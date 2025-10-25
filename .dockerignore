@@ -1,9 +1,0 @@
-Vagrantfile
-vagrant/
-.swc/
-.turbo/
-nix/
-flake.nix
-flake.lock
-var/
-srv/
