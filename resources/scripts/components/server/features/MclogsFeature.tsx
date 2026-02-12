@@ -1,4 +1,3 @@
-import { Check, Link, TriangleExclamation } from '@gravity-ui/icons';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -6,6 +5,9 @@ import ActionButton from '@/components/elements/ActionButton';
 import Modal from '@/components/elements/Modal';
 import Spinner from '@/components/elements/Spinner';
 import { Alert } from '@/components/elements/alert';
+import HugeIconsAlert from '@/components/elements/hugeicons/Alert';
+import HugeIconsCheck from '@/components/elements/hugeicons/Check';
+import HugeIconsLink from '@/components/elements/hugeicons/Link';
 import { SocketEvent } from '@/components/server/events';
 
 import { debounce, isCrashLine } from '@/lib/mclogsUtils';
@@ -216,17 +218,17 @@ export const CrashAnalysisCard = () => {
                 <Alert type={getCardType()}>
                     <div className='flex items-center justify-between gap-3'>
                         <div className='flex-1'>
-                            <p className='font-medium text-sm'>Crash Analysis</p>
+                            <p className='font-medium text-sm'>崩溃分析</p>
                             <p className='text-sm mt-1'>{getCardMessage()}</p>
                         </div>
                         <div className='flex items-center gap-2 flex-shrink-0'>
                             {canViewAnalysis && (
                                 <ActionButton variant='secondary' onClick={() => setModalVisible(true)} size='sm'>
-                                    View Details
+                                    查看详情
                                 </ActionButton>
                             )}
                             <ActionButton variant='secondary' onClick={dismissCard} size='sm'>
-                                Dismiss
+                                关闭
                             </ActionButton>
                         </div>
                     </div>
@@ -272,9 +274,9 @@ const AnalysisModal = ({
     const renderLoadingState = () => (
         <div className='flex flex-col items-center justify-center py-12' aria-busy='true'>
             <Spinner size='large' />
-            <h3 className='text-lg font-medium text-neutral-200 mt-4'>Analyzing Server Logs</h3>
+            <h3 className='text-lg font-medium text-neutral-200 mt-4'>正在分析服务器日志</h3>
             <p className='text-neutral-400 mt-2 text-center max-w-md'>
-                We&apos;re analyzing your server logs with mclo.gs to identify potential issues and provide solutions.
+                我们正在使用 mclo.gs 分析您的服务器日志以识别潜在问题并提供解决方案。
             </p>
         </div>
     );
@@ -284,19 +286,13 @@ const AnalysisModal = ({
         <div className='space-y-6'>
             <div className='bg-red-500/10 border border-red-500/20 rounded-lg p-4'>
                 <div className='flex items-start gap-3'>
-                    <TriangleExclamation
-                        width={22}
-                        height={22}
-                        className='w-6 h-6 text-red-400 flex-shrink-0 mt-0.5'
-                        fill='currentColor'
-                    />
+                    <HugeIconsAlert className='w-6 h-6 text-red-400 flex-shrink-0 mt-0.5' fill='currentColor' />
                     <div className='flex-1'>
-                        <h3 className='font-semibold text-red-400 text-lg'>Analysis Failed</h3>
+                        <h3 className='font-semibold text-red-400 text-lg'>分析失败</h3>
                         <p className='text-neutral-300 mt-2'>{error}</p>
                         {(/latest\.log/i.test(error!) || /no log content/i.test(error!)) && (
                             <p className='text-neutral-400 mt-3 text-sm'>
-                                This usually means the log file doesn&apos;t exist yet. Try starting your server to
-                                generate logs first.
+                                这通常意味着日志文件尚不存在。请先启动服务器以生成日志。
                             </p>
                         )}
                     </div>
@@ -316,21 +312,21 @@ const AnalysisModal = ({
         return (
             <div className='bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-6'>
                 <div className='flex items-center justify-between mb-3'>
-                    <h3 className='text-lg font-semibold text-blue-400'>Server Information</h3>
+                    <h3 className='text-lg font-semibold text-blue-400'>服务器信息</h3>
                     <a
                         href='https://mclo.gs'
                         target='_blank'
                         rel='noopener noreferrer'
                         className='text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1.5 transition-colors'
                     >
-                        <Link width={22} height={22} className='w-4 h-4' />
-                        Powered by mclo.gs
+                        <HugeIconsLink className='w-4 h-4' />
+                        由 mclo.gs 提供支持
                     </a>
                 </div>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                     <div className='bg-blue-500/5 rounded-lg p-3'>
-                        <p className='text-blue-400 font-medium text-sm mb-1'>Server Type</p>
+                        <p className='text-blue-400 font-medium text-sm mb-1'>服务器类型</p>
                         <p className='text-neutral-200'>
                             {serverType} {serverVersion}
                         </p>
@@ -347,7 +343,7 @@ const AnalysisModal = ({
                 {information.length > 3 && (
                     <details className='mt-3'>
                         <summary className='text-blue-400 text-sm cursor-pointer hover:text-blue-300 transition-colors'>
-                            Show {information.length - 3} more details
+                            显示更多 {information.length - 3} 个详情
                         </summary>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mt-3'>
                             {information.slice(3).map((info, idx) => (
@@ -373,17 +369,11 @@ const AnalysisModal = ({
             return (
                 <div className='bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-6'>
                     <div className='flex items-start gap-3'>
-                        <Check
-                            width={22}
-                            height={22}
-                            className='w-6 h-6 text-green-400 flex-shrink-0 mt-0.5'
-                            fill='currentColor'
-                        />
+                        <HugeIconsCheck className='w-6 h-6 text-green-400 flex-shrink-0 mt-0.5' fill='currentColor' />
                         <div>
-                            <h3 className='font-semibold text-green-400 text-lg'>No Issues Detected</h3>
+                            <h3 className='font-semibold text-green-400 text-lg'>未检测到问题</h3>
                             <p className='text-neutral-300 mt-2'>
-                                No specific issues were found in your server logs. The crash may be due to configuration
-                                problems or resource limitations.
+                                在您的服务器日志中未发现特定问题。崩溃可能是由于配置问题或资源限制导致的。
                             </p>
                         </div>
                     </div>
@@ -393,16 +383,14 @@ const AnalysisModal = ({
 
         return (
             <div className='space-y-4 mb-6'>
-                <h3 className='text-lg font-semibold text-red-400'>Issues Found ({problems.length})</h3>
+                <h3 className='text-lg font-semibold text-red-400'>发现的问题 ({problems.length})</h3>
 
                 <div className='space-y-3'>
                     {problems.map((problem, idx) => (
                         <div key={idx} className='bg-red-500/10 border border-red-500/20 rounded-lg overflow-hidden'>
                             <div className='p-4'>
                                 <div className='flex items-start gap-3'>
-                                    <TriangleExclamation
-                                        width={22}
-                                        height={22}
+                                    <HugeIconsAlert
                                         className='w-5 h-5 text-red-400 flex-shrink-0 mt-0.5'
                                         fill='currentColor'
                                     />
@@ -411,7 +399,7 @@ const AnalysisModal = ({
 
                                         {!!problem.entry?.lines?.length && (
                                             <div className='bg-red-500/5 border border-red-500/10 rounded-lg p-3 mb-3'>
-                                                <p className='text-red-400/70 text-sm mb-2 font-medium'>Error Log:</p>
+                                                <p className='text-red-400/70 text-sm mb-2 font-medium'>错误日志:</p>
                                                 <div className='max-h-40 overflow-y-auto font-mono text-sm space-y-1'>
                                                     {problem.entry.lines.map((line, lineIdx) => (
                                                         <div key={lineIdx} className='flex'>
@@ -447,19 +435,14 @@ const AnalysisModal = ({
 
         return (
             <div className='space-y-4'>
-                <h3 className='text-lg font-semibold text-green-400'>Recommended Solutions ({allSolutions.length})</h3>
+                <h3 className='text-lg font-semibold text-green-400'>推荐解决方案 ({allSolutions.length})</h3>
 
                 <div className='bg-green-500/10 border border-green-500/20 rounded-lg p-4'>
                     <div className='space-y-3'>
                         {allSolutions.map((solution, idx) => (
                             <div key={idx} className='flex items-start gap-3'>
                                 <div className='bg-green-500/20 rounded-full p-1 flex-shrink-0 mt-0.5'>
-                                    <Check
-                                        width={22}
-                                        height={22}
-                                        className='w-4 h-4 text-green-400'
-                                        fill='currentColor'
-                                    />
+                                    <HugeIconsCheck className='w-4 h-4 text-green-400' fill='currentColor' />
                                 </div>
                                 <div className='flex-1'>
                                     <p className='text-neutral-200 leading-relaxed'>{solution.message}</p>
@@ -498,7 +481,7 @@ const AnalysisModal = ({
             visible={visible}
             onDismissed={closeModal}
             closeOnBackground={!analyzing}
-            title='Server Log Analysis'
+            title='服务器日志分析'
             showSpinnerOverlay={false}
         >
             <div className='w-full max-w-4xl'>
@@ -506,10 +489,10 @@ const AnalysisModal = ({
 
                 <div className='flex justify-center gap-3 mt-8 pt-4 border-t border-neutral-700'>
                     <ActionButton variant='secondary' onClick={manualAnalyze} disabled={analyzing}>
-                        {analyzing ? 'Analyzing...' : 'Analyze Again'}
+                        {analyzing ? '分析中...' : '重新分析'}
                     </ActionButton>
                     <ActionButton variant='primary' onClick={closeModal} disabled={analyzing}>
-                        Close
+                        关闭
                     </ActionButton>
                 </div>
             </div>

@@ -9,8 +9,6 @@ use Illuminate\Http\Response;
 use Pterodactyl\Models\Allocation;
 use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
-use Pterodactyl\Enums\Daemon\Adapters;
-use Pterodactyl\Enums\Daemon\DaemonType;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Nodes\NodeUpdateService;
@@ -47,7 +45,8 @@ class NodesController extends Controller
         protected NodeUpdateService $updateService,
         protected SoftwareVersionService $versionService,
         protected ViewFactory $view,
-    ) {}
+    ) {
+    }
 
     /**
      * Displays create new node page.
@@ -61,7 +60,7 @@ class NodesController extends Controller
             return redirect()->route('admin.locations');
         }
 
-        return $this->view->make('admin.nodes.new', ['locations' => $locations, 'daemonTypes' => DaemonType::all(), 'backupDisks' => Adapters::all_sorted()]);
+        return $this->view->make('admin.nodes.new', ['locations' => $locations]);
     }
 
     /**

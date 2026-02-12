@@ -1,9 +1,11 @@
-import { ArrowLeft, ArrowRight } from '@gravity-ui/icons';
 import styled from 'styled-components';
 
 import Button from '@/components/elements/Button';
 
 import { PaginatedResult } from '@/api/http';
+
+import HugeIconsArrowLeft from './hugeicons/ArrowLeft';
+import HugeIconsArrowRight from './hugeicons/ArrowRight';
 
 interface RenderFuncProps<T> {
     items: T[];
@@ -54,9 +56,7 @@ function Pagination<T>({ data: { items, pagination }, onPageSelect, children }: 
                                 onPageSelect(pagination.currentPage - 1)
                             }
                         >
-                            <ArrowLeft
-                                width={22}
-                                height={22}
+                            <HugeIconsArrowLeft
                                 fill={'currentColor'}
                                 className={`${pagination.currentPage === 1 ? 'text-neutral-500 cursor-not-allowed' : 'text-white'}`}
                             />
@@ -83,9 +83,7 @@ function Pagination<T>({ data: { items, pagination }, onPageSelect, children }: 
                                 onPageSelect(pagination.currentPage + 1)
                             }
                         >
-                            <ArrowRight
-                                width={22}
-                                height={22}
+                            <HugeIconsArrowRight
                                 fill={'currentColor'}
                                 className={`${pagination.currentPage === pagination.totalPages ? 'text-neutral-500 cursor-not-allowed' : 'text-white'}`}
                             />

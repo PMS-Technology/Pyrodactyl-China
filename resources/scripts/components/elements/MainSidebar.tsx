@@ -35,8 +35,8 @@ const MainSidebar = styled.nav`
             transition: 200ms all ease-in-out;
 
             &.active {
-                color: var(--color-brand);
-                fill: var(--color-brand);
+                color: #fa4e49;
+                fill: #fa4e49;
             }
         }
     }

@@ -1,4 +1,3 @@
-import { Person, Plus } from '@gravity-ui/icons';
 import { Actions, useStoreActions, useStoreState } from 'easy-peasy';
 import { For } from 'million/react';
 import { useEffect, useState } from 'react';
@@ -9,6 +8,8 @@ import ActionButton from '@/components/elements/ActionButton';
 import Can from '@/components/elements/Can';
 import { MainPageHeader } from '@/components/elements/MainPageHeader';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import HugeIconsPlus from '@/components/elements/hugeicons/Plus';
+import HugeIconsUser from '@/components/elements/hugeicons/User';
 import { PageListContainer } from '@/components/elements/pages/PageList';
 import UserRow from '@/components/server/users/UserRow';
 
@@ -53,11 +54,11 @@ const UsersContainer = () => {
 
     if (!subusers.length && (loading || !Object.keys(permissions).length)) {
         return (
-            <ServerContentBlock title={'Users'}>
+            <ServerContentBlock title={'用户'}>
                 <FlashMessageRender byKey={'users'} />
                 <MainPageHeader
                     direction='column'
-                    title={'Users'}
+                    title={'用户'}
                     titleChildren={
                         <div className='flex flex-col sm:flex-row items-center justify-end gap-4'>
                             <p className='text-sm text-zinc-300 text-center sm:text-right'>0 users</p>
@@ -67,16 +68,15 @@ const UsersContainer = () => {
                                     onClick={() => navigate(`/server/${serverId}/users/new`)}
                                     className='flex items-center gap-2'
                                 >
-                                    <Plus width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                                    New User
+                                    <HugeIconsPlus className='w-4 h-4' fill='currentColor' />
+                                    新建用户
                                 </ActionButton>
                             </Can>
                         </div>
                     }
                 >
                     <p className='text-sm text-neutral-400 leading-relaxed'>
-                        Manage user access to your server. Grant specific permissions to other users to help you manage
-                        and maintain your server.
+                        管理用户对您的服务器的访问权限。授予其他用户特定权限以帮助您管理和维护服务器。
                     </p>
                 </MainPageHeader>
                 <div className='flex items-center justify-center py-12'>
@@ -87,11 +87,11 @@ const UsersContainer = () => {
     }
 
     return (
-        <ServerContentBlock title={'Users'}>
+        <ServerContentBlock title={'用户'}>
             <FlashMessageRender byKey={'users'} />
             <MainPageHeader
                 direction='column'
-                title={'Users'}
+                title={'用户'}
                 titleChildren={
                     <div className='flex flex-col sm:flex-row items-center justify-end gap-4'>
                         <p className='text-sm text-zinc-300 text-center sm:text-right'>{subusers.length} users</p>
@@ -101,27 +101,26 @@ const UsersContainer = () => {
                                 onClick={() => navigate(`/server/${serverId}/users/new`)}
                                 className='flex items-center gap-2'
                             >
-                                <Plus width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                                New User
+                                <HugeIconsPlus className='w-4 h-4' fill='currentColor' />
+                                新建用户
                             </ActionButton>
                         </Can>
                     </div>
                 }
             >
                 <p className='text-sm text-neutral-400 leading-relaxed'>
-                    Manage user access to your server. Grant specific permissions to other users to help you manage and
-                    maintain your server.
+                    管理用户对您的服务器的访问权限。授予其他用户特定权限以帮助您管理和维护服务器。
                 </p>
             </MainPageHeader>
             {!subusers.length ? (
                 <div className='flex flex-col items-center justify-center min-h-[60vh] py-12 px-4'>
                     <div className='text-center'>
                         <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-[#ffffff11] flex items-center justify-center'>
-                            <Person width={22} height={22} className='w-8 h-8 text-zinc-400' fill='currentColor' />
+                            <HugeIconsUser className='w-8 h-8 text-zinc-400' fill='currentColor' />
                         </div>
-                        <h3 className='text-lg font-medium text-zinc-200 mb-2'>No users found</h3>
+                        <h3 className='text-lg font-medium text-zinc-200 mb-2'>未找到用户</h3>
                         <p className='text-sm text-zinc-400 max-w-sm'>
-                            Your server does not have any additional users. Add others to help you manage your server.
+                            您的服务器没有任何其他用户。添加其他用户以帮助您管理服务器。
                         </p>
                     </div>
                 </div>

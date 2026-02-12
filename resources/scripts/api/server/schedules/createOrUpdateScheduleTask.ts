@@ -1,5 +1,4 @@
 import http from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 import { Task, rawDataToServerTask } from '@/api/server/schedules/getServerSchedules';
 
 interface Data {
@@ -11,7 +10,7 @@ interface Data {
 
 export default async (uuid: string, schedule: number, task: number | undefined, data: Data): Promise<Task> => {
     const { data: response } = await http.post(
-        `/api/client/servers/${getGlobalDaemonType()}/${uuid}/schedules/${schedule}/tasks${task ? `/${task}` : ''}`,
+        `/api/client/servers/${uuid}/schedules/${schedule}/tasks${task ? `/${task}` : ''}`,
         {
             action: data.action,
             payload: data.payload,

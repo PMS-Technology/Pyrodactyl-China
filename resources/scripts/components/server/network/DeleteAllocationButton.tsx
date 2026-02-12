@@ -1,8 +1,8 @@
-import { TrashBin } from '@gravity-ui/icons';
 import { useState } from 'react';
 
 import ActionButton from '@/components/elements/ActionButton';
 import { Dialog } from '@/components/elements/dialog';
+import HugeIconsDelete from '@/components/elements/hugeicons/Delete';
 
 import deleteServerAllocation from '@/api/server/network/deleteServerAllocation';
 import getServerAllocations from '@/api/swr/getServerAllocations';
@@ -43,11 +43,11 @@ const DeleteAllocationButton = ({ allocation }: Props) => {
             <Dialog.Confirm
                 open={confirm}
                 onClose={() => setConfirm(false)}
-                title={'Remove Allocation'}
-                confirm={'Delete'}
+                title={'移除分配'}
+                confirm={'删除'}
                 onConfirmed={deleteAllocation}
             >
-                This allocation will be immediately removed from your server.
+                此分配将立即从您的服务器中移除。
             </Dialog.Confirm>
             <ActionButton
                 variant='danger'
@@ -55,8 +55,8 @@ const DeleteAllocationButton = ({ allocation }: Props) => {
                 onClick={() => setConfirm(true)}
                 className='flex items-center gap-2'
             >
-                <TrashBin width={22} height={22} fill='currentColor' />
-                <span className='hidden sm:inline'>Delete</span>
+                <HugeIconsDelete className='h-4 w-4' fill='currentColor' />
+                <span className='hidden sm:inline'>删除</span>
             </ActionButton>
         </>
     );

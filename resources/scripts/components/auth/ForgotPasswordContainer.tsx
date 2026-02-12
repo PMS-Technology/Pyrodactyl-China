@@ -44,11 +44,11 @@ const ForgotPasswordContainer = () => {
         http.post('/auth/password', requestData)
             .then((response) => {
                 resetForm();
-                addFlash({ type: 'success', title: 'Success', message: response.data.status || 'Email sent!' });
+                addFlash({ type: 'success', title: '成功', message: response.data.status || '邮件已发送！' });
             })
             .catch((error) => {
                 console.error(error);
-                addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error) });
+                addFlash({ type: 'error', title: '错误', message: httpErrorToHuman(error) });
             })
             .finally(() => {
                 setSubmitting(false);
@@ -61,7 +61,7 @@ const ForgotPasswordContainer = () => {
                 onSubmit={handleSubmission}
                 initialValues={{ email: '' }}
                 validationSchema={object().shape({
-                    email: string().email('Enter a valid email address.').required('Email is required.'),
+                    email: string().email('请输入有效的邮箱地址').required('邮箱是必填项'),
                 })}
             >
                 {({ isSubmitting }) => (
@@ -72,11 +72,11 @@ const ForgotPasswordContainer = () => {
                             </div>
                         </Link>
                         <div aria-hidden className='my-8 bg-[#ffffff33] min-h-[1px]'></div>
-                        <h2 className='text-xl font-extrabold mb-2'>Reset Password</h2>
+                        <h2 className='text-xl font-extrabold mb-2'>重置密码</h2>
                         <div className='text-sm mb-6'>
-                            We&apos;ll send you an email with a link to reset your password.
+                            我们将向您发送一封包含密码重置链接的邮件。
                         </div>
-                        <Field id='email' label={'Email'} name={'email'} type={'email'} />
+                        <Field id='email' label={'邮箱'} name={'email'} type={'email'} />
 
                         <Captcha
                             className='mt-6'
@@ -85,7 +85,7 @@ const ForgotPasswordContainer = () => {
                                 addFlash({
                                     type: 'error',
                                     title: 'Error',
-                                    message: 'Captcha verification failed. Please try again.',
+                                    message: '验证码验证失败，请重试。',
                                 });
                             }}
                         />
@@ -98,7 +98,7 @@ const ForgotPasswordContainer = () => {
                                 isLoading={isSubmitting}
                                 disabled={isSubmitting}
                             >
-                                Send Email
+                                发送邮件
                             </Button>
                         </div>
 
@@ -110,7 +110,7 @@ const ForgotPasswordContainer = () => {
                                 to='/auth/login'
                                 className='block w-full text-center py-2.5 px-4 text-xs font-medium tracking-wide uppercase text-white hover:text-white/80 transition-colors duration-200 border border-white/20 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30'
                             >
-                                Return to Login
+                                返回登录
                             </Link>
                         </div>
                     </LoginFormContainer>

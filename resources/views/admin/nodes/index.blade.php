@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-    List Nodes
+    节点列表
 @endsection
 
 @section('scripts')
@@ -10,10 +10,10 @@
 @endsection
 
 @section('content-header')
-    <h1>Nodes<small>All nodes available on the system.</small></h1>
+    <h1>节点<small>系统中所有可用的节点。</small></h1>
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li class="active">Nodes</li>
+        <li><a href="{{ route('admin.index') }}">管理</a></li>
+        <li class="active">节点</li>
     </ol>
 @endsection
 
@@ -23,14 +23,14 @@
     <div class="col-xs-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Node List</h3>
+                <h3 class="box-title">节点列表</h3>
                 <div class="box-tools search01">
                     <form action="{{ route('admin.nodes') }}" method="GET">
                         <div class="input-group input-group-sm">
-                            <input type="text" name="filter[name]" class="form-control pull-right" value="{{ request()->input('filter.name') }}" placeholder="Search Nodes">
+                            <input type="text" name="filter[name]" class="form-control pull-right" value="{{ request()->input('filter.name') }}" placeholder="搜索节点">
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                <a href="{{ route('admin.nodes.new') }}"><button type="button" class="btn btn-sm btn-primary" style="border-radius: 0 3px 3px 0;margin-left:-1px;">Create New</button></a>
+                                <a href="{{ route('admin.nodes.new') }}"><button type="button" class="btn btn-sm btn-primary" style="border-radius: 0 3px 3px 0;margin-left:-1px;">创建新的</button></a>
                             </div>
                         </div>
                     </form>
@@ -41,31 +41,43 @@
                     <tbody>
                         <tr>
                             <th></th>
-                            <th>Name</th>
-                            <th>Location</th>
-                            <th>Memory%</th>
-                            <th>Allocated Memory</th>
-                            <th>Total Memory</th>
-                            <th>Disk%</th>
-                            <th>Allocated Disk</th>
-                            <th>Total Disk</th>
-                            <th class="text-center">Servers</th>
-                            <th class="text-center">Daemon Type</th>
-                            <th class="text-center">Public</th>
+                            <th>名称</th>
+                            <th>位置</th>
+                            <th>内存%</th>
+                            <th>已分配内存</th>
+                            <th>总内存</th>
+                            <th>磁盘%</th>
+                            <th>已分配磁盘</th>
+                            <th>总磁盘</th>
+                            <th class="text-center">服务器</th>
+                            <th class="text-center">公共</th>
                         </tr>
                         @foreach ($nodes as $node)
                             <tr>
                                 <td class="text-center text-muted left-icon" data-action="ping" data-secret="{{ $node->getDecryptedKey() }}" data-location="{{ $node->scheme }}://{{ $node->fqdn }}:{{ $node->daemonListen }}/api/system"><i class="fa fa-fw fa-refresh fa-spin"></i></td>
                                 <td>{!! $node->maintenance_mode ? '<span class="label label-warning"><i class="fa fa-wrench"></i></span> ' : '' !!}<a href="{{ route('admin.nodes.view', $node->id) }}">{{ $node->name }}</a></td>
                                 <td>{{ $node->location->short }}</td>
-                                <td style="color: {{ $node->memory_color }}">{{ $node->memory_percent }}%</td>
-                                <td>{{ $node->allocated_memory }}</td>
-                                <td>{{ $node->total_memory }}</td>
-                                <td style="color: {{ $node->disk_color }}">{{ $node->disk_percent }}%</td>
-                                <td>{{ $node->allocated_disk }}</td>
-                                <td>{{ $node->total_disk }}</td>
+                                <!-- there's probably a better way to implement this, but that's why we have Naterfute! -->
+                                @php
+                                    $stats = app('Pterodactyl\Repositories\Eloquent\NodeRepository')->getUsageStatsRaw($node);
+                                    $memoryPercent = ($stats['memory']['value'] / $stats['memory']['base_limit']) * 100;
+                                    $diskPercent = ($stats['disk']['value'] / $stats['disk']['base_limit']) * 100;
+
+                                    $memoryColor = $memoryPercent < 50 ? '#50af51' : ($memoryPercent < 70 ? '#e0a800' : '#d9534f');
+                                    $diskColor = $diskPercent < 50 ? '#50af51' : ($diskPercent < 70 ? '#e0a800' : '#d9534f');
+
+                                    $allocatedMemory = humanizeSize($stats['memory']['value'] * 1024 * 1024);
+                                    $totalMemory = humanizeSize($stats['memory']['max'] * 1024 * 1024);
+                                    $allocatedDisk = humanizeSize($stats['disk']['value'] * 1024 * 1024);
+                                    $totalDisk = humanizeSize($stats['disk']['max'] * 1024 * 1024);
+                                @endphp
+                                <td style="color: {{ $memoryColor }}">{{ round($memoryPercent) }}%</td>
+                                <td>{{ $allocatedMemory }}</td>
+                                <td>{{ $totalMemory }}</td>
+                                <td style="color: {{ $diskColor }}">{{ round($diskPercent) }}%</td>
+                                <td>{{ $allocatedDisk }}</td>
+                                <td>{{ $totalDisk }}</td>
                                 <td class="text-center">{{ $node->servers_count }}</td>
-                                <td class="text-center">{{ $node->daemonType }}</td>
                                 <td class="text-center"><i class="fa fa-{{ ($node->public) ? 'eye' : 'eye-slash' }}"></i></td>
                             </tr>
                         @endforeach

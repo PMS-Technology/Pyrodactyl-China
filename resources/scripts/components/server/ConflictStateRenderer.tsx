@@ -15,26 +15,26 @@ const ConflictStateRenderer = () => {
         <div className={'flex flex-col items-center justify-center h-full'}>
             <Spinner size={'large'} />
             <div className='flex flex-col mt-4 text-center'>
-                <label className='text-neutral-100 text-lg font-bold'>Server is Installing</label>
+                <label className='text-neutral-100 text-lg font-bold'>服务器正在安装</label>
                 <label className='text-neutral-500 text-md font-semibold mt-1'>
-                    Your server should be ready soon, for more details visit the home page.
+                    您的服务器即将准备就绪，更多详情请访问主页。
                 </label>
             </div>
         </div>
     ) : status === 'suspended' ? (
-        <ScreenBlock title={'Server Suspended'} message={'This server is suspended and cannot be accessed.'} />
+        <ScreenBlock title={'服务器已暂停'} message={'此服务器已暂停，无法访问。'} />
     ) : isNodeUnderMaintenance ? (
         <ScreenBlock
-            title={'Node under Maintenance'}
-            message={'The node of this server is currently under maintenance.'}
+            title={'节点维护中'}
+            message={'此服务器的节点当前正在维护中。'}
         />
     ) : (
         <ScreenBlock
-            title={isTransferring ? 'Transferring' : 'Restoring from Backup'}
+            title={isTransferring ? '转移中' : '从备份恢复中'}
             message={
                 isTransferring
-                    ? 'Your server is being transferred to a new node, please check back later.'
-                    : 'Your server is currently being restored from a backup, please check back in a few minutes.'
+                    ? '您的服务器正在转移到新节点，请稍后查看。'
+                    : '您的服务器当前正在从备份恢复，请几分钟后查看。'
             }
         />
     );

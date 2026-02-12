@@ -2,7 +2,6 @@
 
 namespace Pterodactyl\Services\Captcha;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Manager;
 use Pterodactyl\Services\Captcha\Providers\TurnstileProvider;
 use Pterodactyl\Services\Captcha\Providers\HCaptchaProvider;
@@ -74,8 +73,6 @@ class CaptchaManager extends Manager
      */
     public function getWidget(): string
     {
-
-
         if ($this->getDefaultDriver() === 'none') {
             return '';
         }

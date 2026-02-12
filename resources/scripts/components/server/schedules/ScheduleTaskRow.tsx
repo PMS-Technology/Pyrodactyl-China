@@ -1,4 +1,4 @@
-import { CircleQuestion, CloudArrowUpIn, PencilToLine, Power, Terminal, TrashBin } from '@gravity-ui/icons';
+import { ComponentType } from 'react';
 import { useState } from 'react';
 
 import ActionButton from '@/components/elements/ActionButton';
@@ -6,6 +6,13 @@ import Can from '@/components/elements/Can';
 import ConfirmationModal from '@/components/elements/ConfirmationModal';
 import ItemContainer from '@/components/elements/ItemContainer';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import HugeIconsCopy from '@/components/elements/hugeicons/Copy';
+import HugeIconsPencil from '@/components/elements/hugeicons/Pencil';
+import HugeIconsPower from '@/components/elements/hugeicons/Power';
+import HugeIconsQuestion from '@/components/elements/hugeicons/Question';
+import HugeIconsTerminal from '@/components/elements/hugeicons/Terminal';
+import HugeIconsTrash from '@/components/elements/hugeicons/Trash';
+import { HugeIconProps } from '@/components/elements/hugeicons/props';
 import TaskDetailsModal from '@/components/server/schedules/TaskDetailsModal';
 
 import { httpErrorToHuman } from '@/api/http';
@@ -21,16 +28,16 @@ interface Props {
     task: Task;
 }
 
-const getActionDetails = (action: string): [string, any, boolean?] => {
+const getActionDetails = (action: string): [string, ComponentType<HugeIconProps>, boolean?] => {
     switch (action) {
         case 'command':
-            return ['Send Command', Terminal, true];
+            return ['发送命令', HugeIconsTerminal, true];
         case 'power':
-            return ['Send Power Action', Power];
+            return ['发送电源操作', HugeIconsPower];
         case 'backup':
-            return ['Create Backup', CloudArrowUpIn];
+            return ['创建备份', HugeIconsCopy];
         default:
-            return ['Unknown Action', CircleQuestion];
+            return ['未知操作', HugeIconsQuestion];
     }
 };
 
@@ -64,9 +71,7 @@ const ScheduleTaskRow = ({ schedule, task }: Props) => {
     return (
         <ItemContainer
             title={title}
-            description={
-                task.payload && task.payload.length > 100 ? `${task.payload.substring(0, 100)}...` : task.payload
-            }
+            description={task.payload}
             icon={icon}
             divClasses={`mb-2 gap-6`}
             copyDescription={copyOnClick}
@@ -80,13 +85,13 @@ const ScheduleTaskRow = ({ schedule, task }: Props) => {
                 onModalDismissed={() => setIsEditing(false)}
             />
             <ConfirmationModal
-                title={'Confirm task deletion'}
-                buttonText={'Delete Task'}
+                title={'确认删除任务'}
+                buttonText={'删除任务'}
                 onConfirmed={onConfirmDeletion}
                 visible={visible}
                 onModalDismissed={() => setVisible(false)}
             >
-                Are you sure you want to delete this task? This action cannot be undone.
+                您确定要删除此任务吗？此操作无法撤销。
             </ConfirmationModal>
             {/* <FontAwesomeIcon icon={icon} className={`text-lg text-white hidden md:block`} /> */}
             {/* <div className={`flex-none sm:flex-1 w-full sm:w-auto overflow-x-auto`}>
@@ -94,14 +99,12 @@ const ScheduleTaskRow = ({ schedule, task }: Props) => {
                 {task.payload && (
                     <div className={`md:ml-6 mt-2`}>
                         {task.action === 'backup' && (
-                            <p className={`text-xs uppercase text-zinc-400 mb-1`}>Ignoring files & folders:</p>
+                            <p className={`text-xs uppercase text-zinc-400 mb-1`}>忽略文件和文件夹:</p>
                         )}
                         <div
                             className={`font-mono bg-zinc-800 rounded-sm py-1 px-2 text-sm w-auto inline-block whitespace-pre-wrap break-all`}
                         >
-                            {task.payload && task.payload.length > 100
-                                ? `${task.payload.substring(0, 100)}...`
-                                : task.payload}
+                            {task.payload}
                         </div>
                     </div>
                 )}
@@ -110,11 +113,11 @@ const ScheduleTaskRow = ({ schedule, task }: Props) => {
                 <div className='mr-0 sm:mr-6'>
                     {task.continueOnFailure && (
                         <div className={`px-2 py-1 bg-yellow-500 text-yellow-800 text-sm rounded-full`}>
-                            Continues on Failure
+                            失败时继续
                         </div>
                     )}
                     {task.sequenceId > 1 && task.timeOffset > 0 && (
-                        <div className={`px-2 py-1 bg-zinc-500 text-sm rounded-full`}>{task.timeOffset}s later</div>
+                        <div className={`px-2 py-1 bg-zinc-500 text-sm rounded-full`}>{task.timeOffset}秒后</div>
                     )}
                 </div>
                 <Can action={'schedule.update'}>
@@ -123,10 +126,10 @@ const ScheduleTaskRow = ({ schedule, task }: Props) => {
                         size='sm'
                         className='flex flex-row items-center gap-2 ml-auto sm:ml-0'
                         onClick={() => setIsEditing(true)}
-                        aria-label='Edit scheduled task'
+                        aria-label='编辑计划任务'
                     >
-                        <PencilToLine width={22} height={22} fill='currentColor' />
-                        Edit
+                        <HugeIconsPencil fill='currentColor' />
+                        编辑
                     </ActionButton>
                 </Can>
                 <Can action={'schedule.update'}>
@@ -135,10 +138,10 @@ const ScheduleTaskRow = ({ schedule, task }: Props) => {
                         size='sm'
                         onClick={() => setVisible(true)}
                         className='flex items-center gap-2'
-                        aria-label='Delete scheduled task'
+                        aria-label='删除计划任务'
                     >
-                        <TrashBin width={22} height={22} fill='currentColor' className='w-4 h-4' />
-                        <span className='hidden sm:inline'>Delete</span>
+                        <HugeIconsTrash fill='currentColor' className='w-4 h-4' />
+                        <span className='hidden sm:inline'>删除</span>
                     </ActionButton>
                 </Can>
             </div>

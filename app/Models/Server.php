@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Pterodactyl\Exceptions\Http\Server\ServerStateConflictException;
-use Pterodactyl\Models\ServerSubdomain;
 
 /**
  * \Pterodactyl\Models\Server.
@@ -239,7 +238,7 @@ class Server extends Model
         if (!$this->egg || !is_array($this->egg->docker_images) || empty($this->egg->docker_images)) {
             return false;
         }
-
+        
         return !in_array($this->image, array_values($this->egg->docker_images));
     }
 
@@ -252,14 +251,14 @@ class Server extends Model
         if (!$this->egg || !is_array($this->egg->docker_images) || empty($this->egg->docker_images)) {
             throw new \RuntimeException('Server egg has no docker images configured.');
         }
-
+        
         $eggDockerImages = $this->egg->docker_images;
         $defaultImage = reset($eggDockerImages);
-
+        
         if (empty($defaultImage)) {
             throw new \RuntimeException('Server egg has no valid default docker image.');
         }
-
+        
         return $defaultImage;
     }
 
@@ -530,27 +529,7 @@ class Server extends Model
         if (
             $this->isSuspended()
             || $this->node->isUnderMaintenance()
-            /* || !$this->isInstalled() */
-            || $this->status === self::STATUS_RESTORING_BACKUP
-            || !is_null($this->transfer)
-        ) {
-            throw new ServerStateConflictException($this);
-        }
-    }
-
-    /**
-     * Checks if the server is currently in a user-accessible state. If not, an
-     * exception is raised. This should be called whenever something needs to make
-     * sure the server is not in a weird state that should block user access.
-     *
-     * @throws ServerStateConflictException
-     */
-    public function validateCurrentStateClient()
-    {
-        if (
-            $this->isSuspended()
-            || $this->node->isUnderMaintenance()
-            /* || !$this->isInstalled() */ // NOTE: this causes issues with how users view servers with the new system
+            || !$this->isInstalled()
             || $this->status === self::STATUS_RESTORING_BACKUP
             || !is_null($this->transfer)
         ) {

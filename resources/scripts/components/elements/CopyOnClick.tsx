@@ -23,7 +23,7 @@ const CopyOnClick = ({ text, children, showInNotification }: CopyOnClickProps) =
 
     useEffect(() => {
         if (!copied) return;
-        toast(`Copied ${truncatedText} to clipboard.`);
+        toast(`已复制 ${truncatedText} 到剪贴板。`);
 
         const timeout = setTimeout(() => {
             setCopied(false);
@@ -35,7 +35,7 @@ const CopyOnClick = ({ text, children, showInNotification }: CopyOnClickProps) =
     }, [copied]);
 
     if (!React.isValidElement(children)) {
-        throw new Error('Component passed to <CopyOnClick/> must be a valid React element.');
+        throw new Error('传递给 <CopyOnClick/> 的组件必须是有效的 React 元素。');
     }
 
     const child = !text

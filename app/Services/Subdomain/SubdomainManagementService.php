@@ -8,10 +8,14 @@ use Pterodactyl\Models\ServerSubdomain;
 use Pterodactyl\Contracts\Dns\DnsProviderInterface;
 use Pterodactyl\Contracts\Subdomain\SubdomainFeatureInterface;
 use Pterodactyl\Exceptions\Dns\DnsProviderException;
+use Pterodactyl\Services\Subdomain\Features\FactorioSubdomainFeature;
+use Pterodactyl\Services\Subdomain\Features\MinecraftSubdomainFeature;
+use Pterodactyl\Services\Subdomain\Features\RustSubdomainFeature;
+use Pterodactyl\Services\Subdomain\Features\ScpSlSubdomainFeature;
+use Pterodactyl\Services\Subdomain\Features\TeamSpeakSubdomainFeature;
+use Pterodactyl\Services\Dns\Providers\CloudflareProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Pterodactyl\Enums\Subdomain\Providers;
-use Pterodactyl\Enums\Subdomain\Features;
 
 class SubdomainManagementService
 {
@@ -21,10 +25,18 @@ class SubdomainManagementService
     public function __construct()
     {
         // Register DNS providers
-        $this->dnsProviders = Providers::all();
+        $this->dnsProviders = [
+            'cloudflare' => CloudflareProvider::class,
+        ];
 
         // Register subdomain features
-        $this->subdomainFeatures = Features::all();
+        $this->subdomainFeatures = [
+            'subdomain_factorio' => FactorioSubdomainFeature::class,
+            'subdomain_minecraft' => MinecraftSubdomainFeature::class,
+            'subdomain_rust' => RustSubdomainFeature::class,
+            'subdomain_scpsl' => ScpSlSubdomainFeature::class,
+            'subdomain_teamspeak' => TeamSpeakSubdomainFeature::class,
+        ];
     }
 
     /**
@@ -36,7 +48,7 @@ class SubdomainManagementService
      * @return ServerSubdomain
      * @throws \Exception
      */
-    public function createSubdomain(Server $server, Domain $domain, string $subdomain): ?ServerSubdomain
+    public function createSubdomain(Server $server, Domain $domain, string $subdomain): ServerSubdomain
     {
         // Check if server supports subdomains
         $feature = $this->getServerSubdomainFeature($server);
@@ -46,22 +58,19 @@ class SubdomainManagementService
 
         // Validate subdomain
         $this->validateSubdomain($subdomain, $feature, $domain);
-        $dnsRecord = $this->createDnsRecord($subdomain, $domain);
 
         // Get DNS provider
         try {
             $dnsProvider = $this->getDnsProvider($domain);
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {            
             throw new \Exception('DNS service temporarily unavailable.');
         }
 
         // Get DNS records to create
-        $newDomain = $this->createDnsRecord($subdomain, $domain->name);
-        $dnsRecords = $feature->getDnsRecords($server, $newDomain, $domain->name);
-
+        $dnsRecords = $feature->getDnsRecords($server, $subdomain, $domain->name);
+        		
         // Normalize IP addresses in DNS records
-        $dnsRecords = $this->normalizeIpAddresses($dnsRecords, $server);
-
+        $dnsRecords = $this->normalizeIpAddresses($dnsRecords);
 
         // Use database transaction for consistency
         return DB::transaction(function () use ($server, $domain, $subdomain, $feature, $dnsProvider, $dnsRecords) {
@@ -88,7 +97,7 @@ class SubdomainManagementService
             // Create DNS records first
             $createdRecordIds = [];
             $rollbackRequired = false;
-
+            
             try {
                 foreach ($dnsRecords as $record) {
                     $recordId = $dnsProvider->createRecord(
@@ -148,7 +157,7 @@ class SubdomainManagementService
         }
 
         $newDnsRecords = $feature->getDnsRecords($server, $serverSubdomain->subdomain, $domain->name);
-        $newDnsRecords = $this->normalizeIpAddresses($newDnsRecords, $server);
+        $newDnsRecords = $this->normalizeIpAddresses($newDnsRecords);
 
         DB::transaction(function () use ($serverSubdomain, $dnsProvider, $domain, $newDnsRecords) {
             $recordIds = $serverSubdomain->dns_records;
@@ -198,7 +207,7 @@ class SubdomainManagementService
                 // Update database record
                 $serverSubdomain->update([
                     'dns_records' => $updatedRecordIds,
-                ]);
+                ]);    
             } catch (\Exception $e) {
                 // Attempt rollback of DNS changes
                 $this->rollbackDnsChanges($dnsProvider, $domain->name, $rollbackData, $updatedRecordIds);
@@ -217,19 +226,19 @@ class SubdomainManagementService
     public function deleteSubdomain(ServerSubdomain $serverSubdomain): void
     {
         $domain = $serverSubdomain->domain;
-
+        
         DB::transaction(function () use ($serverSubdomain, $domain) {
             $dnsRecordsToDelete = $serverSubdomain->dns_records ?? [];
-
+            
             try {
                 // First, mark as inactive in database to prevent new operations
                 $serverSubdomain->update(['is_active' => false]);
-
+                
                 // Try to delete DNS records if provider is available
                 if (!empty($dnsRecordsToDelete)) {
                     try {
                         $dnsProvider = $this->getDnsProvider($domain);
-
+                        
                         // Delete DNS records - don't fail the entire operation if some DNS deletions fail
                         foreach ($dnsRecordsToDelete as $recordId) {
                             try {
@@ -238,6 +247,7 @@ class SubdomainManagementService
                                 Log::warning("Failed to delete DNS record {$recordId} during subdomain deletion: {$e->getMessage()}");
                             }
                         }
+                        
                     } catch (\Exception $e) {
                         // DNS provider unavailable, log and continue with database deletion
                         Log::warning("DNS provider unavailable during subdomain deletion for {$serverSubdomain->full_domain}: {$e->getMessage()}");
@@ -246,6 +256,7 @@ class SubdomainManagementService
 
                 // Delete database record - this should always succeed after marking inactive
                 $serverSubdomain->delete();
+                
             } catch (\Exception $e) {
                 Log::error("Failed to delete subdomain {$serverSubdomain->full_domain}: {$e->getMessage()}");
                 throw new \Exception('Failed to delete subdomain completely.');
@@ -350,135 +361,37 @@ class SubdomainManagementService
 
         return array_map('strtolower', [
             // Web & infra
-            'www',
-            'web',
-            'origin',
-            'edge',
-            'cdn',
-            'static',
-            'assets',
-            'files',
-            'media',
-            'img',
-            'images',
-            'downloads',
-            'dl',
+            'www', 'web', 'origin', 'edge', 'cdn', 'static', 'assets', 'files', 'media', 'img', 'images', 'downloads', 'dl',
 
             // Email & DNS
-            'mail',
-            'webmail',
-            'smtp',
-            'imap',
-            'pop',
-            'pop3',
-            'mx',
-            'dns',
-            'ns',
-            'autodiscover',
-            'autoconfig',
-            'mta-sts',
-            'openpgpkey',
+            'mail', 'webmail', 'smtp', 'imap', 'pop', 'pop3', 'mx', 'dns', 'ns',
+            'autodiscover', 'autoconfig', 'mta-sts', 'openpgpkey',
 
             // Admin & control planes
-            'admin',
-            'administrator',
-            'root',
-            'sysadmin',
-            'panel',
-            'cp',
-            'cpanel',
-            'whm',
-            'webdisk',
-            'status',
-            'monitor',
-            'monitoring',
-            'health',
-            'uptime',
-            'metrics',
-            'logs',
-            'logging',
+            'admin', 'administrator', 'root', 'sysadmin', 'panel', 'cp', 'cpanel', 'whm', 'webdisk',
+            'status', 'monitor', 'monitoring', 'health', 'uptime', 'metrics', 'logs', 'logging',
 
             // Auth & accounts
-            'login',
-            'signin',
-            'sign-in',
-            'signup',
-            'sign-up',
-            'register',
-            'account',
-            'accounts',
-            'auth',
-            'oauth',
-            'oauth2',
-            'sso',
-            'id',
-            'identity',
-            'secure',
-            'passwd',
-            'password',
+            'login', 'signin', 'sign-in', 'signup', 'sign-up', 'register', 'account', 'accounts',
+            'auth', 'oauth', 'oauth2', 'sso', 'id', 'identity', 'secure', 'passwd', 'password',
 
             // APIs & developer endpoints
-            'api',
-            'apis',
-            'dev',
-            'development',
-            'test',
-            'testing',
-            'qa',
-            'stage',
-            'staging',
-            'preprod',
-            'preview',
-            'sandbox',
-            'prod',
-            'production',
-            'demo',
+            'api', 'apis', 'dev', 'development', 'test', 'testing', 'qa', 'stage', 'staging',
+            'preprod', 'preview', 'sandbox', 'prod', 'production', 'demo',
 
             // Commerce / portals / docs
-            'billing',
-            'invoice',
-            'invoices',
-            'payments',
-            'pay',
-            'store',
-            'shop',
-            'support',
-            'help',
-            'docs',
-            'documentation',
-            'wiki',
-            'portal',
-            'dashboard',
+            'billing', 'invoice', 'invoices', 'payments', 'pay', 'store', 'shop',
+            'support', 'help', 'docs', 'documentation', 'wiki', 'portal', 'dashboard',
 
             // File transfer
-            'ftp',
-            'sftp',
-            'tftp',
+            'ftp', 'sftp', 'tftp',
 
             // CI/CD & tooling often probed by scanners
-            'git',
-            'github',
-            'gitlab',
-            'gitea',
-            'forgejo',
-            'bitbucket',
-            'hg',
-            'svn',
-            'jenkins',
-            'grafana',
-            'prometheus',
-            'kibana',
-            'elastic',
-            'sonarqube',
-            'nexus',
+            'git', 'github', 'gitlab', 'gitea', 'bitbucket', 'hg', 'svn',
+            'jenkins', 'grafana', 'prometheus', 'kibana', 'elastic', 'sonarqube', 'nexus',
 
             // Misc safety
-            'localhost',
-            'local',
-            'loopback',
-            'default',
-            'undefined',
-            'null',
+            'localhost', 'local', 'loopback', 'default', 'undefined', 'null',
         ]);
     }
 
@@ -528,7 +441,7 @@ class SubdomainManagementService
     private function validateSubdomain(string $subdomain, SubdomainFeatureInterface $feature, Domain $domain): void
     {
         $availabilityResult = $this->checkSubdomainAvailability($subdomain, $domain, null);
-
+        
         if (!$availabilityResult['available']) {
             throw new \Exception($availabilityResult['message']);
         }
@@ -545,7 +458,7 @@ class SubdomainManagementService
     {
         $providerName = $domain->dns_provider;
 
-        if (!isset($this->dnsProviders[$providerName])) {
+        if (!isset($this->dnsProviders[$providerName])) {            
             throw new \Exception("Unsupported DNS provider: {$providerName}");
         }
 
@@ -603,85 +516,21 @@ class SubdomainManagementService
 
     /**
      * Normalize IP addresses in DNS records (convert localhost to 127.0.0.1).
-     * Or if using ip_aliases convert to the correct ip
-     *
+     * 
      * @param array $dnsRecords
      * @return array
      */
-    private function normalizeIpAddresses(array $dnsRecords, server $server): array
+    private function normalizeIpAddresses(array $dnsRecords): array
     {
-        $useAlias = $server->node->trust_alias;
         foreach ($dnsRecords as &$record) {
-            if ($useAlias == 1) {
-                $record['content'] = $server->allocation->ip_alias;
-            } else if ($record['type'] === 'A' && isset($record['content']) && $useAlias == 0) {
+            if ($record['type'] === 'A' && isset($record['content'])) {
                 // Convert localhost to 127.0.0.1 for A records
-                if (strtolower($record['content']) === 'localhost' &&  $useAlias == 0) {
+                if (strtolower($record['content']) === 'localhost') {
                     $record['content'] = '127.0.0.1';
                 }
             }
         }
+
         return $dnsRecords;
     }
-
-
-    private static function getDnsSubdomainHierarchy($domain)
-    {
-        /**
-         * Get the subdomain hierarchy for DNS record creation
-         *
-         * For 'servers.pyrodactyl.dev' returns 'servers'
-         * For 'api.v1.service.github.io' returns 'api.v1.service'
-         * For 'www.example.com' returns 'www'
-         * For 'example.com' returns ''
-         */
-
-        $cleanDomain = parse_url($domain, PHP_URL_HOST) ?: $domain;
-        $parts = explode('.', $cleanDomain);
-        $partCount = count($parts);
-
-        if ($partCount < 2) {
-            return ['error' => 'Invalid domain format'];
-        }
-
-        if ($partCount > 2) {
-            $subdomainParts = array_slice($parts, 0, $partCount - 2);
-            return implode('.', $subdomainParts);
-        }
-
-        return '';
-    }
-
-    public function createDnsRecord($serverName, $domain)
-    {
-        /**
-         * Create DNS record in the format: servername.subdomain_hierarchy
-         */
-
-        $subdomainHierarchy = $this->getDnsSubdomainHierarchy($domain);
-
-        if ($subdomainHierarchy === '') {
-            return $serverName;
-        } else {
-            return $serverName . '.' . $subdomainHierarchy;
-        }
-    }
 }
-
-
-# TODO: Move these to dedicated test in the test suite
-/* $testCases = [ */
-/*     ['servername', 'servers.pyrodactyl.dev'], */
-/*     ['node1', 'api.v1.service.github.io'], */
-/*     ['web01', 'www.example.com'], */
-/*     ['db01', 'example.com'], */
-/*     ['app', 'staging.app.company.co.uk'],  # TODO: This one is a doozy and returns "DNS Record: app.staging.app.company" instead of "DNS Record: app.staging.app" due to DAMN TLDS!!! */
-/* ]; */
-/**/
-/* foreach ($testCases as [$serverName, $domain]) { */
-/*     $dnsRecord = createDnsRecord($serverName, $domain); */
-/*     echo "Server: $serverName, Domain: $domain\n"; */
-/*     echo "DNS Record: $dnsRecord\n"; */
-/*     echo "Subdomain Hierarchy: '" . getDnsSubdomainHierarchy($domain) . "'\n"; */
-/*     echo str_repeat('-', 50) . "\n"; */
-/* } */

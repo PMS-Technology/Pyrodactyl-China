@@ -108,7 +108,7 @@ const FileEditContainer = () => {
             if (instance) {
                 // they'll stack immediately, so this'll ease that
                 setTimeout(() => {
-                    toast.success('Your server is restarting.');
+                    toast.success('您的服务器正在重启。');
                 }, 500);
                 instance.send('set state', 'restart');
             }
@@ -118,11 +118,11 @@ const FileEditContainer = () => {
     };
 
     if (error) {
-        return <div>An error occurred.</div>;
+        return <div>发生错误。</div>;
     }
 
     return (
-        <PageContentBlock title={action === 'edit' ? `Editing ${filename}` : `New File`} className='p-0! h-full'>
+        <PageContentBlock title={action === 'edit' ? `编辑 ${filename}` : `新建文件`} className='p-0! h-full'>
             <FlashMessageRender byKey={'files:view'} />
 
             <ErrorBoundary>
@@ -134,15 +134,13 @@ const FileEditContainer = () => {
                 </div>
             </ErrorBoundary>
 
-            {['.pyroignore', '.pyroignore'].includes(filename) ? (
+            {['.pyroignore', '.pteroignore'].includes(filename) ? (
                 <div className={`mb-4 p-4 border-l-4 bg-neutral-900 rounded-sm border-cyan-400`}>
                     <p className={`text-neutral-300 text-sm`}>
-                        You&apos;re editing a{' '}
-                        <code className={`font-mono bg-black rounded-sm py-px px-1`}>.pyroignore</code> file. Any files
-                        or directories listed in here will be excluded from backups. Wildcards are supported by using an
-                        asterisk (<code className={`font-mono bg-black rounded-sm py-px px-1`}>*</code>). You can negate
-                        a prior rule by prepending an exclamation point (
-                        <code className={`font-mono bg-black rounded-sm py-px px-1`}>!</code>).
+                        您正在编辑一个
+                        <code className={`font-mono bg-black rounded-sm py-px px-1`}>.pteroignore</code> 文件。在此列出的任何文件或目录都将从备份中排除。通过使用星号 (
+                        <code className={`font-mono bg-black rounded-sm py-px px-1`}>*</code>) 来支持通配符。您可以通过在前面加上感叹号 (
+                        <code className={`font-mono bg-black rounded-sm py-px px-1`}>!</code>) 来否定先前的规则。
                     </p>
                 </div>
             ) : null}
@@ -273,7 +271,7 @@ const FileEditContainer = () => {
                                     sideOffset={8}
                                 >
                                     <DropdownMenuItem onSelect={() => saveAndRestart()}>
-                                        Save & Restart
+                                        保存并重启
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -282,7 +280,7 @@ const FileEditContainer = () => {
                 ) : (
                     <Can action={'file.create'}>
                         <ActionButton variant='secondary' size='lg' onClick={() => setModalVisible(true)}>
-                            Create File
+                            创建文件
                         </ActionButton>
                     </Can>
                 )}

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Pterodactyl\Enums\Daemon\Adapters;
 
 /**
  * Backup model
@@ -16,7 +15,6 @@ use Pterodactyl\Enums\Daemon\Adapters;
  * @property string $uuid
  * @property bool $is_successful
  * @property bool $is_locked
- * @property bool $is_automatic
  * @property string $name
  * @property string[] $ignored_files
  * @property array|null $server_state
@@ -42,13 +40,9 @@ class Backup extends Model
     public const RESOURCE_NAME = 'backup';
 
     // Backup adapters
-    public const ADAPTER_AWS_S3 = 's3';
-
-    // Wings Adapters
     public const ADAPTER_WINGS = 'wings';
-
-    // Elytra Backups
-    public const ADAPTER_ELYTRA = 'elytra';
+    public const ADAPTER_ELYTRA = 'elytra'; // Preferred name for local backups
+    public const ADAPTER_AWS_S3 = 's3';
     public const ADAPTER_RUSTIC_LOCAL = 'rustic_local';
     public const ADAPTER_RUSTIC_S3 = 'rustic_s3';
 
@@ -60,7 +54,6 @@ class Backup extends Model
         'id' => 'int',
         'is_successful' => 'bool',
         'is_locked' => 'bool',
-        'is_automatic' => 'bool',
         'ignored_files' => 'array',
         'server_state' => 'array',
         'bytes' => 'int',
@@ -70,7 +63,6 @@ class Backup extends Model
     protected $attributes = [
         'is_successful' => false,
         'is_locked' => false,
-        'is_automatic' => false,
         'checksum' => null,
         'bytes' => 0,
         'upload_id' => null,
@@ -87,7 +79,6 @@ class Backup extends Model
         return in_array($this->disk, [self::ADAPTER_RUSTIC_LOCAL, self::ADAPTER_RUSTIC_S3]);
     }
 
-
     /**
      * Check if this backup is stored locally (not in cloud storage).
      */
@@ -101,7 +92,7 @@ class Backup extends Model
      */
     public function getRepositoryType(): ?string
     {
-        return match ($this->disk) {
+        return match($this->disk) {
             self::ADAPTER_RUSTIC_LOCAL => 'local',
             self::ADAPTER_RUSTIC_S3 => 's3',
             default => null,
@@ -129,7 +120,6 @@ class Backup extends Model
         'uuid' => 'required|uuid',
         'is_successful' => 'boolean',
         'is_locked' => 'boolean',
-        'is_automatic' => 'boolean',
         'name' => 'required|string',
         'ignored_files' => 'array',
         'server_state' => 'nullable|array',
@@ -167,8 +157,9 @@ class Backup extends Model
      */
     public function getElytraAdapterType(): string
     {
-        return match ($this->disk) {
-            self::ADAPTER_ELYTRA => 'elytra',
+        return match($this->disk) {
+            self::ADAPTER_WINGS => 'elytra',  // Legacy support: wings -> elytra
+            self::ADAPTER_ELYTRA => 'elytra', // Direct mapping for new backups
             self::ADAPTER_AWS_S3 => 's3',
             self::ADAPTER_RUSTIC_LOCAL => 'rustic_local',
             self::ADAPTER_RUSTIC_S3 => 'rustic_s3',
@@ -198,14 +189,6 @@ class Backup extends Model
     public function scopeLocked($query)
     {
         return $query->where('is_locked', true);
-    }
-
-    /**
-     * Scope to get automatic backups
-     */
-    public function scopeAutomatic($query)
-    {
-        return $query->where('is_automatic', true);
     }
 
 

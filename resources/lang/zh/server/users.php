@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'permissions' => [
+        'websocket_*' => '允许访问此服务器的websocket。',
+        'control_console' => '允许用户向服务器控制台发送数据。',
+        'control_start' => '允许用户启动服务器实例。',
+        'control_stop' => '允许用户停止服务器实例。',
+        'control_restart' => '允许用户重启服务器实例。',
+        'control_kill' => '允许用户终止服务器实例。',
+        'user_create' => '允许用户为服务器创建新用户账户。',
+        'user_read' => '允许用户查看与此服务器关联的用户。',
+        'user_update' => '允许用户修改与此服务器关联的其他用户。',
+        'user_delete' => '允许用户删除与此服务器关联的其他用户。',
+        'file_create' => '允许用户创建新文件和目录。',
+        'file_read' => '允许用户查看与此服务器实例关联的文件和文件夹，以及查看其内容。',
+        'file_update' => '允许用户更新与服务器关联的文件和文件夹。',
+        'file_delete' => '允许用户删除文件和目录。',
+        'file_archive' => '允许用户创建文件档案并解压缩现有档案。',
+        'file_sftp' => '允许用户使用SFTP客户端执行上述文件操作。',
+        'allocation_read' => '允许访问服务器分配管理页面。',
+        'allocation_update' => '允许用户修改服务器的分配。',
+        'database_create' => '允许用户为服务器创建新数据库。',
+        'database_read' => '允许用户查看服务器数据库。',
+        'database_update' => '允许用户修改数据库。如果用户没有"查看密码"权限，他们将无法修改密码。',
+        'database_delete' => '允许用户删除数据库实例。',
+        'database_view_password' => '允许用户在系统中查看数据库密码。',
+        'schedule_create' => '允许用户为服务器创建新计划。',
+        'schedule_read' => '允许用户查看服务器计划。',
+        'schedule_update' => '允许用户修改现有服务器计划。',
+        'schedule_delete' => '允许用户删除服务器计划。',
+    ],
+];

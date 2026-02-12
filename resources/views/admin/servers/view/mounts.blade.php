@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
 @section('title')
-    Server — {{ $server->name }}: Mounts
+    服务器 — {{ $server->name }}: 挂载
 @endsection
 
 @section('content-header')
-    <h1>{{ $server->name }}<small>Manage server mounts.</small></h1>
+    <h1>{{ $server->name }}<small>管理服务器挂载。</small></h1>
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li><a href="{{ route('admin.servers') }}">Servers</a></li>
+        <li><a href="{{ route('admin.index') }}">管理员</a></li>
+        <li><a href="{{ route('admin.servers') }}">服务器</a></li>
         <li><a href="{{ route('admin.servers.view', $server->id) }}">{{ $server->name }}</a></li>
-        <li class="active">Mounts</li>
+        <li class="active">挂载</li>
     </ol>
 @endsection
 
@@ -21,17 +21,17 @@
         <div class="col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Available Mounts</h3>
+                    <h3 class="box-title">可用挂载</h3>
                 </div>
 
                 <div class="box-body table-responsible no-padding">
                     <table class="table table-hover">
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Source</th>
-                            <th>Target</th>
-                            <th>Status</th>
+                            <th>名称</th>
+                            <th>源</th>
+                            <th>目标</th>
+                            <th>状态</th>
                             <th></th>
                         </tr>
 
@@ -44,7 +44,7 @@
 
                                 @if (! in_array($mount->id, $server->mounts->pluck('id')->toArray()))
                                     <td class="col-sm-2 middle">
-                                        <span class="label label-primary">Unmounted</span>
+                                        <span class="label label-primary">未挂载</span>
                                     </td>
 
                                     <td class="col-sm-1 middle">
@@ -56,7 +56,7 @@
                                     </td>
                                 @else
                                     <td class="col-sm-2 middle">
-                                        <span class="label label-success">Mounted</span>
+                                        <span class="label label-success">已挂载</span>
                                     </td>
 
                                     <td class="col-sm-1 middle">

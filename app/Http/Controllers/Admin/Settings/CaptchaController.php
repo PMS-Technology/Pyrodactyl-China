@@ -12,7 +12,6 @@ use Pterodactyl\Services\Captcha\CaptchaManager;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Pterodactyl\Http\Requests\Admin\Settings\CaptchaSettingsFormRequest;
-use Pterodactyl\Enums\Captcha\Captchas;
 
 class CaptchaController extends Controller
 {
@@ -33,9 +32,13 @@ class CaptchaController extends Controller
      */
     public function index(): View
     {
-
         return $this->view->make('admin.settings.captcha', [
-            'providers' => Captchas::all(),
+            'providers' => [
+                'none' => 'Disabled',
+                'turnstile' => 'Cloudflare Turnstile',
+                'hcaptcha' => 'hCaptcha',
+                'recaptcha' => 'Google reCAPTCHA',
+            ],
         ]);
     }
 
@@ -48,13 +51,13 @@ class CaptchaController extends Controller
     public function update(CaptchaSettingsFormRequest $request): RedirectResponse
     {
         $values = $request->normalize();
-
+        
         foreach ($values as $key => $value) {
             // Encrypt secret keys before storing
             if (in_array($key, \Pterodactyl\Providers\SettingsServiceProvider::getEncryptedKeys()) && !empty($value)) {
                 $value = $this->encrypter->encrypt($value);
             }
-
+            
             $this->settings->set('settings::' . $key, $value);
         }
 

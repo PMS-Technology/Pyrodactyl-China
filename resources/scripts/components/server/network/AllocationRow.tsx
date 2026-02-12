@@ -1,4 +1,3 @@
-import { AntennaSignal, Check, Copy, CrownDiamond, TrashBin, Xmark } from '@gravity-ui/icons';
 import debounce from 'debounce';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import isEqual from 'react-fast-compare';
@@ -11,6 +10,12 @@ import { Textarea } from '@/components/elements/Input';
 import InputSpinner from '@/components/elements/InputSpinner';
 import Spinner from '@/components/elements/Spinner';
 import { Dialog } from '@/components/elements/dialog';
+import HugeIconsCheck from '@/components/elements/hugeicons/Check';
+import HugeIconsCopy from '@/components/elements/hugeicons/Copy';
+import HugeIconsCrown from '@/components/elements/hugeicons/Crown';
+import HugeIconsNetworkAntenna from '@/components/elements/hugeicons/NetworkAntenna';
+import HugeIconsTrash from '@/components/elements/hugeicons/Trash';
+import HugeIconsX from '@/components/elements/hugeicons/X';
 import { PageListItem } from '@/components/elements/pages/PageList';
 
 import { ip } from '@/lib/formatters';
@@ -90,7 +95,8 @@ const AllocationRow = ({ allocation }: Props) => {
     };
 
     const deleteAllocation = () => {
-        setShowDeleteDialog(false);
+        if (!confirm('您确定要删除此分配吗？')) return;
+
         clearFlashes();
         setDeleteLoading(true);
 
@@ -108,7 +114,7 @@ const AllocationRow = ({ allocation }: Props) => {
                 <div className='flex-1 min-w-0'>
                     <div className='flex items-center gap-3 mb-3'>
                         <div className='flex-shrink-0 w-8 h-8 rounded-lg bg-[#ffffff11] flex items-center justify-center'>
-                            <AntennaSignal width={22} height={22} fill='currentColor' className='text-zinc-400' />
+                            <HugeIconsNetworkAntenna fill='currentColor' className='text-zinc-400 w-4 h-4' />
                         </div>
                         <div className='min-w-0 flex-1'>
                             <div className='flex items-center flex-wrap gap-2'>
@@ -117,18 +123,16 @@ const AllocationRow = ({ allocation }: Props) => {
                                         <h3 className='text-base font-medium text-zinc-100 font-mono truncate'>
                                             {allocation.alias ? allocation.alias : ip(allocation.ip)}:{allocation.port}
                                         </h3>
-                                        <Copy
+                                        <HugeIconsCopy
                                             fill='currentColor'
-                                            width={22}
-                                            height={22}
-                                            className='text-zinc-500 group-hover:text-zinc-400 transition-colors'
+                                            className='w-3 h-3 text-zinc-500 group-hover:text-zinc-400 transition-colors'
                                         />
                                     </div>
                                 </CopyOnClick>
                                 {allocation.isDefault && (
                                     <span className='flex items-center gap-1 text-xs text-brand font-medium bg-brand/10 px-2 py-1 rounded'>
-                                        <CrownDiamond width={22} height={22} fill='currentColor' className='' />
-                                        Primary
+                                        <HugeIconsCrown fill='currentColor' className='w-3 h-3' />
+                                        主要
                                     </span>
                                 )}
                             </div>
@@ -137,7 +141,7 @@ const AllocationRow = ({ allocation }: Props) => {
 
                     {/* Notes Section - Inline Editable */}
                     <div className='mt-3'>
-                        <p className='text-xs text-zinc-500 uppercase tracking-wide mb-2'>Notes</p>
+                        <p className='text-xs text-zinc-500 uppercase tracking-wide mb-2'>备注</p>
 
                         {isEditingNotes ? (
                             <div className='space-y-2'>
@@ -145,7 +149,7 @@ const AllocationRow = ({ allocation }: Props) => {
                                     <Textarea
                                         ref={textareaRef}
                                         className='w-full bg-[#ffffff06] border border-[#ffffff08] rounded-lg p-3 text-sm text-zinc-300 placeholder-zinc-500 resize-none focus:ring-1 focus:ring-[#ffffff20] focus:border-[#ffffff20] transition-all'
-                                        placeholder='Add notes for this allocation...'
+                                        placeholder='为此分配添加备注...'
                                         value={notesValue}
                                         onChange={(e) => setNotesValue(e.currentTarget.value)}
                                         rows={3}
@@ -156,23 +160,25 @@ const AllocationRow = ({ allocation }: Props) => {
                                         {loading ? (
                                             <Spinner size='small' />
                                         ) : (
-                                            <Check fill='currentColor' className='w-3 h-3 mr-1' />
+                                            <HugeIconsCheck fill='currentColor' className='w-3 h-3 mr-1' />
                                         )}
-                                        Save
+                                        保存
                                     </ActionButton>
                                     <ActionButton variant='secondary' size='sm' onClick={cancelEdit} disabled={loading}>
-                                        <Xmark width={22} height={22} fill='currentColor' className='mr-1' />
-                                        Cancel
+                                        <HugeIconsX fill='currentColor' className='w-3 h-3 mr-1' />
+                                        取消
                                     </ActionButton>
                                 </div>
                             </div>
                         ) : (
                             <Can action={'allocation.update'}>
                                 <div
-                                    className={`min-h-[2.5rem] p-3 rounded-lg border border-[#ffffff08] bg-[#ffffff03] cursor-pointer hover:border-[#ffffff15] transition-colors ${allocation.notes ? 'text-sm text-zinc-300' : 'text-sm text-zinc-500 italic'}`}
+                                    className={`min-h-[2.5rem] p-3 rounded-lg border border-[#ffffff08] bg-[#ffffff03] cursor-pointer hover:border-[#ffffff15] transition-colors ${
+                                        allocation.notes ? 'text-sm text-zinc-300' : 'text-sm text-zinc-500 italic'
+                                    }`}
                                     onClick={startEdit}
                                 >
-                                    {allocation.notes || 'Click to add notes...'}
+                                    {allocation.notes || '点击添加备注...'}
                                 </div>
                             </Can>
                         )}
@@ -188,44 +194,35 @@ const AllocationRow = ({ allocation }: Props) => {
                             disabled={allocation.isDefault}
                             title={
                                 allocation.isDefault
-                                    ? 'This is already the primary allocation'
-                                    : 'Make this the primary allocation'
+                                    ? '这已经是主要分配'
+                                    : '将此设为主要分配'
                             }
                         >
-                            <CrownDiamond width={22} height={22} fill='currentColor' className='mr-1' />
-                            <span className='hidden sm:inline'>Make Primary</span>
-                            <span className='sm:hidden'>Primary</span>
+                            <HugeIconsCrown fill='currentColor' className='w-3 h-3 mr-1' />
+                            <span className='hidden sm:inline'>设为主要</span>
+                            <span className='sm:hidden'>主要</span>
                         </ActionButton>
                     </Can>
                     <Can action={'allocation.delete'}>
                         <ActionButton
                             variant='danger'
                             size='sm'
-                            onClick={() => setShowDeleteDialog(true)}
+                            onClick={deleteAllocation}
                             disabled={allocation.isDefault || deleteLoading}
                             title={
-                                allocation.isDefault ? 'Cannot delete the primary allocation' : 'Delete this allocation'
+                                allocation.isDefault ? '无法删除主要分配' : '删除此分配'
                             }
                         >
                             {deleteLoading ? (
                                 <Spinner size='small' />
                             ) : (
-                                <TrashBin width={22} height={22} fill='currentColor' className='mr-1' />
+                                <HugeIconsTrash fill='currentColor' className='w-3 h-3 mr-1' />
                             )}
-                            <span className='hidden sm:inline'>Delete</span>
+                            <span className='hidden sm:inline'>删除</span>
                         </ActionButton>
                     </Can>
                 </div>
             </div>
-            <Dialog.Confirm
-                open={showDeleteDialog}
-                onClose={() => setShowDeleteDialog(false)}
-                title={'Delete Allocation'}
-                confirm={'Delete'}
-                onConfirmed={deleteAllocation}
-            >
-                Are you sure you want to delete this allocation? This action cannot be undone.
-            </Dialog.Confirm>
         </PageListItem>
     );
 };

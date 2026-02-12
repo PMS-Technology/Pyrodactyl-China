@@ -5,16 +5,16 @@ namespace Pterodactyl\Services\Eggs;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Pterodactyl\Models\Server;
-use Illuminate\Support\Facades\Log;
 use Pterodactyl\Services\Servers\ServerConfigurationStructureService;
-
 
 class EggConfigurationService
 {
     /**
      * EggConfigurationService constructor.
      */
-    public function __construct(private ServerConfigurationStructureService $configurationStructureService) {}
+    public function __construct(private ServerConfigurationStructureService $configurationStructureService)
+    {
+    }
 
     /**
      * Return an Egg file to be used by the Daemon.
@@ -92,6 +92,7 @@ class EggConfigurationService
             }
 
             $append = array_merge((array) $data, ['file' => $file, 'replace' => []]);
+
             foreach ($this->iterate($data->find, $structure) as $find => $replace) {
                 if (is_object($replace)) {
                     foreach ($replace as $match => $replaceWith) {

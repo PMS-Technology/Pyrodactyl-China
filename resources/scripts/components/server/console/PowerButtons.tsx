@@ -61,11 +61,11 @@ const PowerButtons = ({ className }: PowerButtonProps) => {
                 open={open}
                 hideCloseIcon
                 onClose={() => setOpen(false)}
-                title={'Forcibly Stop Process'}
-                confirm={'Continue'}
+                title={'强制停止进程'}
+                confirm={'继续'}
                 onConfirmed={onButtonClick.bind(this, 'kill-confirmed')}
             >
-                Forcibly stopping a server can lead to data corruption.
+                强制停止服务器可能导致数据损坏。
             </Dialog.Confirm>
             <Can action={'control.start'}>
                 <button
@@ -86,7 +86,7 @@ const PowerButtons = ({ className }: PowerButtonProps) => {
                     disabled={status !== 'offline'}
                     onClick={onButtonClick.bind(this, 'start')}
                 >
-                    Start
+                    启动
                 </button>
             </Can>
             <Can action={'control.restart'}>
@@ -99,7 +99,7 @@ const PowerButtons = ({ className }: PowerButtonProps) => {
                     disabled={!status}
                     onClick={onButtonClick.bind(this, 'restart')}
                 >
-                    Restart
+                    重启
                 </button>
             </Can>
             <Can action={'control.stop'}>
@@ -121,7 +121,7 @@ const PowerButtons = ({ className }: PowerButtonProps) => {
                     disabled={status === 'offline'}
                     onClick={onButtonClick.bind(this, killable ? 'kill' : 'stop')}
                 >
-                    {killable ? 'Kill' : 'Stop'}
+                    {killable ? '强制停止' : '停止'}
                 </button>
             </Can>
         </div>

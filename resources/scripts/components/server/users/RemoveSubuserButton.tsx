@@ -1,9 +1,9 @@
-import { TrashBin } from '@gravity-ui/icons';
 import { Actions, useStoreActions } from 'easy-peasy';
 import { useState } from 'react';
 
 import ActionButton from '@/components/elements/ActionButton';
 import ConfirmationModal from '@/components/elements/ConfirmationModal';
+import HugeIconsTrash from '@/components/elements/hugeicons/Trash';
 
 import { httpErrorToHuman } from '@/api/http';
 import deleteSubuser from '@/api/server/users/deleteSubuser';
@@ -39,14 +39,14 @@ const RemoveSubuserButton = ({ subuser }: { subuser: Subuser }) => {
     return (
         <>
             <ConfirmationModal
-                title={`Remove ${subuser.username}?`}
-                buttonText={`Remove ${subuser.username}`}
+                title={`移除 ${subuser.username}?`}
+                buttonText={`移除 ${subuser.username}`}
                 visible={showConfirmation}
                 loading={loading}
                 onConfirmed={() => doDeletion()}
                 onModalDismissed={() => setShowConfirmation(false)}
             >
-                All access to the server will be removed immediately.
+                对该服务器的所有访问权限将立即被移除。
             </ConfirmationModal>
             <ActionButton
                 variant='danger'
@@ -55,8 +55,8 @@ const RemoveSubuserButton = ({ subuser }: { subuser: Subuser }) => {
                 onClick={() => setShowConfirmation(true)}
                 aria-label='Delete subuser'
             >
-                <TrashBin width={22} height={22} fill='currentColor' className='w-4 h-4' />
-                Delete
+                <HugeIconsTrash fill='currentColor' className='w-4 h-4' />
+                删除
             </ActionButton>
         </>
     );

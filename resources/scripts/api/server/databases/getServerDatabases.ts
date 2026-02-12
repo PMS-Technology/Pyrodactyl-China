@@ -1,5 +1,4 @@
 import http from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 
 export interface ServerDatabase {
     id: string;
@@ -20,10 +19,8 @@ export const rawDataToServerDatabase = (data: any): ServerDatabase => ({
 });
 
 export default (uuid: string, includePassword = true): Promise<ServerDatabase[]> => {
-    const daemonType = getGlobalDaemonType();
-
     return new Promise((resolve, reject) => {
-        http.get(`/api/client/servers/${daemonType}/${uuid}/databases`, {
+        http.get(`/api/client/servers/${uuid}/databases`, {
             params: includePassword ? { include: 'password' } : undefined,
         })
             .then((response) =>

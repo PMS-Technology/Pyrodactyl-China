@@ -25,6 +25,7 @@ import useFlash from '@/plugins/useFlash';
 // TODO: Port modern dropdowns to Formik and integrate them
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/elements/DropdownMenu';
 // import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+// import HugeIconsArrowUp from '@/components/elements/hugeicons/ArrowUp';
 
 const Label = styled.label`
     display: inline-block;
@@ -51,15 +52,15 @@ const schema = object().shape({
     action: string().required().oneOf(['command', 'power', 'backup']),
     payload: string().when('action', {
         is: (v) => v !== 'backup',
-        then: () => string().required('A task payload must be provided.'),
+        then: () => string().required('必须提供任务载荷。'),
         otherwise: () => string(),
     }),
     continueOnFailure: boolean(),
     timeOffset: number()
-        .typeError('The time offset must be a valid number between 0 and 900.')
-        .required('A time offset value must be provided.')
-        .min(0, 'The time offset must be at least 0 seconds.')
-        .max(900, 'The time offset must be less than 900 seconds.'),
+        .typeError('时间偏移量必须是0到900之间的有效数字。')
+        .required('必须提供时间偏移量。')
+        .min(0, '时间偏移量必须至少为0秒。')
+        .max(900, '时间偏移量必须小于900秒。'),
 });
 
 const ActionListener = () => {
@@ -94,7 +95,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
     }, []);
 
     useEffect(() => {
-        setPropOverrides({ title: task ? 'Edit Task' : 'Create Task' });
+        setPropOverrides({ title: task ? '编辑任务' : '创建任务' });
     }, []);
 
     const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
@@ -102,7 +103,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
         if (backupLimit === 0 && values.action === 'backup') {
             setSubmitting(false);
             addError({
-                message: "A backup task cannot be created when the server's backup limit is set to 0.",
+                message: "当服务器的备份限制设置为0时，无法创建备份任务。",
                 key: 'schedule:task',
             });
         } else {
@@ -141,7 +142,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                         <FlashMessageRender byKey={'schedule:task'} />
                         <div className={`flex flex-col gap-3`}>
                             <div>
-                                <Label>Action</Label>
+                                <Label>操作</Label>
                                 <ActionListener />
                                 <FormikFieldWrapper name={'action'}>
                                     <FormikField
@@ -150,13 +151,13 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                                         name={'action'}
                                     >
                                         <option className='bg-black' value={'command'}>
-                                            Send command
+                                            发送命令
                                         </option>
                                         <option className='bg-black' value={'power'}>
-                                            Power
+                                            电源
                                         </option>
                                         <option className='bg-black' value={'backup'}>
-                                            Create backup
+                                            创建备份
                                         </option>
                                     </FormikField>
                                 </FormikFieldWrapper>
@@ -164,9 +165,9 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                             <div>
                                 <Field
                                     name={'timeOffset'}
-                                    label={'Time offset (in seconds)'}
+                                    label={'时间偏移量（秒）'}
                                     description={
-                                        'The amount of time to wait after the previous task executes before running this one. If this is the first task on a schedule this will not be applied.'
+                                        '在前一个任务执行后等待的时间，然后运行此任务。如果这是计划中的第一个任务，则不会应用此设置。'
                                     }
                                 />
                             </div>
@@ -174,7 +175,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                         <div className={`my-6`}>
                             {values.action === 'command' ? (
                                 <div>
-                                    <Label>Payload</Label>
+                                    <Label>载荷</Label>
                                     <FormikFieldWrapper name={'payload'}>
                                         <FormikField
                                             className='w-full rounded-xl p-2 bg-[#ffffff11]'
@@ -186,7 +187,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                                 </div>
                             ) : values.action === 'power' ? (
                                 <div>
-                                    <Label>Payload</Label>
+                                    <Label>载荷</Label>
                                     <FormikFieldWrapper name={'payload'}>
                                         <FormikField
                                             className='px-4 py-2 bg-[#ffffff11] rounded-lg min-w-full'
@@ -194,27 +195,27 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                                             name={'payload'}
                                         >
                                             <option className='bg-black' value={'start'}>
-                                                Start the server
+                                                启动服务器
                                             </option>
                                             <option className='bg-black' value={'restart'}>
-                                                Restart the server
+                                                重启服务器
                                             </option>
                                             <option className='bg-black' value={'stop'}>
-                                                Stop the server
+                                                停止服务器
                                             </option>
                                             <option className='bg-black' value={'kill'}>
-                                                Terminate the server
+                                                终止服务器
                                             </option>
                                         </FormikField>
                                     </FormikFieldWrapper>
                                 </div>
                             ) : (
                                 <div>
-                                    <Label>Ignored files (optional)</Label>
+                                    <Label>忽略的文件（可选）</Label>
                                     <FormikFieldWrapper
                                         name={'payload'}
                                         description={
-                                            'Include the files and folders to be excluded in this backup. By default, the contents of your .pyroignore file will be used. If you have reached your backup limit, the oldest backup will be rotated.'
+                                            '包含在此备份中要排除的文件和文件夹。默认情况下，将使用您的.pteroignore文件的内容。如果您已达到备份限制，最旧的备份将被轮换。'
                                         }
                                     >
                                         <FormikField
@@ -229,12 +230,12 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                         </div>
                         <FormikSwitchV2
                             name={'continueOnFailure'}
-                            description={'Future tasks will be run if this task fails.'}
-                            label={'Continue on Failure'}
+                            description={'如果此任务失败，未来的任务将继续运行。'}
+                            label={'失败时继续'}
                         />
                         <div className={`flex justify-end my-6`}>
                             <ActionButton variant='primary' type={'submit'} disabled={isSubmitting}>
-                                {task ? 'Save Changes' : 'Create Task'}
+                                {task ? '保存更改' : '创建任务'}
                             </ActionButton>
                         </div>
                     </Form>

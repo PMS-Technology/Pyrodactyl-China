@@ -147,7 +147,7 @@ const UploadButton = () => {
                                     'flex-1 text-lg font-bold tracking-tight text-center truncate w-full relative px-4'
                                 }
                             >
-                                Upload to {name}
+                                上传到 {name}
                             </h1>
                         </div>
                     </div>
@@ -171,7 +171,7 @@ const UploadButton = () => {
                 variant='secondary'
                 onClick={() => fileUploadInput.current && fileUploadInput.current.click()}
             >
-                Upload
+                上传
             </ActionButton>
         </>
     );

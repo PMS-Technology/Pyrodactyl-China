@@ -1,4 +1,3 @@
-import { Eye, EyeSlash, Key, Plus, TrashBin } from '@gravity-ui/icons';
 import { format } from 'date-fns';
 import { Actions, useStoreActions } from 'easy-peasy';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
@@ -14,6 +13,11 @@ import { MainPageHeader } from '@/components/elements/MainPageHeader';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { Dialog } from '@/components/elements/dialog';
+import HugeIconsEye from '@/components/elements/hugeicons/Eye';
+import HugeIconsEyeSlash from '@/components/elements/hugeicons/EyeSlash';
+import HugeIconsKey from '@/components/elements/hugeicons/Key';
+import HugeIconsPlus from '@/components/elements/hugeicons/Plus';
+import HugeIconsTrash from '@/components/elements/hugeicons/Trash';
 
 import { createSSHKey, deleteSSHKey, useSSHKeys } from '@/api/account/ssh-keys';
 import { httpErrorToHuman } from '@/api/http';
@@ -84,7 +88,7 @@ const AccountSSHContainer = () => {
     };
 
     return (
-        <PageContentBlock title={'SSH Keys'}>
+        <PageContentBlock title={'SSH密钥'}>
             <FlashMessageRender byKey='account:ssh-keys' />
 
             {/* Create SSH Key Modal */}
@@ -92,8 +96,8 @@ const AccountSSHContainer = () => {
                 <Dialog.Confirm
                     open={showCreateModal}
                     onClose={() => setShowCreateModal(false)}
-                    title='Add SSH Key'
-                    confirm='Add Key'
+                    title='添加SSH密钥'
+                    confirm='添加密钥'
                     onConfirmed={() => {
                         const form = document.getElementById('create-ssh-form') as HTMLFormElement;
                         if (form) {
@@ -106,8 +110,8 @@ const AccountSSHContainer = () => {
                         onSubmit={submitCreate}
                         initialValues={{ name: '', publicKey: '' }}
                         validationSchema={object().shape({
-                            name: string().required('SSH Key Name is required'),
-                            publicKey: string().required('Public Key is required'),
+                            name: string().required('SSH密钥名称是必需的'),
+                            publicKey: string().required('公钥是必需的'),
                         })}
                     >
                         {({ isSubmitting }) => (
@@ -115,17 +119,17 @@ const AccountSSHContainer = () => {
                                 <SpinnerOverlay visible={isSubmitting} />
 
                                 <FormikFieldWrapper
-                                    label='SSH Key Name'
+                                    label='SSH密钥名称'
                                     name='name'
-                                    description='A name to identify this SSH key.'
+                                    description='用于标识此SSH密钥的名称。'
                                 >
                                     <Field name='name' as={Input} className='w-full' />
                                 </FormikFieldWrapper>
 
                                 <FormikFieldWrapper
-                                    label='Public Key'
+                                    label='公钥'
                                     name='publicKey'
-                                    description='Enter your public SSH key.'
+                                    description='输入您的公钥SSH密钥。'
                                 >
                                     <Field name='publicKey' as={Input} className='w-full' />
                                 </FormikFieldWrapper>
@@ -147,15 +151,15 @@ const AccountSSHContainer = () => {
                     }}
                 >
                     <MainPageHeader
-                        title='SSH Keys'
+                        title='SSH密钥'
                         titleChildren={
                             <ActionButton
                                 variant='primary'
                                 onClick={() => setShowCreateModal(true)}
                                 className='flex items-center gap-2'
                             >
-                                <Plus width={22} height={22} fill='currentColor' />
-                                Add SSH Key
+                                <HugeIconsPlus className='w-4 h-4' fill='currentColor' />
+                                添加SSH密钥
                             </ActionButton>
                         }
                     />
@@ -172,26 +176,25 @@ const AccountSSHContainer = () => {
                     <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-4 sm:p-6 shadow-sm'>
                         <SpinnerOverlay visible={!data && isValidating} />
                         <Dialog.Confirm
-                            title={'Delete SSH Key'}
-                            confirm={'Delete Key'}
+                            title={'删除SSH密钥'}
+                            confirm={'删除密钥'}
                             open={!!deleteKey}
                             onClose={() => setDeleteKey(null)}
                             onConfirmed={doDeletion}
                         >
-                            Removing the <Code>{deleteKey?.name}</Code> SSH key will invalidate its usage across the
-                            Panel.
+                            删除 <Code>{deleteKey?.name}</Code> SSH密钥将使其在整个面板中的使用无效。
                         </Dialog.Confirm>
 
                         {!data || data.length === 0 ? (
                             <div className='text-center py-12'>
                                 <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-[#ffffff11] flex items-center justify-center'>
-                                    <Key width={22} height={22} className='text-zinc-400' fill='currentColor' />
+                                    <HugeIconsKey className='w-8 h-8 text-zinc-400' fill='currentColor' />
                                 </div>
-                                <h3 className='text-lg font-medium text-zinc-200 mb-2'>No SSH Keys</h3>
+                                <h3 className='text-lg font-medium text-zinc-200 mb-2'>无SSH密钥</h3>
                                 <p className='text-sm text-zinc-400 max-w-sm mx-auto'>
                                     {!data
-                                        ? 'Loading your SSH keys...'
-                                        : "You haven't added any SSH keys yet. Add one to securely access your servers."}
+                                        ? '正在加载您的SSH密钥...'
+                                        : "您尚未添加任何SSH密钥。添加一个以安全地访问您的服务器。"}
                                 </p>
                             </div>
                         ) : (
@@ -215,9 +218,9 @@ const AccountSSHContainer = () => {
                                                         </h4>
                                                     </div>
                                                     <div className='flex items-center gap-4 text-xs text-zinc-400'>
-                                                        <span>Added: {format(key.createdAt, 'MMM d, yyyy HH:mm')}</span>
+                                                        <span>添加时间: {format(key.createdAt, 'yyyy年M月d日 HH:mm')}</span>
                                                         <div className='flex items-center gap-2'>
-                                                            <span>Fingerprint:</span>
+                                                            <span>指纹:</span>
                                                             <code className='font-mono px-2 py-1 bg-[#ffffff08] border border-[#ffffff08] rounded text-zinc-300'>
                                                                 {showKeys[key.fingerprint]
                                                                     ? `SHA256:${key.fingerprint}`
@@ -230,13 +233,15 @@ const AccountSSHContainer = () => {
                                                                 className='p-1 text-zinc-400 hover:text-zinc-300'
                                                             >
                                                                 {showKeys[key.fingerprint] ? (
-                                                                    <EyeSlash
-                                                                        width={18}
-                                                                        height={18}
+                                                                    <HugeIconsEyeSlash
+                                                                        className='w-3 h-3'
                                                                         fill='currentColor'
                                                                     />
                                                                 ) : (
-                                                                    <Eye width={18} height={18} fill='currentColor' />
+                                                                    <HugeIconsEye
+                                                                        className='w-3 h-3'
+                                                                        fill='currentColor'
+                                                                    />
                                                                 )}
                                                             </ActionButton>
                                                         </div>
@@ -250,7 +255,7 @@ const AccountSSHContainer = () => {
                                                         setDeleteKey({ name: key.name, fingerprint: key.fingerprint })
                                                     }
                                                 >
-                                                    <TrashBin width={20} height={20} fill='currentColor' />
+                                                    <HugeIconsTrash className='w-4 h-4' fill='currentColor' />
                                                 </ActionButton>
                                             </div>
                                         </div>

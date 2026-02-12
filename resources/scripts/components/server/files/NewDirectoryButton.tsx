@@ -45,7 +45,7 @@ const schema = object().shape({
 // });
 
 const NewDirectoryDialog = asDialog({
-    title: 'New Folder',
+    title: '新建文件夹',
 })(() => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
@@ -77,7 +77,7 @@ const NewDirectoryDialog = asDialog({
                 <>
                     <FlashMessageRender byKey='files:directory-modal' />
                     <Form className={`m-0`}>
-                        <Field autoFocus id={'directoryName'} name={'directoryName'} label={'Name'} />
+                        <Field autoFocus id={'directoryName'} name={'directoryName'} label={'名称'} />
                         <p className={`mt-2 text-xs! break-all`}>
                             <span className={`text-zinc-200`}>This folder will be created as&nbsp;</span>
                             <Code>
@@ -90,10 +90,10 @@ const NewDirectoryDialog = asDialog({
                     </Form>
                     <Dialog.Footer>
                         <ActionButton variant='secondary' className={'w-full sm:w-auto'} onClick={close}>
-                            Cancel
+                            取消
                         </ActionButton>
                         <ActionButton variant='primary' className={'w-full sm:w-auto'} onClick={submitForm}>
-                            Create
+                            创建
                         </ActionButton>
                     </Dialog.Footer>
                 </>
@@ -109,7 +109,7 @@ const NewDirectoryButton = () => {
         <>
             <NewDirectoryDialog open={open} onClose={setOpen.bind(this, false)} />
             <ActionButton variant='secondary' onClick={setOpen.bind(this, true)}>
-                New Folder
+                新建文件夹
             </ActionButton>
         </>
     );

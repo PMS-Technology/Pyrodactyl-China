@@ -41,18 +41,18 @@ function LoginCheckpointForm() {
                     </div>
                 </Link>
                 <div aria-hidden className='my-8 bg-[#ffffff33] min-h-[1px]'></div>
-                <h2 className='text-xl font-extrabold mb-2'>Two Factor Authentication</h2>
-                <div className='text-sm mb-6'>Check device linked with your account for code.</div>
+                <h2 className='text-xl font-extrabold mb-2'>双重身份验证</h2>
+                <div className='text-sm mb-6'>请检查与您账户关联的设备以获取验证码。</div>
 
                 <div className={`mt-6`}>
                     <Field
                         name={isMissingDevice ? 'recoveryCode' : 'code'}
-                        title={isMissingDevice ? 'Recovery Code' : 'Authentication Code'}
+                        title={isMissingDevice ? '恢复代码' : '验证码'}
                         placeholder='000000'
                         description={
                             isMissingDevice
-                                ? 'Enter one of the recovery codes generated when you setup 2-Factor authentication on this account in order to continue.'
-                                : 'Enter the two-factor token displayed by your device.'
+                                ? '输入您在为此账户设置双重身份验证时生成的其中一个恢复代码以继续。'
+                                : '输入您设备上显示的双重身份验证令牌。'
                         }
                         type={'text'}
                         autoComplete={'one-time-code'}
@@ -67,7 +67,7 @@ function LoginCheckpointForm() {
                         disabled={isSubmitting}
                         isLoading={isSubmitting}
                     >
-                        Login
+                        登录
                     </Button>
                 </div>
                 <div aria-hidden className='my-8 bg-[#ffffff33] min-h-[1px]'></div>
@@ -86,7 +86,7 @@ function LoginCheckpointForm() {
                             'block w-full text-center py-2.5 px-4 text-xs font-medium tracking-wide uppercase text-white hover:text-white/80 transition-colors duration-200 border border-white/20 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30'
                         }
                     >
-                        {!isMissingDevice ? "I've Lost My Device" : 'I Have My Device'}
+                        {!isMissingDevice ? '我的设备丢失了' : '我有我的设备'}
                     </span>
                 </div>
                 <div
@@ -98,7 +98,7 @@ function LoginCheckpointForm() {
                             'block w-full text-center py-2.5 px-4 text-xs font-medium tracking-wide uppercase text-white hover:text-white/80 transition-colors duration-200 border border-white/20 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30'
                         }
                     >
-                        Return to Login
+                        返回登录
                     </Link>
                 </div>
             </LoginFormContainer>

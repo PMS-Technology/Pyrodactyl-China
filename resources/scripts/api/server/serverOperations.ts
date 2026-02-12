@@ -1,7 +1,6 @@
 import React from 'react';
 
 import http from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 
 /**
  * Server operation status constants.
@@ -51,7 +50,7 @@ export interface ApplyEggChangeAsyncResponse {
  * Get specific operation status by ID.
  */
 export const getOperationStatus = async (uuid: string, operationId: string): Promise<ServerOperation> => {
-    const { data } = await http.get(`/api/client/servers/${getGlobalDaemonType()}/${uuid}/operations/${operationId}`);
+    const { data } = await http.get(`/api/client/servers/${uuid}/operations/${operationId}`);
     return data;
 };
 
@@ -59,7 +58,7 @@ export const getOperationStatus = async (uuid: string, operationId: string): Pro
  * Get all operations for a server.
  */
 export const getServerOperations = async (uuid: string): Promise<{ operations: ServerOperation[] }> => {
-    const { data } = await http.get(`/api/client/servers/${getGlobalDaemonType()}/${uuid}/operations`);
+    const { data } = await http.get(`/api/client/servers/${uuid}/operations`);
     return data;
 };
 

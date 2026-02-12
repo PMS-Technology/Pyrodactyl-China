@@ -1,4 +1,3 @@
-import { Database, Eye, TrashBin } from '@gravity-ui/icons';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -12,6 +11,9 @@ import Field from '@/components/elements/Field';
 import Input from '@/components/elements/Input';
 import Modal from '@/components/elements/Modal';
 import Spinner from '@/components/elements/Spinner';
+import HugeIconsDatabase from '@/components/elements/hugeicons/Database';
+import HugeIconsEye from '@/components/elements/hugeicons/Eye';
+import HugeIconsTrash from '@/components/elements/hugeicons/Trash';
 import { PageListItem } from '@/components/elements/pages/PageList';
 import RotatePasswordButton from '@/components/server/databases/RotatePasswordButton';
 
@@ -43,7 +45,9 @@ const DatabaseRow = ({ database }: Props) => {
     const appendDatabase = ServerContext.useStoreActions((actions) => actions.databases.appendDatabase);
     const removeDatabase = ServerContext.useStoreActions((actions) => actions.databases.removeDatabase);
 
-    const jdbcConnectionString = `jdbc:mysql://${database.username}${database.password ? `:${encodeURIComponent(database.password)}` : ''}@${database.connectionString}/${database.name}`;
+    const jdbcConnectionString = `jdbc:mysql://${database.username}${
+        database.password ? `:${encodeURIComponent(database.password)}` : ''
+    }@${database.connectionString}/${database.name}`;
 
     const schema = object().shape({
         confirm: string()
@@ -83,21 +87,20 @@ const DatabaseRow = ({ database }: Props) => {
                             setVisible(false);
                             resetForm();
                         }}
-                        title='Confirm database deletion'
+                        title='确认删除数据库'
                     >
                         <FlashMessageRender byKey={'database:delete'} />
                         <div className='flex flex-col'>
                             <p>
-                                Deleting a database is a permanent action, it cannot be undone. This will permanently
-                                delete the <strong>{database.name}</strong> database and remove all its data.
+                                删除数据库是一个永久性操作，无法撤销。这将永久删除 <strong>{database.name}</strong> 数据库并移除所有数据。
                             </p>
                             <Form className='mt-6'>
                                 <Field
                                     type={'text'}
                                     id={'confirm_name'}
                                     name={'confirm'}
-                                    label={'Confirm Database Name'}
-                                    description={'Enter the database name to confirm deletion.'}
+                                    label={'确认数据库名称'}
+                                    description={'输入数据库名称以确认删除。'}
                                 />
                                 <ActionButton
                                     variant='danger'
@@ -106,7 +109,7 @@ const DatabaseRow = ({ database }: Props) => {
                                     disabled={!isValid || isSubmitting}
                                 >
                                     {isSubmitting && <Spinner size='small' />}
-                                    {isSubmitting ? 'Deleting...' : 'Delete Database'}
+                                    {isSubmitting ? '删除中...' : '删除数据库'}
                                 </ActionButton>
                             </Form>
                         </div>
@@ -116,7 +119,7 @@ const DatabaseRow = ({ database }: Props) => {
 
             <Modal
                 visible={connectionVisible}
-                title='Database connection details'
+                title='数据库连接详情'
                 closeButton={true}
                 onDismissed={() => setConnectionVisible(false)}
             >
@@ -124,26 +127,26 @@ const DatabaseRow = ({ database }: Props) => {
                 <div className='flex flex-col min-w-full gap-4'>
                     <div className='grid gap-4 sm:grid-cols-2 min-w-full'>
                         <div className='flex flex-col'>
-                            <Label>Endpoint</Label>
+                            <Label>连接点</Label>
                             <CopyOnClick text={database.connectionString}>
                                 <Input type={'text'} readOnly value={database.connectionString} />
                             </CopyOnClick>
                         </div>
                         <div className='flex flex-col'>
-                            <Label>Connections from</Label>
+                            <Label>连接来源</Label>
                             <CopyOnClick text={database.allowConnectionsFrom}>
                                 <Input type={'text'} readOnly value={database.allowConnectionsFrom} />
                             </CopyOnClick>
                         </div>
                         <div className='flex flex-col'>
-                            <Label>Username</Label>
+                            <Label>用户名</Label>
                             <CopyOnClick text={database.username}>
                                 <Input type={'text'} readOnly value={database.username} />
                             </CopyOnClick>
                         </div>
                         <Can action={'database.view_password'}>
                             <div className='flex flex-col'>
-                                <Label>Password</Label>
+                                <Label>密码</Label>
                                 <div className='flex flex-row min-w-full gap-2'>
                                     <CopyOnClick text={database.password} showInNotification={false}>
                                         <Input
@@ -162,7 +165,7 @@ const DatabaseRow = ({ database }: Props) => {
                     </div>
                     <div className='flex flex-col'>
                         <div className='flex flex-row gap-2 align-middle items-center'>
-                            <Label>JDBC Connection String</Label>
+                            <Label>JDBC 连接字符串</Label>
                         </div>
                         <CopyOnClick text={jdbcConnectionString} showInNotification={false}>
                             <Input type={'password'} readOnly value={jdbcConnectionString} />
@@ -176,7 +179,7 @@ const DatabaseRow = ({ database }: Props) => {
                     <div className='flex-1 min-w-0'>
                         <div className='flex items-center gap-3 mb-2'>
                             <div className='flex-shrink-0 w-8 h-8 rounded-lg bg-[#ffffff11] flex items-center justify-center'>
-                                <Database fill='currentColor' className='text-zinc-400 w-4 h-4' />
+                                <HugeIconsDatabase fill='currentColor' className='text-zinc-400 w-4 h-4' />
                             </div>
                             <div className='min-w-0 flex-1'>
                                 <CopyOnClick text={database.name}>
@@ -187,19 +190,19 @@ const DatabaseRow = ({ database }: Props) => {
 
                         <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm'>
                             <div>
-                                <p className='text-xs text-zinc-500 uppercase tracking-wide mb-1'>Endpoint</p>
+                                <p className='text-xs text-zinc-500 uppercase tracking-wide mb-1'>连接点</p>
                                 <CopyOnClick text={database.connectionString}>
                                     <p className='text-zinc-300 font-mono truncate'>{database.connectionString}</p>
                                 </CopyOnClick>
                             </div>
                             <div>
-                                <p className='text-xs text-zinc-500 uppercase tracking-wide mb-1'>From</p>
+                                <p className='text-xs text-zinc-500 uppercase tracking-wide mb-1'>来源</p>
                                 <CopyOnClick text={database.allowConnectionsFrom}>
                                     <p className='text-zinc-300 font-mono truncate'>{database.allowConnectionsFrom}</p>
                                 </CopyOnClick>
                             </div>
                             <div>
-                                <p className='text-xs text-zinc-500 uppercase tracking-wide mb-1'>Username</p>
+                                <p className='text-xs text-zinc-500 uppercase tracking-wide mb-1'>用户名</p>
                                 <CopyOnClick text={database.username}>
                                     <p className='text-zinc-300 font-mono truncate'>{database.username}</p>
                                 </CopyOnClick>
@@ -214,8 +217,8 @@ const DatabaseRow = ({ database }: Props) => {
                             onClick={() => setConnectionVisible(true)}
                             className='flex items-center gap-2'
                         >
-                            <Eye fill='currentColor' className='w-4 h-4' />
-                            <span className='hidden sm:inline'>Details</span>
+                            <HugeIconsEye fill='currentColor' className='w-4 h-4' />
+                            <span className='hidden sm:inline'>详情</span>
                         </ActionButton>
                         <Can action={'database.delete'}>
                             <ActionButton
@@ -224,8 +227,8 @@ const DatabaseRow = ({ database }: Props) => {
                                 onClick={() => setVisible(true)}
                                 className='flex items-center gap-2'
                             >
-                                <TrashBin fill='currentColor' className='w-4 h-4' />
-                                <span className='hidden sm:inline'>Delete</span>
+                                <HugeIconsTrash fill='currentColor' className='w-4 h-4' />
+                                <span className='hidden sm:inline'>删除</span>
                             </ActionButton>
                         </Can>
                     </div>

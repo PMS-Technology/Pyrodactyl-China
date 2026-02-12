@@ -57,13 +57,12 @@ const NetworkContainer = () => {
     };
 
     return (
-        <ServerContentBlock title={'Network'}>
+        <ServerContentBlock title={'网络'}>
             <FlashMessageRender byKey={'server:network'} />
 
-            <MainPageHeader direction='column' title={'Networking'}>
+            <MainPageHeader direction='column' title={'网络'}>
                 <p className='text-sm text-neutral-400 leading-relaxed'>
-                    Configure network settings for your server. Manage subdomains, IP addresses and ports that your
-                    server can bind to for incoming connections.
+                    配置服务器的网络设置。管理子域名、IP 地址和端口，这些是您的服务器用于接收传入连接的绑定设置。
                 </p>
             </MainPageHeader>
 
@@ -72,29 +71,28 @@ const NetworkContainer = () => {
 
                 <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-6 shadow-sm mt-8'>
                     <div className='flex items-center justify-between mb-6'>
-                        <h3 className='text-xl font-extrabold tracking-tight'>Port Allocations</h3>
+                        <h3 className='text-xl font-extrabold tracking-tight'>端口分配</h3>
                         {data && (
                             <Can action={'allocation.create'}>
                                 <div className='flex items-center gap-4'>
                                     {allocationLimit === null && (
                                         <span className='text-sm text-zinc-400 bg-[#ffffff08] px-3 py-1 rounded-lg border border-[#ffffff15]'>
-                                            {data.length} allocations (unlimited)
+                                            {data.filter((allocation) => !allocation.isDefault).length} 个分配 (无限制)
                                         </span>
                                     )}
                                     {allocationLimit > 0 && (
                                         <span className='text-sm text-zinc-400 bg-[#ffffff08] px-3 py-1 rounded-lg border border-[#ffffff15]'>
-                                            {data.length} of {allocationLimit}
+                                            {data.filter((allocation) => !allocation.isDefault).length} / {allocationLimit}
                                         </span>
                                     )}
                                     {allocationLimit === 0 && (
                                         <span className='text-sm text-red-400 bg-[#ffffff08] px-3 py-1 rounded-lg border border-[#ffffff15]'>
-                                            Allocations disabled
+                                            分配已禁用
                                         </span>
                                     )}
-                                    {(allocationLimit === null ||
-                                        (allocationLimit > 0 && allocationLimit > data.length)) && (
+                                    {(allocationLimit === null || (allocationLimit > 0 && allocationLimit > data.filter((allocation) => !allocation.isDefault).length)) && (
                                         <ActionButton variant='primary' onClick={onCreateAllocation} size='sm'>
-                                            New Allocation
+                                            新建分配
                                         </ActionButton>
                                     )}
                                 </div>
@@ -106,7 +104,7 @@ const NetworkContainer = () => {
                         <div className='flex items-center justify-center py-12'>
                             <div className='flex flex-col items-center gap-3'>
                                 <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-brand'></div>
-                                <p className='text-sm text-neutral-400'>Loading allocations...</p>
+                                <p className='text-sm text-neutral-400'>加载分配中...</p>
                             </div>
                         </div>
                     ) : data.length > 0 ? (
@@ -133,12 +131,12 @@ const NetworkContainer = () => {
                                     </svg>
                                 </div>
                                 <h4 className='text-lg font-medium text-zinc-200 mb-2'>
-                                    {allocationLimit === 0 ? 'Allocations unavailable' : 'No allocations found'}
+                                    {allocationLimit === 0 ? '分配不可用' : '未找到分配'}
                                 </h4>
                                 <p className='text-sm text-zinc-400 max-w-sm text-center'>
                                     {allocationLimit === 0
-                                        ? 'Network allocations cannot be created for this server.'
-                                        : 'Create your first allocation to get started.'}
+                                        ? '此服务器无法创建网络分配。'
+                                        : '创建您的第一个分配以开始使用。'}
                                 </p>
                             </div>
                         </div>

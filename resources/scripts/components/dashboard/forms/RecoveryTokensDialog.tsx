@@ -19,9 +19,9 @@ const RecoveryTokensDialog = ({ tokens, open, onClose }: RecoveryTokenDialogProp
         <Dialog
             open={open}
             onClose={onClose}
-            title={'Authenticator App Enabled'}
+            title={'身份验证器应用已启用'}
             description={
-                'Store the codes below somewhere safe. If you lose access to your authenticator app you can use these backup codes to sign in.'
+                '请将以下代码存储在安全的地方。如果您无法访问身份验证器应用，可以使用这些备份代码登录。'
             }
             hideCloseIcon
             preventExternalClose
@@ -40,11 +40,11 @@ const RecoveryTokensDialog = ({ tokens, open, onClose }: RecoveryTokenDialogProp
                 </pre>
             </CopyOnClick>
             <Alert type={'danger'} className={'mt-3'}>
-                These codes will not be shown again.
+                这些代码将不会再次显示。
             </Alert>
             <Dialog.Footer>
                 <ActionButton variant='primary' onClick={onClose}>
-                    Done
+                    完成
                 </ActionButton>
             </Dialog.Footer>
         </Dialog>

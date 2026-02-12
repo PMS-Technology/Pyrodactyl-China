@@ -25,7 +25,7 @@ const ReinstallServerBox = () => {
                 addFlash({
                     key: 'settings',
                     type: 'success',
-                    message: 'Your server has begun the reinstallation process.',
+                    message: '您的服务器已开始重新安装过程。',
                 });
             })
             .catch((error) => {
@@ -44,29 +44,26 @@ const ReinstallServerBox = () => {
     }, []);
 
     return (
-        <TitledGreyBox title={'Reinstall Server'}>
+        <TitledGreyBox title={'重新安装服务器'}>
             <Dialog.Confirm
                 open={modalVisible}
-                title={'Confirm server reinstallation'}
-                confirm={'Yes, reinstall server'}
+                title={'确认重新安装服务器'}
+                confirm={'是的，重新安装服务器'}
                 onClose={() => setModalVisible(false)}
                 onConfirmed={reinstall}
                 loading={loading}
             >
-                Your server will be stopped and some files may be deleted or modified during this process, are you sure
-                you wish to continue?
+                您的服务器将停止，在此过程中某些文件可能会被删除或修改，您确定要继续吗？
             </Dialog.Confirm>
             <p className={`text-sm`}>
-                Reinstalling your server will stop it, and then re-run the installation script that initially set it
-                up.&nbsp;
+                重新安装您的服务器将停止它，然后重新运行最初设置它的安装脚本。&nbsp;
                 <strong className={`font-medium`}>
-                    Some files may be deleted or modified during this process, please back up your data before
-                    continuing.
+                    在此过程中某些文件可能会被删除或修改，请在继续之前备份您的数据。
                 </strong>
             </p>
             <div className={`mt-6 text-right`}>
                 <ActionButton variant='danger' onClick={() => setModalVisible(true)}>
-                    Reinstall Server
+                    重新安装服务器
                 </ActionButton>
             </div>
         </TitledGreyBox>

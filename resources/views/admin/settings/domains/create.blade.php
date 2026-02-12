@@ -2,16 +2,16 @@
 @include('partials/admin.settings.nav', ['activeTab' => 'domains'])
 
 @section('title')
-  Create Domain
+  创建域名
 @endsection
 
 @section('content-header')
-  <h1>Create Domain<small>Add a new DNS domain for subdomain management.</small></h1>
+  <h1>创建域名<small>添加用于子域名管理的新DNS域名。</small></h1>
   <ol class="breadcrumb">
-    <li><a href="{{ route('admin.index') }}">Admin</a></li>
-    <li><a href="{{ route('admin.settings') }}">Settings</a></li>
-    <li><a href="{{ route('admin.settings.domains.index') }}">Domains</a></li>
-    <li class="active">Create</li>
+    <li><a href="{{ route('admin.index') }}">管理</a></li>
+    <li><a href="{{ route('admin.settings') }}">设置</a></li>
+    <li><a href="{{ route('admin.settings.domains.index') }}">域名</a></li>
+    <li class="active">创建</li>
   </ol>
 @endsection
 
@@ -22,30 +22,30 @@
       <form action="{{ route('admin.settings.domains.store') }}" method="POST" id="domain-form">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title">Domain Information</h3>
+            <h3 class="box-title">域名信息</h3>
           </div>
           <div class="box-body">
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="name" class="control-label">Domain Name <span class="field-required"></span></label>
+                <label for="name" class="control-label">域名 <span class="field-required"></span></label>
                 <div>
                   <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}"
                     placeholder="example.com" required />
-                  <p class="text-muted small">The domain name that will be used for subdomains (e.g., example.com).</p>
+                  <p class="text-muted small">将用于子域名的域名（例如：example.com）。</p>
                 </div>
               </div>
               <div class="form-group col-md-6">
-                <label for="dns_provider" class="control-label">DNS Provider <span class="field-required"></span></label>
+                <label for="dns_provider" class="control-label">DNS提供商 <span class="field-required"></span></label>
                 <div>
                   <select name="dns_provider" id="dns_provider" class="form-control" required>
-                    <option value="">Select a DNS provider...</option>
+                    <option value="">选择DNS提供商...</option>
                     @foreach($providers as $key => $provider)
                       <option value="{{ $key }}" @if(old('dns_provider') === $key) selected @endif>
                         {{ $provider['name'] }}
                       </option>
                     @endforeach
                   </select>
-                  <p class="text-muted small">The DNS service provider that manages this domain.</p>
+                  <p class="text-muted small">管理此域名的DNS服务提供商。</p>
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@
 
         <div class="box" id="dns-config-box" style="display: none;">
           <div class="box-header with-border">
-            <h3 class="box-title">DNS Provider Configuration</h3>
+            <h3 class="box-title">DNS提供商配置</h3>
           </div>
           <div class="box-body" id="dns-config-content">
             <!-- Dynamic content will be loaded here -->
@@ -63,37 +63,36 @@
 
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title">Additional Settings</h3>
+            <h3 class="box-title">附加设置</h3>
           </div>
           <div class="box-body">
             <div class="row">
               <div class="form-group col-md-6">
-                <label class="control-label">Status</label>
+                <label class="control-label">状态</label>
                 <div>
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-outline-primary @if(old('is_active', true)) active @endif">
-                      <input type="radio" name="is_active" value="1" @if(old('is_active', true)) checked @endif> Active
+                      <input type="radio" name="is_active" value="1" @if(old('is_active', true)) checked @endif> 活跃
                     </label>
                     <label class="btn btn-outline-primary @if(!old('is_active', true)) active @endif">
-                      <input type="radio" name="is_active" value="0" @if(!old('is_active', true)) checked @endif> Inactive
+                      <input type="radio" name="is_active" value="0" @if(!old('is_active', true)) checked @endif> 不活跃
                     </label>
                   </div>
-                  <p class="text-muted small">Whether this domain should be available for subdomain creation.</p>
+                  <p class="text-muted small">此域名是否应可用于子域名创建。</p>
                 </div>
               </div>
               <div class="form-group col-md-6">
-                <label class="control-label">Default Domain</label>
+                <label class="control-label">默认域名</label>
                 <div>
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-outline-primary @if(old('is_default', false)) active @endif">
-                      <input type="radio" name="is_default" value="1" @if(old('is_default', false)) checked @endif> Yes
+                      <input type="radio" name="is_default" value="1" @if(old('is_default', false)) checked @endif> 是
                     </label>
                     <label class="btn btn-outline-primary @if(!old('is_default', false)) active @endif">
-                      <input type="radio" name="is_default" value="0" @if(!old('is_default', false)) checked @endif> No
+                      <input type="radio" name="is_default" value="0" @if(!old('is_default', false)) checked @endif> 否
                     </label>
                   </div>
-                  <p class="text-muted small">Whether this domain should be used as the default for automatic subdomain
-                    generation.</p>
+                  <p class="text-muted small">此域名是否应用作自动子域名生成的默认域名。</p>
                 </div>
               </div>
             </div>
@@ -104,10 +103,10 @@
           <div class="box-footer">
             {{ csrf_field() }}
             <button type="button" id="test-connection" class="btn btn-sm btn-info" disabled>
-              <i class="fa fa-refresh fa-spin" style="display: none;"></i> Test Connection
+              <i class="fa fa-refresh fa-spin" style="display: none;"></i> 测试连接
             </button>
-            <a href="{{ route('admin.settings.domains.index') }}" class="btn btn-sm btn-default">Cancel</a>
-            <button type="submit" class="btn btn-sm btn-success pull-right">Create Domain</button>
+            <a href="{{ route('admin.settings.domains.index') }}" class="btn btn-sm btn-default">取消</a>
+            <button type="submit" class="btn btn-sm btn-success pull-right">创建域名</button>
           </div>
         </div>
       </form>
@@ -161,21 +160,21 @@
         $button.prop('disabled', true);
         $spinner.show();
 
-        $.post('{{ route('admin.settings.domains.test-connection') }}', {
-          _token: '{{ csrf_token() }}',
+        $.post("{{ route('admin.settings.domains.test-connection') }}", {
+          _token: "{{ csrf_token() }}",
           ...formData
         })
           .done(function (response) {
             if (response.success) {
               swal({
                 type: 'success',
-                title: 'Connection Successful',
+                title: '连接成功',
                 text: response.message
               });
             } else {
               swal({
                 type: 'error',
-                title: 'Connection Failed',
+                title: '连接失败',
                 text: response.message
               });
             }
@@ -184,8 +183,8 @@
             const response = xhr.responseJSON || {};
             swal({
               type: 'error',
-              title: 'Connection Failed',
-              text: response.message || 'An unexpected error occurred.'
+              title: '连接失败',
+              text: response.message || '发生意外错误。'
             });
           })
           .always(function () {

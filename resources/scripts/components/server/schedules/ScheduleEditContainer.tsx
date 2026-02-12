@@ -28,7 +28,7 @@ const CronBox = ({ title, value }: { title: string; value: string }) => (
 
 const ActivePill = ({ active }: { active: boolean }) => (
     <span className='flex items-center rounded-full px-2 py-px text-xs ml-4 uppercase bg-neutral-600 text-white'>
-        {active ? 'Active' : 'Inactive'}
+        {active ? '活跃' : '非活跃'}
     </span>
 );
 
@@ -87,7 +87,7 @@ const ScheduleEditContainer = () => {
     }, [schedule, id, clearFlashes, clearAndAddHttpError, appendSchedule]);
 
     return (
-        <PageContentBlock title={'Schedules'}>
+        <PageContentBlock title={'计划'}>
             <FlashMessageRender byKey={'schedules'} />
             {!schedule || isLoading ? (
                 <Spinner size={'large'} centered />
@@ -103,14 +103,14 @@ const ScheduleEditContainer = () => {
                                     <span
                                         className={`flex items-center rounded-full px-2 py-px text-xs ml-4 uppercase bg-neutral-600 text-white`}
                                     >
-                                        Processing
+                                        处理中
                                     </span>
                                 ) : (
                                     <ActivePill active={schedule.isActive} />
                                 )}
                             </h3>
                             <p className={`mt-1 text-sm`}>
-                                <strong>Last run at:&nbsp;</strong>
+                                <strong>上次运行时间:&nbsp;</strong>
                                 {schedule.lastRunAt ? (
                                     format(schedule.lastRunAt, "MMM do 'at' h:mma")
                                 ) : (
@@ -120,7 +120,7 @@ const ScheduleEditContainer = () => {
                                 <span className={`ml-4 pl-4 border-l-4 border-neutral-600 py-px hidden sm:inline`} />
                                 <br className={`sm:hidden`} />
 
-                                <strong>Next run at:&nbsp;</strong>
+                                <strong>下次运行时间:&nbsp;</strong>
                                 {schedule.nextRunAt ? (
                                     format(schedule.nextRunAt, "MMM do 'at' h:mma")
                                 ) : (
@@ -135,24 +135,24 @@ const ScheduleEditContainer = () => {
                                     onClick={toggleEditModal}
                                     className={'flex-1 min-w-max'}
                                 >
-                                    Edit
+                                    编辑
                                 </ActionButton>
                                 <ActionButton
                                     variant='primary'
                                     onClick={() => setShowTaskModal(true)}
                                     className={'flex-1 min-w-max'}
                                 >
-                                    New Task
+                                    新建任务
                                 </ActionButton>
                             </Can>
                         </div>
                     </div>
                     <div className={`grid grid-cols-3 sm:grid-cols-5 gap-4`}>
-                        <CronBox title={'Minute'} value={schedule.cron.minute} />
-                        <CronBox title={'Hour'} value={schedule.cron.hour} />
-                        <CronBox title={'Day (Month)'} value={schedule.cron.dayOfMonth} />
-                        <CronBox title={'Month'} value={schedule.cron.month} />
-                        <CronBox title={'Day (Week)'} value={schedule.cron.dayOfWeek} />
+                        <CronBox title={'分钟'} value={schedule.cron.minute} />
+                        <CronBox title={'小时'} value={schedule.cron.hour} />
+                        <CronBox title={'每月几号'} value={schedule.cron.dayOfMonth} />
+                        <CronBox title={'月份'} value={schedule.cron.month} />
+                        <CronBox title={'星期几'} value={schedule.cron.dayOfWeek} />
                     </div>
                     <div>
                         {schedule.tasks.length > 0
@@ -186,7 +186,7 @@ const ScheduleEditContainer = () => {
                                     disabled={schedule.isProcessing}
                                     onClick={onTriggerExecute}
                                 >
-                                    Run Now
+                                    立即运行
                                 </ActionButton>
                             </Can>
                         )}

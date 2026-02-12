@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{ config('app.name', 'Panel') }} - @yield('title')</title>
+  <title>{{ config('app.name', '面板') }} - @yield('title')</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="_token" content="{{ csrf_token() }}">
 
@@ -66,7 +66,7 @@
       </a>
       <nav class="navbar navbar-static-top">
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-          <span class="sr-only">Toggle navigation</span>
+          <span class="sr-only">切换导航</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -81,11 +81,11 @@
             </li>
             <li>
             <li><a href="{{ route('index') }}" data-toggle="tooltip" data-placement="bottom"
-                title="Exit Admin Control"><i class="fa fa-server"></i></a></li>
+                title="退出管理员控制"><i class="fa fa-server"></i></a></li>
             </li>
             <li>
             <li><a href="{{ route('auth.logout') }}" id="logoutButton" data-toggle="tooltip" data-placement="bottom"
-                title="Logout"><i class="fa fa-sign-out"></i></a></li>
+                title="退出登录"><i class="fa fa-sign-out"></i></a></li>
             </li>
           </ul>
         </div>
@@ -94,57 +94,57 @@
     <aside class="main-sidebar">
       <section class="sidebar">
         <ul class="sidebar-menu">
-          <li class="header">BASIC ADMINISTRATION</li>
+          <li class="header">基础管理</li>
           <li class="{{ Route::currentRouteName() !== 'admin.index' ?: 'active' }}">
             <a href="{{ route('admin.index') }}">
-              <i class="bi bi-house-fill"></i> <span>Overview</span>
+              <i class="bi bi-house-fill"></i> <span>概览</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.settings') ?: 'active' }}">
             <a href="{{ route('admin.settings')}}">
-              <i class="bi bi-gear-fill"></i> <span>Settings</span>
+              <i class="bi bi-gear-fill"></i> <span>设置</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.api') ?: 'active' }}">
             <a href="{{ route('admin.api.index')}}">
-              <i class="bi bi-globe"></i> <span>Application API</span>
+              <i class="bi bi-globe"></i> <span>应用 API</span>
             </a>
           </li>
-          <li class="header">MANAGEMENT</li>
+          <li class="header">管理</li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.databases') ?: 'active' }}">
             <a href="{{ route('admin.databases') }}">
-              <i class="bi bi-database-fill"></i> <span>Databases</span>
+              <i class="bi bi-database-fill"></i> <span>数据库</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.locations') ?: 'active' }}">
             <a href="{{ route('admin.locations') }}">
-              <i class="bi bi-globe-americas"></i> <span>Locations</span>
+              <i class="bi bi-globe-americas"></i> <span>位置</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.nodes') ?: 'active' }}">
             <a href="{{ route('admin.nodes') }}">
-              <i class="bi bi-hdd-fill"></i> <span>Nodes</span>
+              <i class="bi bi-hdd-fill"></i> <span>节点</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.servers') ?: 'active' }}">
             <a href="{{ route('admin.servers') }}">
-              <i class="bi bi-hdd-stack-fill"></i> <span>Servers</span>
+              <i class="bi bi-hdd-stack-fill"></i> <span>服务器</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.users') ?: 'active' }}">
             <a href="{{ route('admin.users') }}">
-              <i class="bi bi-people-fill"></i> <span>Users</span>
+              <i class="bi bi-people-fill"></i> <span>用户</span>
             </a>
           </li>
-          <li class="header">SERVICE MANAGEMENT</li>
+          <li class="header">服务管理</li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.mounts') ?: 'active' }}">
             <a href="{{ route('admin.mounts') }}">
-              <i class="bi bi-magic"></i> <span>Mounts</span>
+              <i class="bi bi-magic"></i> <span>挂载点</span>
             </a>
           </li>
           <li class="{{ !starts_with(Route::currentRouteName(), 'admin.nests') ?: 'active' }}">
             <a href="{{ route('admin.nests') }}">
-              <i class="bi bi-egg-fill"></i> <span>Nests</span>
+              <i class="bi bi-egg-fill"></i> <span>预设</span>
             </a>
           </li>
         </ul>
@@ -159,7 +159,7 @@
           <div class="col-xs-12">
             @if (count($errors) > 0)
               <div class="alert alert-danger">
-                There was an error validating the data provided.<br><br>
+                验证提供的数据时出错。<br><br>
                 <ul>
                   @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -170,7 +170,7 @@
             @foreach (Alert::getMessages() as $type => $messages)
               @foreach ($messages as $message)
                 <div class="alert alert-{{ $type }} alert-dismissable" role="alert">
-                  {{ $message }}
+                  {!! $message !!}
                 </div>
               @endforeach
             @endforeach
@@ -210,12 +210,12 @@
 
         var that = this;
         swal({
-          title: 'Do you want to log out?',
+          title: '您想要退出登录吗？',
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#d9534f',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Log out'
+          confirmButtonText: '退出登录'
         }, function () {
           $.ajax({
             type: 'POST',

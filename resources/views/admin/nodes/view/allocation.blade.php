@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
 @section('title')
-    {{ $node->name }}: Allocations
+    {{ $node->name }}: 分配
 @endsection
 
 @section('content-header')
-    <h1>{{ $node->name }}<small>Control allocations available for servers on this node.</small></h1>
+    <h1>{{ $node->name }}<small>控制此节点上服务器可用的分配。</small></h1>
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li><a href="{{ route('admin.nodes') }}">Nodes</a></li>
+        <li><a href="{{ route('admin.index') }}">管理员</a></li>
+        <li><a href="{{ route('admin.nodes') }}">节点</a></li>
         <li><a href="{{ route('admin.nodes.view', $node->id) }}">{{ $node->name }}</a></li>
-        <li class="active">Allocations</li>
+        <li class="active">分配</li>
     </ol>
 @endsection
 
@@ -19,11 +19,11 @@
     <div class="col-xs-12">
         <div class="nav-tabs-custom nav-tabs-floating">
             <ul class="nav nav-tabs">
-                <li><a href="{{ route('admin.nodes.view', $node->id) }}">About</a></li>
-                <li><a href="{{ route('admin.nodes.view.settings', $node->id) }}">Settings</a></li>
-                <li><a href="{{ route('admin.nodes.view.configuration', $node->id) }}">Configuration</a></li>
-                <li class="active"><a href="{{ route('admin.nodes.view.allocation', $node->id) }}">Allocation</a></li>
-                <li><a href="{{ route('admin.nodes.view.servers', $node->id) }}">Servers</a></li>
+                <li><a href="{{ route('admin.nodes.view', $node->id) }}">关于</a></li>
+                <li><a href="{{ route('admin.nodes.view.settings', $node->id) }}">设置</a></li>
+                <li><a href="{{ route('admin.nodes.view.configuration', $node->id) }}">配置</a></li>
+                <li class="active"><a href="{{ route('admin.nodes.view.allocation', $node->id) }}">分配</a></li>
+                <li><a href="{{ route('admin.nodes.view.servers', $node->id) }}">服务器</a></li>
             </ul>
         </div>
     </div>
@@ -32,7 +32,7 @@
     <div class="col-sm-8">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Existing Allocations</h3>
+                <h3 class="box-title">现有分配</h3>
             </div>
             <div class="box-body table-responsive no-padding" style="overflow-x: visible">
                 <table class="table table-hover" style="margin-bottom:0;">
@@ -40,17 +40,17 @@
                         <th>
                             <input type="checkbox" class="select-all-files hidden-xs" data-action="selectAll">
                         </th>
-                        <th>IP Address <i class="fa fa-fw fa-minus-square" style="font-weight:normal;color:#d9534f;cursor:pointer;" data-toggle="modal" data-target="#allocationModal"></i></th>
-                        <th>IP Alias</th>
-                        <th>Port</th>
-                        <th>Assigned To</th>
+                        <th>IP 地址 <i class="fa fa-fw fa-minus-square" style="font-weight:normal;color:#d9534f;cursor:pointer;" data-toggle="modal" data-target="#allocationModal"></i></th>
+                        <th>IP 别名</th>
+                        <th>端口</th>
+                        <th>分配给</th>
                         <th>
                             <div class="btn-group hidden-xs">
                                 <button type="button" id="mass_actions" class="btn btn-sm btn-default dropdown-toggle disabled"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mass Actions <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-massactions">
-                                    <li><a href="#" id="selective-deletion" data-action="selective-deletion">Delete <i class="fa fa-fw fa-trash-o"></i></a></li>
+                                    <li><a href="#" id="selective-deletion" data-action="selective-deletion">删除 <i class="fa fa-fw fa-trash-o"></i></a></li>
                                 </ul>
                             </div>
                         </th>
@@ -66,7 +66,7 @@
                             </td>
                             <td class="col-sm-3 middle" data-identifier="ip">{{ $allocation->ip }}</td>
                             <td class="col-sm-3 middle">
-                                <input class="form-control input-sm" type="text" value="{{ $allocation->ip_alias }}" data-action="set-alias" data-id="{{ $allocation->id }}" placeholder="none" />
+                                <input class="form-control input-sm" type="text" value="{{ $allocation->ip_alias }}" data-action="set-alias" data-id="{{ $allocation->id }}" placeholder="无" />
                                 <span class="input-loader"><i class="fa fa-refresh fa-spin fa-fw"></i></span>
                             </td>
                             <td class="col-sm-2 middle" data-identifier="port">{{ $allocation->port }}</td>
@@ -99,34 +99,34 @@
                 </div>
                 <div class="box-body">
                     <div class="form-group">
-                        <label for="pAllocationIP" class="control-label">IP Address</label>
+                        <label for="pAllocationIP" class="control-label">IP 地址</label>
                         <div>
                             <select class="form-control" name="allocation_ip" id="pAllocationIP" multiple>
                                 @foreach($allocations as $allocation)
                                     <option value="{{ $allocation->ip }}">{{ $allocation->ip }}</option>
                                 @endforeach
                             </select>
-                            <p class="text-muted small">Enter an IP address to assign ports to here.</p>
+                            <p class="text-muted small">在此处输入要分配端口的 IP 地址。</p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="pAllocationIP" class="control-label">IP Alias</label>
+                        <label for="pAllocationIP" class="control-label">IP 别名</label>
                         <div>
-                            <input type="text" id="pAllocationAlias" class="form-control" name="allocation_alias" placeholder="alias" />
-                            <p class="text-muted small">If you would like to assign a default alias to these allocations enter it here.</p>
+                            <input type="text" id="pAllocationAlias" class="form-control" name="allocation_alias" placeholder="别名" />
+                            <p class="text-muted small">如果您想为这些分配指定默认别名，请在此处输入。</p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="pAllocationPorts" class="control-label">Ports</label>
+                        <label for="pAllocationPorts" class="control-label">端口</label>
                         <div>
                             <select class="form-control" name="allocation_ports[]" id="pAllocationPorts" multiple></select>
-                            <p class="text-muted small">Enter individual ports or port ranges here separated by commas or spaces.</p>
+                            <p class="text-muted small">在此处输入以逗号或空格分隔的单独端口或端口范围。</p>
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
                     {!! csrf_field() !!}
-                    <button type="submit" class="btn btn-success btn-sm pull-right">Submit</button>
+                    <button type="submit" class="btn btn-success btn-sm pull-right">提交</button>
                 </div>
             </div>
         </form>
@@ -137,7 +137,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Delete Allocations for IP Block</h4>
+                <h4 class="modal-title">删除 IP 块的分配</h4>
             </div>
             <form action="{{ route('admin.nodes.view.allocation.removeBlock', $node->id) }}" method="POST">
                 <div class="modal-body">
@@ -153,8 +153,8 @@
                 </div>
                 <div class="modal-footer">
                     {{{ csrf_field() }}}
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete Allocations</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-danger">删除分配</button>
                 </div>
             </form>
         </div>
@@ -165,6 +165,7 @@
 @section('footer-scripts')
     @parent
     <script>
+    var nodeId = "{{ $node->id }}";
     $('[data-action="addSelection"]').on('click', function () {
         updateMassActions();
     });
@@ -198,28 +199,29 @@
         event.preventDefault();
         var element = $(this);
         var allocation = $(this).data('id');
+        var nodeId = "{{ $node->id }}";
         swal({
             title: '',
-            text: 'Are you sure you want to delete this allocation?',
+            text: '您确定要删除此分配吗？',
             type: 'warning',
             showCancelButton: true,
             allowOutsideClick: true,
             closeOnConfirm: false,
-            confirmButtonText: 'Delete',
+            confirmButtonText: '删除',
             confirmButtonColor: '#d9534f',
             showLoaderOnConfirm: true
         }, function () {
             $.ajax({
                 method: 'DELETE',
-                url: '/admin/nodes/view/' + {{ $node->id }} + '/allocation/remove/' + allocation,
+                url: '/admin/nodes/view/' + nodeId + '/allocation/remove/' + allocation,
                 headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
             }).done(function (data) {
                 element.parent().parent().addClass('warning').delay(100).fadeOut();
-                swal({ type: 'success', title: 'Port Deleted!' });
+                swal({ type: 'success', title: '端口已删除！' });
             }).fail(function (jqXHR) {
                 console.error(jqXHR);
                 swal({
-                    title: 'Whoops!',
+                    title: '哎呀！',
                     text: jqXHR.responseJSON.error,
                     type: 'error'
                 });
@@ -238,9 +240,10 @@
     function sendAlias(element) {
         element.parent().find('.input-loader').show();
         clearTimeout(fadeTimers[element.data('id')]);
+        var nodeId = "{{ $node->id }}";
         $.ajax({
             method: 'POST',
-            url: '/admin/nodes/view/' + {{ $node->id }} + '/allocation/alias',
+            url: '/admin/nodes/view/' + nodeId + '/allocation/alias',
             headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
             data: {
                 alias: element.val(),
@@ -302,10 +305,11 @@
                 formattedItems += ', and ' + (selectedItems.length - 5) + ' other(s)';
             }
 
+            var nodeId = "{{ $node->id }}";
             swal({
                 type: 'warning',
                 title: '',
-                text: 'Are you sure you want to delete the following allocations: ' + formattedItems + '?',
+                text: '您确定要删除以下分配：' + formattedItems + '？',
                 html: true,
                 showCancelButton: true,
                 showConfirmButton: true,
@@ -314,7 +318,7 @@
             }, function () {
                 $.ajax({
                     method: 'DELETE',
-                    url: '/admin/nodes/view/' + {{ $node->id }} + '/allocations',
+                    url: '/admin/nodes/view/' + nodeId + '/allocations',
                     headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')},
                     data: JSON.stringify({
                         allocations: selectedIds
@@ -332,15 +336,15 @@
 
                     swal({
                         type: 'success',
-                        title: 'Allocations Deleted'
+                        title: '分配已删除'
                     });
                 }).fail(function (jqXHR) {
                     console.error(jqXHR);
                     swal({
                         type: 'error',
-                        title: 'Whoops!',
+                        title: '哎呀！',
                         html: true,
-                        text: 'An error occurred while attempting to delete these allocations. Please try again.',
+                        text: '尝试删除这些分配时出错。请重试。',
                     });
                 });
             });
@@ -348,7 +352,7 @@
             swal({
                 type: 'warning',
                 title: '',
-                text: 'Please select allocation(s) to delete.',
+                text: '请选择要删除的分配。',
             });
         }
     }

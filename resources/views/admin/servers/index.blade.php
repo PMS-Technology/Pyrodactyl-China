@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
 @section('title')
-    List Servers
+    服务器列表
 @endsection
 
 @section('content-header')
-    <h1>Servers<small>All servers available on the system.</small></h1>
+    <h1>服务器<small>系统中所有可用的服务器。</small></h1>
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li class="active">Servers</li>
+        <li><a href="{{ route('admin.index') }}">管理员</a></li>
+        <li class="active">服务器</li>
     </ol>
 @endsection
 
@@ -17,14 +17,14 @@
     <div class="col-xs-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Server List</h3>
+                <h3 class="box-title">服务器列表</h3>
                 <div class="box-tools search01">
                     <form action="{{ route('admin.servers') }}" method="GET">
                         <div class="input-group input-group-sm">
-                            <input type="text" name="filter[*]" class="form-control pull-right" value="{{ request()->input()['filter']['*'] ?? '' }}" placeholder="Search Servers">
+                            <input type="text" name="filter[*]" class="form-control pull-right" value="{{ request()->input()['filter']['*'] ?? '' }}" placeholder="搜索服务器">
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                <a href="{{ route('admin.servers.new') }}"><button type="button" class="btn btn-sm btn-primary" style="border-radius: 0 3px 3px 0;margin-left:-1px;">Create New</button></a>
+                                <a href="{{ route('admin.servers.new') }}"><button type="button" class="btn btn-sm btn-primary" style="border-radius: 0 3px 3px 0;margin-left:-1px;">创建新服务器</button></a>
                             </div>
                         </div>
                     </form>
@@ -34,12 +34,11 @@
                 <table class="table table-hover">
                     <tbody>
                         <tr>
-                            <th>Server Name</th>
+                            <th>服务器名称</th>
                             <th>UUID</th>
-                            <th>Owner</th>
-                            <th>Node</th>
-                            <th>Connection</th>
-                            <!-- <th>Domain</th> -->
+                            <th>所有者</th>
+                            <th>节点</th>
+                            <th>连接</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -52,18 +51,17 @@
                                 <td>
                                     <code>{{ $server->allocation->alias }}:{{ $server->allocation->port }}</code>
                                 </td>
-                                <!-- <td>{{ $server->domain }}</td> -->
                                 <td class="text-center">
                                     @if($server->isSuspended())
-                                        <span class="label bg-maroon">Suspended</span>
+                                        <span class="label bg-maroon">已暂停</span>
                                     @elseif(! $server->isInstalled())
-                                        <span class="label label-warning">Installing</span>
+                                        <span class="label label-warning">安装中</span>
                                     @else
-                                        <span class="label label-success">Active</span>
+                                        <span class="label label-success">活跃</span>
                                     @endif
-
+                                    
                                     @if($server->exclude_from_resource_calculation)
-                                        <br><small><span class="label label-info" title="Excluded from resource calculations">Excluded</span></small>
+                                        <br><small><span class="label label-info" title="排除在资源计算之外">已排除</span></small>
                                     @endif
                                 </td>
                                 <td class="text-center">

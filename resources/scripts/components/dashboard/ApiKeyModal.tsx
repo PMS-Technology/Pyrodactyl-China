@@ -2,11 +2,10 @@ import ModalContext from '@/context/ModalContext';
 import { useContext } from 'react';
 
 import FlashMessageRender from '@/components/FlashMessageRender';
+import Button from '@/components/elements/Button';
 import CopyOnClick from '@/components/elements/CopyOnClick';
 
 import asModal from '@/hoc/asModal';
-
-import ActionButton from '../elements/ActionButton';
 
 interface Props {
     apiKey: string;
@@ -22,8 +21,7 @@ const ApiKeyModal = ({ apiKey }: Props) => {
 
             {/* Modal Header */}
             <p className='text-sm text-white-600 mt-2'>
-                The API key you have requested is shown below. Please store it in a safe place, as it will not be shown
-                again.
+                您请求的API密钥如下所示。请将其保存在安全的地方，因为它不会再次显示。
             </p>
 
             {/* API Key Display Section */}
@@ -40,9 +38,13 @@ const ApiKeyModal = ({ apiKey }: Props) => {
 
             {/* Action Buttons */}
             <div className='flex justify-end space-x-4'>
-                <ActionButton type='button' onClick={() => dismiss()} variant='danger' className='flex items-center'>
-                    Close
-                </ActionButton>
+                <Button
+                    type='button'
+                    onClick={() => dismiss()}
+                    className='bg-red-600 text-white hover:bg-red-700 px-6 py-2 rounded-md focus:outline-hidden focus:ring-2 focus:ring-gray-500 cursor-pointer'
+                >
+                    关闭
+                </Button>
             </div>
         </div>
     );
@@ -51,7 +53,7 @@ const ApiKeyModal = ({ apiKey }: Props) => {
 ApiKeyModal.displayName = 'ApiKeyModal';
 
 export default asModal<Props>({
-    title: 'Your API Key',
-    closeOnEscape: true, // Allows closing the modal by pressing Escape
-    closeOnBackground: true, // Allows closing by clicking outside the modal
+    title: '您的API密钥',
+    closeOnEscape: true, // 允许通过按Escape键关闭模态框
+    closeOnBackground: true, // 允许通过点击模态框外部关闭
 })(ApiKeyModal);

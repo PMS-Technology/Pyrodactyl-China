@@ -25,12 +25,11 @@ const SettingsContainer = () => {
     const sftp = ServerContext.useStoreState((state) => state.server.data!.sftpDetails, isEqual);
 
     return (
-        <ServerContentBlock title={'Settings'}>
+        <ServerContentBlock title={'设置'}>
             <FlashMessageRender byKey={'settings'} />
-            <MainPageHeader direction='column' title={'Settings'}>
+            <MainPageHeader direction='column' title={'设置'}>
                 <p className='text-sm text-neutral-400 leading-relaxed'>
-                    Configure your server settings, manage SFTP access, and access debug information. Make changes to
-                    server name and reinstall when needed.
+                    配置您的服务器设置，管理 SFTP 访问权限，并访问调试信息。根据需要更改服务器名称和重新安装。
                 </p>
             </MainPageHeader>
             <Can action={'settings.rename'}>
@@ -43,22 +42,22 @@ const SettingsContainer = () => {
                 <Can action={'settings.reinstall'}>
                     <ReinstallServerBox />
                 </Can>
-                <TitledGreyBox title={'Debug Information'}>
+                <TitledGreyBox title={'调试信息'}>
                     <div className={`flex items-center justify-between text-sm`}>
-                        <p>Node</p>
+                        <p>节点</p>
                         <code className={`font-mono bg-zinc-900 rounded-sm py-1 px-2`}>{node}</code>
                     </div>
                     <CopyOnClick text={uuid}>
                         <div className={`flex items-center justify-between mt-2 text-sm`}>
-                            <p>Server ID</p>
+                            <p>服务器 ID</p>
                             <code className={`font-mono bg-zinc-900 rounded-sm py-1 px-2`}>{uuid}</code>
                         </div>
                     </CopyOnClick>
                 </TitledGreyBox>
                 <Can action={'file.sftp'}>
-                    <TitledGreyBox title={'SFTP Details'} className={`mb-6 md:mb-10`}>
+                    <TitledGreyBox title={'SFTP 详情'} className={`mb-6 md:mb-10`}>
                         <div className={`flex items-center justify-between text-sm`}>
-                            <Label>Server Address</Label>
+                            <Label>服务器地址</Label>
                             <CopyOnClick text={`sftp://${ip(sftp.ip)}:${sftp.port}`}>
                                 <code
                                     className={`font-mono bg-zinc-900 rounded-sm py-1 px-2`}
@@ -66,7 +65,7 @@ const SettingsContainer = () => {
                             </CopyOnClick>
                         </div>
                         <div className={`mt-2 flex items-center justify-between text-sm`}>
-                            <Label>Username</Label>
+                            <Label>用户名</Label>
                             <CopyOnClick text={`${username}.${id}`}>
                                 <code
                                     className={`font-mono bg-zinc-900 rounded-sm py-1 px-2`}
@@ -77,13 +76,13 @@ const SettingsContainer = () => {
                             <div className={`flex-1`}>
                                 <div className={`border-l-4 border-brand p-3`}>
                                     <p className={`text-xs text-zinc-200`}>
-                                        Your SFTP password is the same as the password you use to access this panel.
+                                        您的 SFTP 密码与您用来访问此面板的密码相同。
                                     </p>
                                 </div>
                             </div>
                             <div className={`ml-4`}>
                                 <a href={`sftp://${username}.${id}@${ip(sftp.ip)}:${sftp.port}`}>
-                                    <ActionButton variant='secondary'>Launch SFTP</ActionButton>
+                                    <ActionButton variant='secondary'>启动 SFTP</ActionButton>
                                 </a>
                             </div>
                         </div>

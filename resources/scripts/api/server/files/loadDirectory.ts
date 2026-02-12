@@ -1,5 +1,4 @@
 import http from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 import { rawDataToFileObject } from '@/api/transformers';
 
 export interface FileObject {
@@ -18,15 +17,9 @@ export interface FileObject {
 }
 
 export default async (uuid: string, directory?: string): Promise<FileObject[]> => {
-    const { data } = await http.get(`/api/client/servers/${getGlobalDaemonType()}/${uuid}/files/list`, {
+    const { data } = await http.get(`/api/client/servers/${uuid}/files/list`, {
         params: { directory: directory ?? '/' },
     });
 
-    const files = (data.data || []).map(rawDataToFileObject);
-
-    if (files.length > 500) {
-        files.length = 500;
-    }
-
-    return files;
+    return (data.data || []).map(rawDataToFileObject);
 };

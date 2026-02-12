@@ -7,7 +7,7 @@ return [
     // will be stored in this location by default. It is possible to change this once backups
     // have been made, without losing data.
     // Options: elytra, wings (legacy), s3, rustic_local, rustic_s3
-    'default' => env('APP_BACKUP_DRIVER', Backup::ADAPTER_WINGS),
+    'default' => env('APP_BACKUP_DRIVER', Backup::ADAPTER_RUSTIC_LOCAL),
 
     // This value is used to determine the lifespan of UploadPart presigned urls that wings
     // uses to upload backups to S3 storage.  Value is in minutes, so this would default to an hour.
@@ -21,12 +21,6 @@ return [
     // The time to wait before automatically failing a backup, time is in minutes and defaults
     // to 6 hours.  To disable this feature, set the value to `0`.
     'prune_age' => env('BACKUP_PRUNE_AGE', 360),
-
-    // The maximum number of unlocked automatic backups to keep per server. When this limit is
-    // exceeded, the oldest unlocked automatic backups will be automatically deleted. Locked
-    // automatic backups do not count toward this limit and are preserved indefinitely.
-    // Set to 0 to disable automatic pruning. Defaults to 32.
-    'automatic_backup_limit' => env('BACKUP_AUTOMATIC_LIMIT', 32),
 
     'disks' => [
         // There is no configuration for the local disk for Wings. That configuration

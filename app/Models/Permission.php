@@ -6,234 +6,231 @@ use Illuminate\Support\Collection;
 
 class Permission extends Model
 {
-    /**
-     * The resource name for this model when it is transformed into an
-     * API representation using fractal.
-     */
-    public const RESOURCE_NAME = 'subuser_permission';
+  /**
+   * 将此模型转换为使用 fractal 的 API 表示时的资源名称。
+   */
+  public const RESOURCE_NAME = 'subuser_permission';
 
-    /**
-     * Constants defining different permissions available.
-     */
-    public const ACTION_WEBSOCKET_CONNECT = 'websocket.connect';
-    public const ACTION_CONTROL_CONSOLE = 'control.console';
-    public const ACTION_CONTROL_START = 'control.start';
-    public const ACTION_CONTROL_STOP = 'control.stop';
-    public const ACTION_CONTROL_RESTART = 'control.restart';
+  /**
+   * 定义可用的不同权限的常量。
+   */
+  public const ACTION_WEBSOCKET_CONNECT = 'websocket.connect';
+  public const ACTION_CONTROL_CONSOLE = 'control.console';
+  public const ACTION_CONTROL_START = 'control.start';
+  public const ACTION_CONTROL_STOP = 'control.stop';
+  public const ACTION_CONTROL_RESTART = 'control.restart';
 
-    public const ACTION_DATABASE_READ = 'database.read';
-    public const ACTION_DATABASE_CREATE = 'database.create';
-    public const ACTION_DATABASE_UPDATE = 'database.update';
-    public const ACTION_DATABASE_DELETE = 'database.delete';
-    public const ACTION_DATABASE_VIEW_PASSWORD = 'database.view_password';
+  public const ACTION_DATABASE_READ = 'database.read';
+  public const ACTION_DATABASE_CREATE = 'database.create';
+  public const ACTION_DATABASE_UPDATE = 'database.update';
+  public const ACTION_DATABASE_DELETE = 'database.delete';
+  public const ACTION_DATABASE_VIEW_PASSWORD = 'database.view_password';
 
-    public const ACTION_SCHEDULE_READ = 'schedule.read';
-    public const ACTION_SCHEDULE_CREATE = 'schedule.create';
-    public const ACTION_SCHEDULE_UPDATE = 'schedule.update';
-    public const ACTION_SCHEDULE_DELETE = 'schedule.delete';
+  public const ACTION_SCHEDULE_READ = 'schedule.read';
+  public const ACTION_SCHEDULE_CREATE = 'schedule.create';
+  public const ACTION_SCHEDULE_UPDATE = 'schedule.update';
+  public const ACTION_SCHEDULE_DELETE = 'schedule.delete';
 
-    public const ACTION_USER_READ = 'user.read';
-    public const ACTION_USER_CREATE = 'user.create';
-    public const ACTION_USER_UPDATE = 'user.update';
-    public const ACTION_USER_DELETE = 'user.delete';
+  public const ACTION_USER_READ = 'user.read';
+  public const ACTION_USER_CREATE = 'user.create';
+  public const ACTION_USER_UPDATE = 'user.update';
+  public const ACTION_USER_DELETE = 'user.delete';
 
-    public const ACTION_BACKUP_READ = 'backup.read';
-    public const ACTION_BACKUP_CREATE = 'backup.create';
-    public const ACTION_BACKUP_DELETE = 'backup.delete';
-    public const ACTION_BACKUP_DOWNLOAD = 'backup.download';
-    public const ACTION_BACKUP_RESTORE = 'backup.restore';
+  public const ACTION_BACKUP_READ = 'backup.read';
+  public const ACTION_BACKUP_CREATE = 'backup.create';
+  public const ACTION_BACKUP_DELETE = 'backup.delete';
+  public const ACTION_BACKUP_DOWNLOAD = 'backup.download';
+  public const ACTION_BACKUP_RESTORE = 'backup.restore';
 
-    public const ACTION_ALLOCATION_READ = 'allocation.read';
-    public const ACTION_ALLOCATION_CREATE = 'allocation.create';
-    public const ACTION_ALLOCATION_UPDATE = 'allocation.update';
-    public const ACTION_ALLOCATION_DELETE = 'allocation.delete';
+  public const ACTION_ALLOCATION_READ = 'allocation.read';
+  public const ACTION_ALLOCATION_CREATE = 'allocation.create';
+  public const ACTION_ALLOCATION_UPDATE = 'allocation.update';
+  public const ACTION_ALLOCATION_DELETE = 'allocation.delete';
 
-    public const ACTION_FILE_READ = 'file.read';
-    public const ACTION_FILE_READ_CONTENT = 'file.read-content';
-    public const ACTION_FILE_CREATE = 'file.create';
-    public const ACTION_FILE_UPDATE = 'file.update';
-    public const ACTION_FILE_DELETE = 'file.delete';
-    public const ACTION_FILE_ARCHIVE = 'file.archive';
-    public const ACTION_FILE_SFTP = 'file.sftp';
+  public const ACTION_FILE_READ = 'file.read';
+  public const ACTION_FILE_READ_CONTENT = 'file.read-content';
+  public const ACTION_FILE_CREATE = 'file.create';
+  public const ACTION_FILE_UPDATE = 'file.update';
+  public const ACTION_FILE_DELETE = 'file.delete';
+  public const ACTION_FILE_ARCHIVE = 'file.archive';
+  public const ACTION_FILE_SFTP = 'file.sftp';
 
-    public const ACTION_STARTUP_READ = 'startup.read';
-    public const ACTION_STARTUP_UPDATE = 'startup.update';
-    public const ACTION_STARTUP_COMMAND = 'startup.command';
-    public const ACTION_STARTUP_DOCKER_IMAGE = 'startup.docker-image';
+  public const ACTION_STARTUP_READ = 'startup.read';
+  public const ACTION_STARTUP_UPDATE = 'startup.update';
+  public const ACTION_STARTUP_COMMAND = 'startup.command';
+  public const ACTION_STARTUP_DOCKER_IMAGE = 'startup.docker-image';
 
-    public const ACTION_STARTUP_SOFTWARE = 'startup.software';
+  public const ACTION_STARTUP_SOFTWARE = 'startup.software';
 
-    public const ACTION_SETTINGS_RENAME = 'settings.rename';
-    public const ACTION_SETTINGS_MODR = 'settings.mod';
-    public const ACTION_SETTINGS_REINSTALL = 'settings.reinstall';
+  public const ACTION_SETTINGS_RENAME = 'settings.rename';
+  public const ACTION_SETTINGS_MODRINTH = 'settings.modrinth';
+  public const ACTION_SETTINGS_REINSTALL = 'settings.reinstall';
 
-    public const ACTION_ACTIVITY_READ = 'activity.read';
+  public const ACTION_ACTIVITY_READ = 'activity.read';
 
-    public const ACTION_MOD_DOWNLOAD = 'mod.download';
+  public const ACTION_MODRINTH_DOWNLOAD = 'modrinth.download';
 
-    /**
-     * Should timestamps be used on this model.
-     */
-    public $timestamps = false;
+  /**
+   * 此模型是否使用时间戳。
+   */
+  public $timestamps = false;
 
-    /**
-     * The table associated with the model.
-     */
-    protected $table = 'permissions';
+  /**
+   * 与此模型关联的表。
+   */
+  protected $table = 'permissions';
 
-    /**
-     * Fields that are not mass assignable.
-     */
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+  /**
+   * 不可批量赋值的字段。
+   */
+  protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    /**
-     * Cast values to correct type.
-     */
-    protected $casts = [
-        'subuser_id' => 'integer',
-    ];
+  /**
+   * 将值转换为正确的类型。
+   */
+  protected $casts = [
+    'subuser_id' => 'integer',
+  ];
 
-    public static array $validationRules = [
-        'subuser_id' => 'required|numeric|min:1',
-        'permission' => 'required|string',
-    ];
+  public static array $validationRules = [
+    'subuser_id' => 'required|numeric|min:1',
+    'permission' => 'required|string',
+  ];
 
-    /**
-     * All the permissions available on the system. You should use self::permissions()
-     * to retrieve them, and not directly access this array as it is subject to change.
-     *
-     * @see \Pterodactyl\Models\Permission::permissions()
-     */
-    protected static array $permissions = [
-        'websocket' => [
-            'description' => 'Allows the user to connect to the server websocket, giving them access to view console output and realtime server stats.',
-            'keys' => [
-                'connect' => 'Allows a user to connect to the websocket instance for a server to stream the console.',
-            ],
-        ],
+  /**
+   * 系统中可用的所有权限。请使用 self::permissions() 来检索它们，
+   * 不要直接访问此数组，因为它可能会变化。
+   *
+   * @see \Pterodactyl\Models\Permission::permissions()
+   */
+  protected static array $permissions = [
+    'websocket' => [
+      'description' => '允许用户连接到服务器的 websocket，从而查看控制台输出和实时服务器统计信息。',
+      'keys' => [
+        'connect' => '允许用户连接到服务器的 websocket 以流式传输控制台。',
+      ],
+    ],
 
-        'control' => [
-            'description' => 'Permissions that control a user\'s ability to control the power state of a server, or send commands.',
-            'keys' => [
-                'console' => 'Allows a user to send commands to the server instance via the console.',
-                'start' => 'Allows a user to start the server if it is stopped.',
-                'stop' => 'Allows a user to stop a server if it is running.',
-                'restart' => 'Allows a user to perform a server restart. This allows them to start the server if it is offline, but not put the server in a completely stopped state.',
-            ],
-        ],
+    'control' => [
+      'description' => '控制用户对服务器电源状态或发送命令的权限。',
+      'keys' => [
+        'console' => '允许用户通过控制台向服务器实例发送命令。',
+        'start' => '允许用户在服务器停止时启动它。',
+        'stop' => '允许用户在服务器运行时停止它。',
+        'restart' => '允许用户执行服务器重启。该权限允许在服务器离线时启动它，但不会将服务器置于完全停止状态。',
+      ],
+    ],
 
-        'user' => [
-            'description' => 'Permissions that allow a user to manage other subusers on a server. They will never be able to edit their own account, or assign permissions they do not have themselves.',
-            'keys' => [
-                'create' => 'Allows a user to create new subusers for the server.',
-                'read' => 'Allows the user to view subusers and their permissions for the server.',
-                'update' => 'Allows a user to modify other subusers.',
-                'delete' => 'Allows a user to delete a subuser from the server.',
-            ],
-        ],
+    'user' => [
+      'description' => '允许用户管理服务器上的其他子用户的权限。用户永远不能编辑自己的账户或分配其自身没有的权限。',
+      'keys' => [
+        'create' => '允许用户为服务器创建新的子用户。',
+        'read' => '允许用户查看服务器的子用户及其权限。',
+        'update' => '允许用户修改其他子用户。',
+        'delete' => '允许用户从服务器中删除子用户。',
+      ],
+    ],
 
-        'file' => [
-            'description' => 'Permissions that control a user\'s ability to modify the filesystem for this server.',
-            'keys' => [
-                'create' => 'Allows a user to create additional files and folders via the Panel or direct upload.',
-                'read' => 'Allows a user to view the contents of a directory, but not view the contents of or download files.',
-                'read-content' => 'Allows a user to view the contents of a given file. This will also allow the user to download files.',
-                'update' => 'Allows a user to update the contents of an existing file or directory.',
-                'delete' => 'Allows a user to delete files or directories.',
-                'archive' => 'Allows a user to archive the contents of a directory as well as decompress existing archives on the system.',
-                'sftp' => 'Allows a user to connect to SFTP and manage server files using the other assigned file permissions.',
-            ],
-        ],
+    'file' => [
+      'description' => '控制用户修改此服务器文件系统能力的权限。',
+      'keys' => [
+        'create' => '允许用户通过面板或直接上传创建附加文件和文件夹。',
+        'read' => '允许用户查看目录内容，但不能查看文件内容或下载文件。',
+        'read-content' => '允许用户查看给定文件的内容。这也将允许用户下载文件。',
+        'update' => '允许用户更新现有文件或目录的内容。',
+        'delete' => '允许用户删除文件或目录。',
+        'archive' => '允许用户将目录内容归档以及解压系统上的现有归档。',
+        'sftp' => '允许用户连接到 SFTP 并使用其它分配的文件权限管理服务器文件。',
+      ],
+    ],
 
-        'backup' => [
-            'description' => 'Permissions that control a user\'s ability to generate and manage server backups.',
-            'keys' => [
-                'create' => 'Allows a user to create new backups for this server.',
-                'read' => 'Allows a user to view all backups that exist for this server.',
-                'delete' => 'Allows a user to remove backups from the system.',
-                'download' => 'Allows a user to download a backup for the server. Danger: this allows a user to access all files for the server in the backup.',
-                'restore' => 'Allows a user to restore a backup for the server. Danger: this allows the user to delete all of the server files in the process.',
-            ],
-        ],
+    'backup' => [
+      'description' => '控制用户生成和管理服务器备份能力的权限。',
+      'keys' => [
+        'create' => '允许用户为此服务器创建新备份。',
+        'read' => '允许用户查看此服务器存在的所有备份。',
+        'delete' => '允许用户从系统中删除备份。',
+        'download' => '允许用户下载服务器的备份。注意：这允许用户访问备份中的所有服务器文件。',
+        'restore' => '允许用户为服务器恢复备份。注意：此操作可能会在恢复过程中删除服务器的所有文件。',
+      ],
+    ],
 
-        // Controls permissions for editing or viewing a server's allocations.
-        'allocation' => [
-            'description' => 'Permissions that control a user\'s ability to modify the port allocations for this server.',
-            'keys' => [
-                'read' => 'Allows a user to view all allocations currently assigned to this server. Users with any level of access to this server can always view the primary allocation.',
-                'create' => 'Allows a user to assign additional allocations to the server.',
-                'update' => 'Allows a user to change the primary server allocation and attach notes to each allocation.',
-                'delete' => 'Allows a user to delete an allocation from the server.',
-            ],
-        ],
+    // 控制编辑或查看服务器分配（allocation）的权限。
+    'allocation' => [
+      'description' => '控制用户修改此服务器端口分配能力的权限。',
+      'keys' => [
+        'read' => '允许用户查看当前分配给此服务器的所有分配。对任何级别访问此服务器的用户总是可以查看主分配。',
+        'create' => '允许用户为服务器分配额外的分配。',
+        'update' => '允许用户更改主服务器分配并为每个分配添加备注。',
+        'delete' => '允许用户从服务器删除分配。',
+      ],
+    ],
 
-        // Controls permissions for editing or viewing a server's startup parameters.
-        'startup' => [
-            'description' => 'Permissions that control a user\'s ability to view this server\'s startup parameters.',
-            'keys' => [
-                'read' => 'Allows a user to view the startup variables for a server.',
-                'update' => 'Allows a user to modify the startup variables for the server.',
-                'command' => 'Allows a user to modify the startup command for the server.',
-                'docker-image' => 'Allows a user to modify the Docker image used when running the server.',
-                'software' => 'Allows a user to modify the game / software used for the server.',
-            ],
-        ],
+    // 控制编辑或查看服务器启动参数的权限。
+    'startup' => [
+      'description' => '控制用户查看此服务器启动参数的权限。',
+      'keys' => [
+        'read' => '允许用户查看服务器的启动变量。',
+        'update' => '允许用户修改服务器的启动变量。',
+        'command' => '允许用户修改服务器的启动命令。',
+        'docker-image' => '允许用户修改运行服务器时使用的 Docker 镜像。',
+        'software' => '允许用户修改服务器使用的游戏/软件。',
+      ],
+    ],
 
-        'database' => [
-            'description' => 'Permissions that control a user\'s access to the database management for this server.',
-            'keys' => [
-                'create' => 'Allows a user to create a new database for this server.',
-                'read' => 'Allows a user to view the database associated with this server.',
-                'update' => 'Allows a user to rotate the password on a database instance. If the user does not have the view_password permission they will not see the updated password.',
-                'delete' => 'Allows a user to remove a database instance from this server.',
-                'view_password' => 'Allows a user to view the password associated with a database instance for this server.',
-            ],
-        ],
+    'database' => [
+      'description' => '控制用户访问此服务器数据库管理的权限。',
+      'keys' => [
+        'create' => '允许用户为此服务器创建新数据库。',
+        'read' => '允许用户查看与此服务器关联的数据库。',
+        'update' => '允许用户轮换数据库实例的密码。如果用户没有 view_password 权限，他们将看不到更新后的密码。',
+        'delete' => '允许用户从此服务器移除数据库实例。',
+        'view_password' => '允许用户查看此服务器数据库实例关联的密码。',
+      ],
+    ],
 
-        'schedule' => [
-            'description' => 'Permissions that control a user\'s access to the schedule management for this server.',
-            'keys' => [
-                'create' => 'Allows a user to create new schedules for this server.', // task.create-schedule
-                'read' => 'Allows a user to view schedules and the tasks associated with them for this server.', // task.view-schedule, task.list-schedules
-                'update' => 'Allows a user to update schedules and schedule tasks for this server.', // task.edit-schedule, task.queue-schedule, task.toggle-schedule
-                'delete' => 'Allows a user to delete schedules for this server.', // task.delete-schedule
-            ],
-        ],
+    'schedule' => [
+      'description' => '控制用户访问此服务器计划（schedule）管理的权限。',
+      'keys' => [
+        'create' => '允许用户为此服务器创建新的计划。', // task.create-schedule
+        'read' => '允许用户查看此服务器的计划及其相关任务。', // task.view-schedule, task.list-schedules
+        'update' => '允许用户更新计划和计划任务。', // task.edit-schedule, task.queue-schedule, task.toggle-schedule
+        'delete' => '允许用户删除服务器的计划。', // task.delete-schedule
+      ],
+    ],
 
-        'settings' => [
-            'description' => 'Permissions that control a user\'s access to the settings for this server.',
-            'keys' => [
-                'rename' => 'Allows a user to rename this server and change the description of it.',
-                'reinstall' => 'Allows a user to trigger a reinstall of this server.',
+    'settings' => [
+      'description' => '控制用户访问此服务器设置的权限。',
+      'keys' => [
+        'rename' => '允许用户重命名此服务器并更改其描述。',
+        'reinstall' => '允许用户触发此服务器的重新安装。',
+      ],
+    ],
 
-            ],
-        ],
+    'activity' => [
+      'description' => '控制用户访问服务器活动日志的权限。',
+      'keys' => [
+        'read' => '允许用户查看服务器的活动日志。',
+      ],
+    ],
 
-        'activity' => [
-            'description' => 'Permissions that control a user\'s access to the server activity logs.',
-            'keys' => [
-                'read' => 'Allows a user to view the activity logs for the server.',
-            ],
-        ],
+    'modrinth' => [
+      'description' => '控制用户下载和更新 mod 的权限。',
+      'keys' => [
+        'version' => '允许用户更改要下载的版本',
+        'loader' => '允许用户更改要下载的加载器（loader）',
+        'download' => '允许用户使用 modrinth 将 mod 下载到服务器',
+        'resolver' => '允许用户访问依赖关系解析器',
+        'update' => '允许用户更新当前已安装的 mods',
+      ],
+    ],
+  ];
 
-        'mod' => [
-            'description' => 'Permissions that control a user\'s access to downloading and updating mods.',
-            'keys' => [
-                'version' => 'Allows a user to change what version to download for',
-                'loader' => 'Allows a user to change what loader to download for',
-                'download' => 'Allows a user to download mods to the server',
-                'resolver' => 'Allows a user to access the Dependency Resolver',
-                'update' => 'Allows a user to update Currently installed mods',
-            ],
-        ],
-    ];
-
-    /**
-     * Returns all the permissions available on the system for a user to
-     * have when controlling a server.
-     */
-    public static function permissions(): Collection
-    {
-        return Collection::make(self::$permissions);
-    }
+  /**
+   * 返回系统中可用于控制服务器的所有权限。
+   */
+  public static function permissions(): Collection
+  {
+    return Collection::make(self::$permissions);
+  }
 }

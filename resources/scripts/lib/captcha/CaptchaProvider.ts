@@ -55,7 +55,7 @@ export interface CaptchaProviderInterface {
 export interface CaptchaRenderConfig {
     siteKey: string;
     theme?: 'light' | 'dark' | 'auto';
-    size?: 'normal' | 'compact' | 'invisible' | 'flexible';
+    size?: 'normal' | 'compact' | 'invisible';
     onSuccess?: (token: string) => void;
     onError?: (error: any) => void;
     onExpired?: () => void;

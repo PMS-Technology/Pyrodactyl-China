@@ -1,194 +1,87 @@
-import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { useEffect, useRef, useState } from 'react';
+// NOTE: This should be a middleware instead of whatever the fuck this is
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-import Button from '../../elements/ButtonV2';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import DropdownButton from '@/components/server/modrinth/Dropdown';
 
-interface ApiFile {
-    hashes: {
-        sha512: string;
-        sha1: string;
-    };
-    url: string;
-    filename: string;
-    primary: boolean;
-    size: number;
-    file_type: string | null;
-}
+import asModal from '@/hoc/asModal';
 
-interface Version {
+import { ExpandableScrollBox, type ScrollItem } from './scroll-dropdown';
+
+interface ModVersion {
     id: string;
-    project_id: string;
-    author_id: string;
-    featured: boolean;
-    name: string;
     version_number: string;
-    changelog: string;
-    changelog_url: string | null;
     date_published: string;
     downloads: number;
-    version_type: string;
-    status: string;
-    requested_status: string | null;
-    files: ApiFile[];
-    game_versions: string[];
-    loaders: string[];
+    files: { url: string; filename: string }[];
 }
 
-interface DropdownButtonProps {
-    versions: Version[];
-    onVersionSelect?: (version: Version) => void;
-    className?: string;
+interface Props {
+    modid: string;
+    modName: string;
 }
 
-const formatFileSize = (bytes: number): string => {
-    const units = ['B', 'KB', 'MB', 'GB'];
-    let size = bytes;
-    let unitIndex = 0;
+const DownloadModModal = ({ modid, modName }: Props) => {
+    const [versions, setVersions] = useState<ModVersion[]>([]);
+    const [visibleCount, setVisibleCount] = useState(5);
+    const [loading, setLoading] = useState(true);
+    const [selectedItem, setSelectedItem] = useState<ScrollItem | null>(null);
 
-    while (size >= 1024 && unitIndex < units.length - 1) {
-        size /= 1024;
-        unitIndex++;
-    }
-
-    return `${size.toFixed(1)} ${units[unitIndex]}`;
-};
-
-const DropdownButton = ({ versions, onVersionSelect, className = '' }: DropdownButtonProps) => {
-    const [selectedVersion, setSelectedVersion] = useState<Version | null>(versions[0] || null);
-    const [isOpen, setIsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const buttonRef = useRef<HTMLButtonElement>(null);
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node) &&
-                buttonRef.current &&
-                !buttonRef.current.contains(event.target as Node)
-            ) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleSelect = async (version: Version) => {
-        setIsLoading(true);
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 300)); // Simulate async operation
-            setSelectedVersion(version);
-            setIsOpen(false);
-            onVersionSelect?.(version);
-        } finally {
-            setIsLoading(false);
-        }
+    const handleSelect = (item: ScrollItem) => {
+        setSelectedItem(item);
+        console.log(`已选择: ${item.label}`);
     };
 
-    // Fallback UI if no versions are provided
-    if (!versions.length) {
-        return (
-            <div className={`relative flex justify-center ${className}`}>
-                <div className='relative w-full max-w-md'>
-                    <Button
-                        variant='outline'
-                        className='flex items-center justify-between w-full px-4 py-3 text-left bg-gray-900 border-gray-700 hover:bg-gray-800 transition-colors disabled:opacity-50'
-                        disabled
-                    >
-                        <span className='font-medium truncate'>No versions available</span>
-                    </Button>
-                </div>
-            </div>
-        );
-    }
+    // Fetch mod versions from Modrinth API
+    useEffect(() => {
+        setLoading(true);
+        axios
+            .get(`https://api.modrinth.com/v2/project/${modid}/version`)
+            .then((response) => {
+                setVersions(response.data);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
+    }, [modid]);
 
     return (
-        <div className={`relative flex justify-center ${className}`} ref={dropdownRef}>
-            <div className='relative w-full max-w-md'>
-                <Button
-                    ref={buttonRef}
-                    variant='outline'
-                    className='flex items-center justify-between w-full px-4 py-3 text-left bg-gray-900 border-gray-700 hover:bg-gray-800 transition-colors disabled:opacity-50'
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-haspopup='listbox'
-                    aria-expanded={isOpen}
-                    disabled={isLoading || !selectedVersion}
-                >
-                    <div className='flex flex-col'>
-                        <span className='font-medium truncate'>
-                            Version: {selectedVersion?.version_number || 'Select a version'}
-                        </span>
-                        {selectedVersion?.files?.[0]?.size && (
-                            <span className='text-xs text-gray-400'>
-                                ({formatFileSize(selectedVersion.files[0].size)})
-                            </span>
-                        )}
-                    </div>
-                    <ChevronDownIcon
-                        className={`w-5 h-5 ml-2 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                    />
-                </Button>
+        <div className='p-6 mb-12 w-full overscroll-none'>
+            <h2 className='text-2xl font-bold text-white mb-4 text-center '>{modName}</h2>
+            <div aria-hidden className='my-8 bg-[#ffffff33] min-h-[1px]'></div>
 
-                {isOpen && (
-                    <div
-                        className='absolute z-20 w-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-96 overflow-y-auto'
-                        role='listbox'
-                    >
-                        {versions.map((version) => (
-                            <div
-                                key={version.id}
-                                role='option'
-                                aria-selected={version.id === selectedVersion?.id}
-                                className={`px-4 py-3 cursor-pointer transition-colors ${
-                                    version.id === selectedVersion?.id ? 'bg-brand text-white' : 'hover:bg-gray-700'
-                                } focus:outline-none focus:bg-gray-700`}
-                                onClick={() => handleSelect(version)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' || e.key === ' ') {
-                                        e.preventDefault();
-                                        handleSelect(version);
-                                    }
-                                }}
-                                tabIndex={0}
-                            >
-                                <div className='flex flex-col'>
-                                    <div className='flex justify-between items-center'>
-                                        <span className='font-medium'>{version.version_number}</span>
-                                        <span className='text-xs text-gray-400'>
-                                            {new Date(version.date_published).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                    {version.name && (
-                                        <span className='text-sm text-gray-300 truncate'>{version.name}</span>
-                                    )}
-                                    <div className='flex gap-2 mt-1 text-xs text-gray-400'>
-                                        {version.files?.[0]?.file_type && (
-                                            <span>Type: {version.files[0].file_type}</span>
-                                        )}
-                                        {version.files?.[0]?.size && (
-                                            <span>Size: {formatFileSize(version.files[0].size)}</span>
-                                        )}
-                                        {version.game_versions?.length > 0 && (
-                                            <span>Game: {version.game_versions[0]}</span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+            <FlashMessageRender byKey={`mod-download-${modid}`} />
+            {loading ? (
+                <p className='text-white'>加载版本中...</p>
+            ) : versions.length === 0 ? (
+                <p className='text-white'>此模组无可用版本。😔</p>
+            ) : (
+                <div className='flex flex-col gap-4'>
+                    <div className='w-full max-w-sm space-y-8'>
+                        <h1 className='text-2xl font-bold text-center text-custom-light-gray'>
+                            <span className='text-custom-red'>选择</span> 框
+                        </h1>
+
+                        <ExpandableScrollBox
+                            placeholder='请选择一个选项'
+                            items={versions}
+                            maxHeight='250px'
+                            onSelect={handleSelect}
+                        />
+
+                        {/* Display selected item */}
+                        <div className='p-4 bg-custom-dark-gray rounded-md text-custom-light-gray text-center'>
+                            {selectedItem ? `您选择了: ${selectedItem.label}` : '尚未选择任何选项'}
+                        </div>
+
+                        <div className='text-sm text-custom-light-gray text-center mt-4 opacity-70'>
+                            选择的项目会在按钮中显示
+                        </div>
                     </div>
-                )}
-            </div>
-            {isLoading && (
-                <div className='absolute inset-0 flex items-center justify-center bg-gray-900/50 rounded-lg'>
-                    <div className='w-6 h-6 border-2 border-brand border-t-transparent rounded-full animate-spin' />
                 </div>
             )}
         </div>
     );
 };
 
-export default DropdownButton;
+export default asModal<Props>()(DownloadModModal);

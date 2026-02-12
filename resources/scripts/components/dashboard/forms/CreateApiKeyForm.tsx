@@ -47,13 +47,13 @@ const CreateApiKeyForm = ({ onKeyCreated }: { onKeyCreated: (key: ApiKey) => voi
 
     return (
         <>
-            {/* Flash Messages */}
+            {/* 消息提示 */}
             <FlashMessageRender byKey='account' />
 
-            {/* Modal for API Key */}
+            {/* API密钥模态框 */}
             <ApiKeyModal visible={apiKey.length > 0} onModalDismissed={() => setApiKey('')} apiKey={apiKey} />
 
-            {/* Form for creating API key */}
+            {/* 创建API密钥表单 */}
             <ContentBox>
                 <Formik
                     onSubmit={submit}
@@ -70,18 +70,18 @@ const CreateApiKeyForm = ({ onKeyCreated }: { onKeyCreated: (key: ApiKey) => voi
 
                             {/* Description Field */}
                             <FormikFieldWrapper
-                                label='Description'
+                                label='描述'
                                 name='description'
-                                description='A description of this API key.'
+                                description='此API密钥的描述。'
                             >
                                 <Field name='description' as={Input} className='w-full' />
                             </FormikFieldWrapper>
 
                             {/* Allowed IPs Field */}
                             <FormikFieldWrapper
-                                label='Allowed IPs'
+                                label='允许的IP地址'
                                 name='allowedIps'
-                                description='Leave blank to allow any IP address to use this API key, otherwise provide each IP address on a new line.'
+                                description='留空以允许任何IP地址使用此API密钥，否则请在新行上提供每个IP地址。'
                             >
                                 <Field name='allowedIps' as={Input} className='w-full' />
                             </FormikFieldWrapper>
@@ -89,7 +89,7 @@ const CreateApiKeyForm = ({ onKeyCreated }: { onKeyCreated: (key: ApiKey) => voi
                             {/* Submit Button below form fields */}
                             <div className='flex justify-end mt-6'>
                                 <ActionButton type='submit' disabled={isSubmitting}>
-                                    {isSubmitting ? 'Creating...' : 'Create API Key'}
+                                    {isSubmitting ? '创建中...' : '创建API密钥'}
                                 </ActionButton>
                             </div>
                         </Form>

@@ -70,17 +70,16 @@ const MassActionsBar = () => {
                     {loadingMessage}
                 </SpinnerOverlay>
                 <Dialog.Confirm
-                    title={'Delete Files'}
+                    title={'删除文件'}
                     open={showConfirm}
-                    confirm={'Delete'}
+                    confirm={'删除'}
                     onClose={() => setShowConfirm(false)}
                     onConfirmed={onClickConfirmDeletion}
                     loading={loading}
                 >
                     <p className={'mb-2'}>
-                        Are you sure you want to delete&nbsp;
-                        <span className={'font-semibold text-zinc-50'}>{selectedFiles.length} files</span>? This is a
-                        permanent action and the files cannot be recovered.
+                        您确定要删除&nbsp;
+                        <span className={'font-semibold text-zinc-50'}>{selectedFiles.length} 个文件</span>吗？这是一个永久性操作，文件无法恢复。
                     </p>
                     {selectedFiles.slice(0, 15).map((file) => (
                         <li key={file}>{file}</li>
@@ -105,15 +104,15 @@ const MassActionsBar = () => {
                         <div className={`flex items-center space-x-4 pointer-events-auto rounded-sm p-4 bg-black/50`}>
                             <ActionButton onClick={() => setShowMove(true)} disabled={loading}>
                                 {loading && loadingMessage.includes('Moving') && <Spinner size='small' />}
-                                Move
+                                移动
                             </ActionButton>
                             <ActionButton onClick={onClickCompress} disabled={loading}>
                                 {loading && loadingMessage.includes('Archiving') && <Spinner size='small' />}
-                                Archive
+                                压缩
                             </ActionButton>
                             <ActionButton variant='danger' onClick={() => setShowConfirm(true)} disabled={loading}>
                                 {loading && loadingMessage.includes('Deleting') && <Spinner size='small' />}
-                                Delete
+                                删除
                             </ActionButton>
                         </div>
                     </div>

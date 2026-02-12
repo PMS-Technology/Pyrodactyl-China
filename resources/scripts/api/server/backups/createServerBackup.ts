@@ -1,5 +1,4 @@
 import http from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 import { ServerBackup } from '@/api/server/types';
 import { rawDataToServerBackup } from '@/api/transformers';
 
@@ -19,12 +18,8 @@ interface CreateBackupResponse {
     };
 }
 
-export default async (
-    uuid: string,
-    params: RequestParameters,
-): Promise<{ backup: ServerBackup; jobId: string; status: string; progress: number; message?: string }> => {
-    const daemonType = getGlobalDaemonType();
-    const response = await http.post<CreateBackupResponse>(`/api/client/servers/${daemonType}/${uuid}/backups`, {
+export default async (uuid: string, params: RequestParameters): Promise<{ backup: ServerBackup; jobId: string; status: string; progress: number; message?: string }> => {
+    const response = await http.post<CreateBackupResponse>(`/api/client/servers/${uuid}/backups`, {
         name: params.name,
         ignored: params.ignored,
         is_locked: params.isLocked,
@@ -47,6 +42,7 @@ export default async (
     }
 
     if (response.data.job_id && response.data.status) {
+
         // Create a minimal backup object for the async job
         // note: I really don't like this implementation but I really can't be fucked right now to do this better - ellie
         const tempBackup: ServerBackup = {
@@ -64,7 +60,7 @@ export default async (
             jobMessage: response.data.message || '',
             jobId: response.data.job_id,
             jobError: null,
-            object: 'backup',
+            object: 'backup'
         };
 
         return {
@@ -77,6 +73,7 @@ export default async (
     }
 
     if (response.data.uuid || response.data.object === 'backup') {
+
         try {
             const backupData = rawDataToServerBackup(response.data);
 

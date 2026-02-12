@@ -41,7 +41,6 @@ class DownloadLinkService
                 'server_uuid' => $backup->server->uuid,
                 'backup_disk' => $backup->disk,
                 'repository_type' => $backup->getRepositoryType(),
-                'snapshot_id' => $backup->snapshot_id,
             ])
             ->handle($backup->server->node, $user->id . $backup->server->uuid);
 

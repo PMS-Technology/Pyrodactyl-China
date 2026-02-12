@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight } from '@gravity-ui/icons';
 import clsx from 'clsx';
 
 import ActionButton from '@/components/elements/ActionButton';
+import HugeIconsChevronLeft from '@/components/elements/hugeicons/ChevronLeft';
+import HugeIconsChevronRight from '@/components/elements/hugeicons/ChevronRight';
 
 import { PaginationDataSet } from '@/api/http';
 
@@ -34,11 +35,11 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
     return (
         <div className={clsx('flex items-center justify-between my-2', className)}>
             <p className={'text-sm text-zinc-500'}>
-                Showing&nbsp;
+                显示&nbsp;
                 <span className={'font-semibold text-zinc-400'}>{Math.max(start, Math.min(pagination.total, 1))}</span>
-                &nbsp;to&nbsp;
-                <span className={'font-semibold text-zinc-400'}>{end}</span> of&nbsp;
-                <span className={'font-semibold text-zinc-400'}>{pagination.total}</span> results.
+                &nbsp;到&nbsp;
+                <span className={'font-semibold text-zinc-400'}>{end}</span> 条结果，共&nbsp;
+                <span className={'font-semibold text-zinc-400'}>{pagination.total}</span> 条。
             </p>
             {pagination.totalPages > 1 && (
                 <div className={'flex space-x-1'}>
@@ -47,9 +48,9 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
                         size='sm'
                         onClick={() => onPageSelect(current - 1)}
                         disabled={current <= 1}
-                        className=' p-0 flex items-center justify-center'
+                        className='w-8 h-8 p-0 flex items-center justify-center'
                     >
-                        <ChevronLeft width={22} height={22} fill='currentColor' />
+                        <HugeIconsChevronLeft fill='currentColor' className='w-3 h-3' />
                     </ActionButton>
                     {pages.previous.reverse().map((value) => (
                         <ActionButton
@@ -86,9 +87,9 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
                         size='sm'
                         onClick={() => onPageSelect(current + 1)}
                         disabled={current >= total}
-                        className='p-0 flex items-center justify-center'
+                        className='w-8 h-8 p-0 flex items-center justify-center'
                     >
-                        <ChevronRight width={22} height={22} fill='currentColor' />
+                        <HugeIconsChevronRight fill='currentColor' className='w-3 h-3' />
                     </ActionButton>
                 </div>
             )}

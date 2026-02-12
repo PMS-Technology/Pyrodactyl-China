@@ -1,4 +1,3 @@
-import { Database } from '@gravity-ui/icons';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { For } from 'million/react';
 import { useEffect, useState } from 'react';
@@ -11,6 +10,7 @@ import Field from '@/components/elements/Field';
 import { MainPageHeader } from '@/components/elements/MainPageHeader';
 import Modal from '@/components/elements/Modal';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import HugeIconsDatabase from '@/components/elements/hugeicons/Database';
 import { PageListContainer, PageListItem } from '@/components/elements/pages/PageList';
 import DatabaseRow from '@/components/server/databases/DatabaseRow';
 
@@ -84,30 +84,32 @@ const DatabasesContainer = () => {
     }, []);
 
     return (
-        <ServerContentBlock title={'Databases'}>
+        <ServerContentBlock title={'数据库'}>
             <FlashMessageRender byKey={'databases'} />
             <MainPageHeader
                 direction='column'
-                title={'Databases'}
+                title={'数据库'}
                 titleChildren={
                     <Can action={'database.create'}>
                         <div className='flex flex-col sm:flex-row items-center justify-end gap-4'>
                             {databaseLimit === null && (
                                 <p className='text-sm text-zinc-300 text-center sm:text-right'>
-                                    {databases.length} databases (unlimited)
+                                    {databases.length} 个数据库 (无限制)
                                 </p>
                             )}
                             {databaseLimit > 0 && (
                                 <p className='text-sm text-zinc-300 text-center sm:text-right'>
-                                    {databases.length} of {databaseLimit} databases
+                                    {databases.length} / {databaseLimit} 个数据库
                                 </p>
                             )}
                             {databaseLimit === 0 && (
-                                <p className='text-sm text-red-400 text-center sm:text-right'>Databases disabled</p>
+                                <p className='text-sm text-red-400 text-center sm:text-right'>
+                                    数据库已禁用
+                                </p>
                             )}
                             {(databaseLimit === null || (databaseLimit > 0 && databaseLimit !== databases.length)) && (
                                 <ActionButton variant='primary' onClick={() => setCreateModalVisible(true)}>
-                                    New Database
+                                    新建数据库
                                 </ActionButton>
                             )}
                         </div>
@@ -115,8 +117,7 @@ const DatabasesContainer = () => {
                 }
             >
                 <p className='text-sm text-neutral-400 leading-relaxed'>
-                    Create and manage MySQL databases for your server. Configure database access, manage users, and view
-                    connection details.
+                    为您的服务器创建和管理 MySQL 数据库。配置数据库访问权限，管理用户并查看连接详细信息。
                 </p>
             </MainPageHeader>
 
@@ -134,7 +135,7 @@ const DatabasesContainer = () => {
                             resetForm();
                             setCreateModalVisible(false);
                         }}
-                        title='Create new database'
+                        title='创建新数据库'
                     >
                         <div className='flex flex-col'>
                             <FlashMessageRender byKey={'database:create'} />
@@ -143,23 +144,23 @@ const DatabasesContainer = () => {
                                     type={'string'}
                                     id={'database_name'}
                                     name={'databaseName'}
-                                    label={'Database Name'}
-                                    description={'A descriptive name for your database instance.'}
+                                    label={'数据库名称'}
+                                    description={'数据库实例的描述性名称。'}
                                 />
                                 <div className={`mt-6`}>
                                     <Field
                                         type={'string'}
                                         id={'connections_from'}
                                         name={'connectionsFrom'}
-                                        label={'Connections From'}
+                                        label={'连接来源'}
                                         description={
-                                            'Where connections should be allowed from. Leave blank to allow connections from anywhere.'
+                                            '允许从哪里连接。留空以允许从任何地方连接。'
                                         }
                                     />
                                 </div>
                                 <div className={`flex gap-3 justify-end my-6`}>
                                     <ActionButton variant='primary' type={'submit'}>
-                                        Create Database
+                                        创建数据库
                                     </ActionButton>
                                 </div>
                             </Form>
@@ -182,15 +183,15 @@ const DatabasesContainer = () => {
                 <div className='flex flex-col items-center justify-center min-h-[60vh] py-12 px-4'>
                     <div className='text-center'>
                         <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-[#ffffff11] flex items-center justify-center'>
-                            <Database className='w-8 h-8 text-zinc-400' fill='currentColor' />
+                            <HugeIconsDatabase className='w-8 h-8 text-zinc-400' fill='currentColor' />
                         </div>
                         <h3 className='text-lg font-medium text-zinc-200 mb-2'>
-                            {databaseLimit === 0 ? 'Databases unavailable' : 'No databases found'}
+                            {databaseLimit === 0 ? '数据库不可用' : '未找到数据库'}
                         </h3>
                         <p className='text-sm text-zinc-400 max-w-sm'>
                             {databaseLimit === 0
-                                ? 'Databases cannot be created for this server.'
-                                : 'Your server does not have any databases. Create one to get started.'}
+                                ? '无法为此服务器创建数据库。'
+                                : '您的服务器没有任何数据库。创建一个以开始使用。'}
                         </p>
                     </div>
                 </div>

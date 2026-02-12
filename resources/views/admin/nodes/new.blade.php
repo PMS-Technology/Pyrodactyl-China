@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
 @section('title')
-    Nodes &rarr; New
+    节点 &rarr; 新建
 @endsection
 
 @section('content-header')
-    <h1>New Node<small>Create a new local or remote node for servers to be installed to.</small></h1>
+    <h1>新建节点<small>创建一个新的本地或远程节点，用于安装服务器。</small></h1>
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li><a href="{{ route('admin.nodes') }}">Nodes</a></li>
-        <li class="active">New</li>
+        <li><a href="{{ route('admin.index') }}">管理</a></li>
+        <li><a href="{{ route('admin.nodes') }}">节点</a></li>
+        <li class="active">新建</li>
     </ol>
 @endsection
 
@@ -19,20 +19,20 @@
         <div class="col-sm-6">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Basic Details</h3>
+                    <h3 class="box-title">基本详情</h3>
                 </div>
                 <div class="box-body">
                     <div class="form-group">
-                        <label for="pName" class="form-label">Name</label>
+                        <label for="pName" class="form-label">名称</label>
                         <input type="text" name="name" id="pName" class="form-control" value="{{ old('name') }}"/>
-                        <p class="text-muted small">Character limits: <code>a-zA-Z0-9_.-</code> and <code>[Space]</code> (min 1, max 100 characters).</p>
+                        <p class="text-muted small">字符限制: <code>a-zA-Z0-9_.-</code> 和 <code>[空格]</code> (最少 1 个，最多 100 个字符)。</p>
                     </div>
                     <div class="form-group">
-                        <label for="pDescription" class="form-label">Description</label>
+                        <label for="pDescription" class="form-label">描述</label>
                         <textarea name="description" id="pDescription" rows="4" class="form-control">{{ old('description') }}</textarea>
                     </div>
                     <div class="form-group">
-                        <label for="pLocationId" class="form-label">Location</label>
+                        <label for="pLocationId" class="form-label">位置</label>
                         <select name="location_id" id="pLocationId">
                             @foreach($locations as $location)
                                 <option value="{{ $location->id }}" {{ $location->id != old('location_id') ?: 'selected' }}>{{ $location->short }}</option>
@@ -40,95 +40,74 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="pDaemonType" class="form-label">Daemon</label>
-                        <select name="daemonType" id="pDaemonType" class="form-control">
-                            @foreach($daemonTypes as $daemon => $label)
-                                <option value="{{ $daemon }}" {{ $daemon == old('daemon_type', 'wings') ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pBackupDisk" class="form-label">Backup Disk</label>
-                        <div>
-                        <select name="backupDisk" id="pBackupDisk" class="form-control">
-                            <!-- Populated via Script-->
-                        </select>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label class="form-label">Node Visibility</label>
+                        <label class="form-label">节点可见性</label>
                         <div>
                             <div class="radio radio-success radio-inline">
 
                                 <input type="radio" id="pPublicTrue" value="1" name="public" checked>
-                                <label for="pPublicTrue"> Public </label>
+                                <label for="pPublicTrue"> 公共 </label>
                             </div>
                             <div class="radio radio-danger radio-inline">
                                 <input type="radio" id="pPublicFalse" value="0" name="public">
-                                <label for="pPublicFalse"> Private </label>
+                                <label for="pPublicFalse"> 私有 </label>
                             </div>
                         </div>
-                        <p class="text-muted small">By setting a node to <code>private</code> you will be denying the ability to auto-deploy to this node.
+                        <p class="text-muted small">将节点设置为 <code>私有</code> 将会拒绝自动部署到此节点的能力。
                     </div>
                     <div class="form-group">
-                        <label for="pFQDN" class="form-label">Public FQDN</label>
+                        <label for="pFQDN" class="form-label">公共 FQDN</label>
                         <input type="text" name="fqdn" id="pFQDN" class="form-control" value="{{ old('fqdn') }}" />
                         <p class="text-muted small">
-                            Domain name that browsers will use to connect to your Node (e.g <code>node.example.com</code>).
-                            An IP address may be used <em>only</em> if you are not using SSL for this node.
+                            浏览器将用于连接到 Wings 的域名 (例如 <code>wings.example.com</code>)。
+                            只有在不为此节点使用 SSL 的情况下才可以使用 IP 地址。
                         </p>
                     </div>
                     <div class="form-group">
                         <label for="pInternalFQDN" class="form-label">
-                            Internal FQDN
-                            <strong>(Optional)</strong>
+                            内部 FQDN
+                            <strong>(可选)</strong>
                         </label>
                         <input type="text" name="internal_fqdn" id="pInternalFQDN" class="form-control"
                             value="{{ old('internal_fqdn') }}" />
                         <p class="text-muted small">
-                            <strong>Optional:</strong>
-                            Leave blank to use the Public FQDN for panel-to-node communication.
-                            If specified, this internal domain name will be used for panel-to-node communication instead
-                            (e.g <code>node-internal.example.com</code> or <code>10.0.0.5</code>).
-                            Useful for internal networks where the panel needs to communicate with your node using a
-                            different address than what browsers use.
+                            <strong>可选:</strong>
+                            留空以使用公共 FQDN 进行面板到 Wings 的通信。
+                            如果指定，将使用此内部域名进行面板到 Wings 的通信
+                            (例如 <code>wings-internal.example.com</code> 或 <code>10.0.0.5</code>)。
+                            适用于面板需要使用与浏览器不同的地址与 Wings 通信的内部网络。
                         </p>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Communicate Over SSL</label>
+                        <label class="form-label">通过 SSL 通信</label>
                         <div>
                             <div class="radio radio-success radio-inline">
                                 <input type="radio" id="pSSLTrue" value="https" name="scheme" checked>
-                                <label for="pSSLTrue"> Use SSL Connection</label>
+                                <label for="pSSLTrue"> 使用 SSL 连接</label>
                             </div>
                             <div class="radio radio-danger radio-inline">
                                 <input type="radio" id="pSSLFalse" value="http" name="scheme" @if(request()->isSecure()) disabled @endif>
-                                <label for="pSSLFalse"> Use HTTP Connection</label>
+                                <label for="pSSLFalse"> 使用 HTTP 连接</label>
                             </div>
                         </div>
                         @if(request()->isSecure())
-                            <p class="text-danger small">Your Panel is currently configured to use a secure connection. In order for browsers to connect to your node it <strong>must</strong> use a SSL connection.</p>
+                            <p class="text-danger small">您的面板当前配置为使用安全连接。为了让浏览器连接到您的节点，它<strong>必须</strong>使用 SSL 连接。</p>
                         @else
-                            <p class="text-muted small">In most cases you should select to use a SSL connection. If using an IP Address or you do not wish to use SSL at all, select a HTTP connection.</p>
+                            <p class="text-muted small">在大多数情况下，您应该选择使用 SSL 连接。如果使用 IP 地址或您根本不希望使用 SSL，请选择 HTTP 连接。</p>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Behind Proxy</label>
+                        <label class="form-label">位于代理后</label>
                         <div>
                             <div class="radio radio-success radio-inline">
                                 <input type="radio" id="pProxyFalse" value="0" name="behind_proxy" checked>
-                                <label for="pProxyFalse"> Not Behind Proxy </label>
+                                <label for="pProxyFalse"> 不位于代理后 </label>
                             </div>
                             <div class="radio radio-info radio-inline">
                                 <input type="radio" id="pProxyTrue" value="1" name="behind_proxy">
-                                <label for="pProxyTrue"> Behind Proxy </label>
+                                <label for="pProxyTrue"> 位于代理后 </label>
                             </div>
                         </div>
-                        <p class="text-muted small">If you are running the daemon behind a proxy such as Cloudflare, select this to have the daemon skip looking for certificates on boot.</p>
+                        <p class="text-muted small">如果您在 Cloudflare 等代理后运行守护进程，请选择此项以使守护进程在启动时跳过查找证书。</p>
                     </div>
                 </div>
             </div>
@@ -136,69 +115,69 @@
         <div class="col-sm-6">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Configuration</h3>
+                    <h3 class="box-title">配置</h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="pDaemonBase" class="form-label">Daemon Server File Directory</label>
-                            <input type="text" name="daemonBase" id="pDaemonBase" class="form-control" value="/var/lib/elytra/volumes" />
-                            <p class="text-muted small">Enter the directory where server files should be stored. <strong>If you use OVH you should check your partition scheme. You may need to use <code>/home/daemon-data</code> to have enough space.</strong></p>
+                            <label for="pDaemonBase" class="form-label">守护进程服务器文件目录</label>
+                            <input type="text" name="daemonBase" id="pDaemonBase" class="form-control" value="/var/lib/pterodactyl/volumes" />
+                            <p class="text-muted small">输入应存储服务器文件的目录。<strong>如果您使用 OVH，您应该检查您的分区方案。您可能需要使用 <code>/home/daemon-data</code> 才能有足够的空间。</strong></p>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="pMemory" class="form-label">Total Memory</label>
+                            <label for="pMemory" class="form-label">总内存</label>
                             <div class="input-group">
                                 <input type="text" name="memory" data-multiplicator="true" class="form-control" id="pMemory" value="{{ old('memory') }}"/>
                                 <span class="input-group-addon">MiB</span>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="pMemoryOverallocate" class="form-label">Memory Over-Allocation</label>
+                            <label for="pMemoryOverallocate" class="form-label">内存超额分配</label>
                             <div class="input-group">
                                 <input type="text" name="memory_overallocate" class="form-control" id="pMemoryOverallocate" value="{{ old('memory_overallocate') }}"/>
                                 <span class="input-group-addon">%</span>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <p class="text-muted small">Enter the total amount of memory available for new servers. If you would like to allow overallocation of memory enter the percentage that you want to allow. To disable checking for overallocation enter <code>-1</code> into the field. Entering <code>0</code> will prevent creating new servers if it would put the node over the limit.</p>
+                            <p class="text-muted small">输入可用于新服务器的总内存量。如果您希望允许内存超额分配，请输入您希望允许的百分比。要禁用超额分配检查，请在字段中输入 <code>-1</code>。输入 <code>0</code> 将防止创建新服务器，如果这会使节点超出限制。</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="pDisk" class="form-label">Total Disk Space</label>
+                            <label for="pDisk" class="form-label">总磁盘空间</label>
                             <div class="input-group">
                                 <input type="text" name="disk" data-multiplicator="true" class="form-control" id="pDisk" value="{{ old('disk') }}"/>
                                 <span class="input-group-addon">MiB</span>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="pDiskOverallocate" class="form-label">Disk Over-Allocation</label>
+                            <label for="pDiskOverallocate" class="form-label">磁盘超额分配</label>
                             <div class="input-group">
                                 <input type="text" name="disk_overallocate" class="form-control" id="pDiskOverallocate" value="{{ old('disk_overallocate') }}"/>
                                 <span class="input-group-addon">%</span>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <p class="text-muted small">Enter the total amount of disk space available for new servers. If you would like to allow overallocation of disk space enter the percentage that you want to allow. To disable checking for overallocation enter <code>-1</code> into the field. Entering <code>0</code> will prevent creating new servers if it would put the node over the limit.</p>
+                            <p class="text-muted small">输入可用于新服务器的总磁盘空间量。如果您希望允许磁盘空间超额分配，请输入您希望允许的百分比。要禁用超额分配检查，请在字段中输入 <code>-1</code>。输入 <code>0</code> 将防止创建新服务器，如果这会使节点超出限制。</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="pDaemonListen" class="form-label">Daemon Port</label>
+                            <label for="pDaemonListen" class="form-label">守护进程端口</label>
                             <input type="text" name="daemonListen" class="form-control" id="pDaemonListen" value="8080" />
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="pDaemonSFTP" class="form-label">Daemon SFTP Port</label>
+                            <label for="pDaemonSFTP" class="form-label">守护进程 SFTP 端口</label>
                             <input type="text" name="daemonSFTP" class="form-control" id="pDaemonSFTP" value="2022" />
                         </div>
                         <div class="col-md-12">
-                            <p class="text-muted small">The daemon runs its own SFTP management container and does not use the SSHd process on the main physical server. <Strong>Do not use the same port that you have assigned for your physical server's SSH process.</strong> If you will be running the daemon behind CloudFlare&reg; you should set the daemon port to <code>8443</code> to allow websocket proxying over SSL.</p>
+                            <p class="text-muted small">守护进程运行自己的 SFTP 管理容器，不使用主物理服务器上的 SSHd 进程。<Strong>不要使用您为物理服务器的 SSH 进程分配的相同端口。</strong> 如果您将在 CloudFlare&reg; 后运行守护进程，您应该将守护进程端口设置为 <code>8443</code> 以允许通过 SSL 进行 websocket 代理。</p>
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
                     {!! csrf_field() !!}
-                    <button type="submit" class="btn btn-success pull-right">Create Node</button>
+                    <button type="submit" class="btn btn-success pull-right">创建节点</button>
                 </div>
             </div>
         </div>
@@ -210,39 +189,5 @@
     @parent
     <script>
         $('#pLocationId').select2();
-
-        $(document).ready(function() {
-            const daemonSelect = document.getElementById('pDaemonType');
-            const backupDiskSelect = document.getElementById('pBackupDisk');
-
-            // Auto Update backup disks based on the selected daemon type
-            function updateBackupDisks() {
-                const daemonValue = daemonSelect.value;
-                const disks = {!! json_encode($backupDisks ?? []) !!}[daemonValue] || [];
-
-                backupDiskSelect.innerHTML = '';
-
-                disks.forEach(disk => {
-                    const option = document.createElement('option');
-                    option.value = disk;
-                    option.textContent = disk;
-
-                    backupDiskSelect.appendChild(option);
-                });
-            }
-
-            updateBackupDisks();
-
-            daemonSelect.addEventListener('change', updateBackupDisks);
-
-            $('[data-toggle="popover"]').popover({
-                placement: 'auto'
-            });
-
-            $('select[name="location_id"]').select2();
-        });
-
-
-
     </script>
 @endsection

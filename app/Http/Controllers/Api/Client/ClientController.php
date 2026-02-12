@@ -37,7 +37,6 @@ class ClientController extends ClientApiController
             'name',
             'description',
             'external_id',
-            'daemonType',
             AllowedFilter::custom('*', new MultiFieldServerFilter()),
         ]);
 
@@ -58,9 +57,6 @@ class ClientController extends ClientApiController
             }
         } elseif ($type === 'owner') {
             $builder = $builder->where('servers.owner_id', $user->id);
-        } elseif ($type === 'all') {
-            // Yes, I'm well aware this and the one below it are the same function, shut Up, I know. it's not a bug
-            $builder = $builder->whereIn('servers.id', $user->accessibleServers()->pluck('id')->all());
         } else {
             $builder = $builder->whereIn('servers.id', $user->accessibleServers()->pluck('id')->all());
         }

@@ -1,5 +1,3 @@
-// TODO: Convert this to pure React
-
 // Copyright (c) 2015 - 2017 Dane Everitt <dane@daneeveritt.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,8 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-$(document).ready(function() {
-    Socket.on('console', function(data) {
+$(document).ready(function () {
+    Socket.on('console', function (data) {
         if (typeof data === 'undefined' || typeof data.line === 'undefined') {
             return;
         }
@@ -39,7 +37,7 @@ $(document).ready(function() {
                     closeOnConfirm: false,
                     showLoaderOnConfirm: true,
                 },
-                function() {
+                function () {
                     $.ajax({
                         type: 'POST',
                         url: Pterodactyl.meta.saveFile,
@@ -49,7 +47,7 @@ $(document).ready(function() {
                             contents: 'eula=true',
                         },
                     })
-                        .done(function(data) {
+                        .done(function (data) {
                             $('[data-attr="power"][data-action="start"]').trigger('click');
                             swal({
                                 type: 'success',
@@ -57,7 +55,7 @@ $(document).ready(function() {
                                 text: 'The EULA for this server has been accepted, restarting server now.',
                             });
                         })
-                        .fail(function(jqXHR) {
+                        .fail(function (jqXHR) {
                             console.error(jqXHR);
                             swal({
                                 title: 'Whoops!',

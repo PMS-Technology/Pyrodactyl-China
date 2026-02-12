@@ -1,4 +1,3 @@
-import { Box, TriangleExclamation } from '@gravity-ui/icons';
 import { useEffect, useMemo, useState } from 'react';
 import isEqual from 'react-fast-compare';
 import { toast } from 'sonner';
@@ -17,14 +16,13 @@ import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import Spinner from '@/components/elements/Spinner';
 import { Switch } from '@/components/elements/SwitchV2';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import HugeIconsAlert from '@/components/elements/hugeicons/Alert';
+import HugeIconsEggs from '@/components/elements/hugeicons/Egg';
 import OperationProgressModal from '@/components/server/operations/OperationProgressModal';
-import WingsOperationProgressModal from '@/components/server/operations/WingsOperationProgressModal';
 
 import { httpErrorToHuman } from '@/api/http';
 import getNests from '@/api/nests/getNests';
 import applyEggChange from '@/api/server/applyEggChange';
-import applyEggChangeSync from '@/api/server/applyEggChangeSync';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 import previewEggChange, { EggPreview } from '@/api/server/previewEggChange';
 import { ServerOperation } from '@/api/server/serverOperations';
 import getServerBackups from '@/api/swr/getServerBackups';
@@ -89,7 +87,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
 
         // If required and empty/null
         if (isRequired && (!value || value.trim() === '')) {
-            errors.push(`${variable.name} is required.`);
+            errors.push(`${variable.name} 是必填项。`);
             return;
         }
 
@@ -105,21 +103,21 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
             switch (ruleName) {
                 case 'string':
                     if (typeof value !== 'string') {
-                        errors.push(`${variable.name} must be a string.`);
+                        errors.push(`${variable.name} 必须是字符串。`);
                     }
                     break;
 
                 case 'integer':
                 case 'numeric':
                     if (value && isNaN(Number(value))) {
-                        errors.push(`${variable.name} must be a number.`);
+                        errors.push(`${variable.name} 必须是数字。`);
                     }
                     break;
 
                 case 'boolean': {
                     const boolValues = ['true', 'false', '1', '0', 'yes', 'no', 'on', 'off'];
                     if (value && !boolValues.includes(value.toLowerCase())) {
-                        errors.push(`${variable.name} must be true or false.`);
+                        errors.push(`${variable.name} 必须是 true 或 false。`);
                     }
                     break;
                 }
@@ -128,7 +126,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                     if (ruleValue && value) {
                         const minValue = parseInt(ruleValue);
                         if (value.length < minValue) {
-                            errors.push(`${variable.name} must be at least ${minValue} characters.`);
+                            errors.push(`${variable.name} 至少需要 ${minValue} 个字符。`);
                         }
                     }
                     break;
@@ -138,7 +136,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                     if (ruleValue && value) {
                         const maxValue = parseInt(ruleValue);
                         if (value.length > maxValue) {
-                            errors.push(`${variable.name} may not be greater than ${maxValue} characters.`);
+                            errors.push(`${variable.name} 不能超过 ${maxValue} 个字符。`);
                         }
                     }
                     break;
@@ -148,7 +146,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                     if (ruleValue && value) {
                         const [min, max] = ruleValue.split(',').map((v) => parseInt(v.trim()));
                         if (value.length < min || value.length > max) {
-                            errors.push(`${variable.name} must be between ${min} and ${max} characters.`);
+                            errors.push(`${variable.name} 必须在 ${min} 到 ${max} 个字符之间。`);
                         }
                     }
                     break;
@@ -158,7 +156,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                     if (ruleValue && value) {
                         const allowedValues = ruleValue.split(',').map((v) => v.trim());
                         if (!allowedValues.includes(value)) {
-                            errors.push(`${variable.name} must be one of: ${allowedValues.join(', ')}.`);
+                            errors.push(`${variable.name} 必须是以下值之一: ${allowedValues.join(', ')}。`);
                         }
                     }
                     break;
@@ -172,7 +170,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                             if (regexMatch) {
                                 const regex = new RegExp(regexMatch[1], regexMatch[2]);
                                 if (!regex.test(value)) {
-                                    errors.push(`${variable.name} format is invalid.`);
+                                    errors.push(`${variable.name} 格式无效。`);
                                 }
                             }
                         } catch (e) {
@@ -184,19 +182,19 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
 
                 case 'alpha':
                     if (value && !/^[a-zA-Z]+$/.test(value)) {
-                        errors.push(`${variable.name} may only contain letters.`);
+                        errors.push(`${variable.name} 只能包含字母。`);
                     }
                     break;
 
                 case 'alpha_num':
                     if (value && !/^[a-zA-Z0-9]+$/.test(value)) {
-                        errors.push(`${variable.name} may only contain letters and numbers.`);
+                        errors.push(`${variable.name} 只能包含字母和数字。`);
                     }
                     break;
 
                 case 'alpha_dash':
                     if (value && !/^[a-zA-Z0-9_-]+$/.test(value)) {
-                        errors.push(`${variable.name} may only contain letters, numbers, dashes and underscores.`);
+                        errors.push(`${variable.name} 只能包含字母、数字、短横线和下划线。`);
                     }
                     break;
 
@@ -205,14 +203,14 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                         try {
                             new URL(value);
                         } catch {
-                            errors.push(`${variable.name} must be a valid URL.`);
+                            errors.push(`${variable.name} 必须是有效的 URL。`);
                         }
                     }
                     break;
 
                 case 'email':
                     if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                        errors.push(`${variable.name} must be a valid email address.`);
+                        errors.push(`${variable.name} 必须是有效的邮箱地址。`);
                     }
                     break;
 
@@ -221,7 +219,7 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
                         const ipRegex =
                             /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
                         if (!ipRegex.test(value)) {
-                            errors.push(`${variable.name} must be a valid IP address.`);
+                            errors.push(`${variable.name} 必须是有效的 IP 地址。`);
                         }
                     }
                     break;
@@ -251,7 +249,6 @@ const validateEnvironmentVariables = (variables: any[], pendingVariables: Record
 
 const SoftwareContainer = () => {
     const serverData = ServerContext.useStoreState((state) => state.server.data);
-    const daemonType = getGlobalDaemonType();
     const uuid = serverData?.uuid;
     const [nests, setNests] = useState<Nest[]>();
     //const eggs = nests?.reduce(
@@ -274,7 +271,6 @@ const SoftwareContainer = () => {
             ?.attributes?.name;
     }, [nests, currentEgg]);
     const backupLimit = serverData?.featureLimits.backups;
-
     const { data: backups } = getServerBackups();
     const setServerFromState = ServerContext.useStoreActions((actions) => actions.server.setServerFromState);
 
@@ -512,8 +508,8 @@ const SoftwareContainer = () => {
                 selectedDockerImage && eggPreview.docker_images
                     ? eggPreview.docker_images[selectedDockerImage]
                     : eggPreview.default_docker_image && eggPreview.docker_images
-                        ? eggPreview.docker_images[eggPreview.default_docker_image]
-                        : '';
+                      ? eggPreview.docker_images[eggPreview.default_docker_image]
+                      : '';
 
             // Filter out empty environment variables to prevent validation issues
             const filteredEnvironment: Record<string, string> = {};
@@ -523,34 +519,24 @@ const SoftwareContainer = () => {
                 }
             });
 
-            if (daemonType?.toLowerCase() == 'elytra') {
-                const response = await applyEggChange(uuid, {
-                    egg_id: selectedEgg.attributes.id,
-                    nest_id: selectedNest.attributes.id,
-                    docker_image: actualDockerImage,
-                    startup_command: customStartup,
-                    environment: filteredEnvironment,
-                    should_backup: shouldBackup,
-                    should_wipe: shouldWipe,
-                });
+            // Start the async operation
+            const response = await applyEggChange(uuid, {
+                egg_id: selectedEgg.attributes.id,
+                nest_id: selectedNest.attributes.id,
+                docker_image: actualDockerImage,
+                startup_command: customStartup,
+                environment: filteredEnvironment,
+                should_backup: shouldBackup,
+                should_wipe: shouldWipe,
+            });
 
-                setCurrentOperationId(response.operation_id);
+            // Operation started successfully - show progress modal
+            setCurrentOperationId(response.operation_id);
+            setShowOperationModal(true);
 
-                setShowOperationModal(true);
-            } else if (daemonType?.toLowerCase() == 'wings') {
-                await applyEggChangeSync(uuid, {
-                    egg_id: selectedEgg.attributes.id,
-                    nest_id: selectedNest.attributes.id,
-                    docker_image: actualDockerImage,
-                    startup_command: customStartup,
-                    environment: filteredEnvironment,
-                    should_backup: shouldBackup,
-                    should_wipe: shouldWipe,
-                });
-            }
+            toast.success('软件更改操作已成功启动');
 
-            toast.success('Software change operation started successfully');
-
+            // Reset the configuration flow but keep the modal open
             resetFlow();
         } catch (error) {
             console.error('Failed to start egg change operation:', error);
@@ -568,17 +554,17 @@ const SoftwareContainer = () => {
 
     const handleOperationComplete = (operation: ServerOperation) => {
         if (operation.is_completed) {
-            toast.success('Your software configuration has been applied successfully');
+            toast.success('您的软件配置已成功应用');
 
             // Refresh server data to reflect changes
             mutate();
         } else if (operation.has_failed) {
-            toast.error(operation.message || 'The software configuration change failed');
+            toast.error(operation.message || '软件配置更改失败');
         }
     };
 
     const handleOperationError = (error: Error) => {
-        toast.error(error.message || 'An error occurred while monitoring the operation');
+        toast.error(error.message || '监控操作时发生错误');
     };
 
     const closeOperationModal = () => {
@@ -603,7 +589,7 @@ const SoftwareContainer = () => {
                             onClick={() => toggleDescription(id)}
                             className='text-brand hover:underline font-medium'
                         >
-                            Show more
+                            显示更多
                         </button>
                     </>
                 ) : (
@@ -616,7 +602,7 @@ const SoftwareContainer = () => {
                                     onClick={() => toggleDescription(id)}
                                     className='text-brand hover:underline font-medium'
                                 >
-                                    Show less
+                                    显示较少
                                 </button>
                             </>
                         )}
@@ -627,21 +613,16 @@ const SoftwareContainer = () => {
     };
 
     const renderOverview = () => (
-        <TitledGreyBox title='Current Software'>
+        <TitledGreyBox title='当前软件'>
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
                 <div className='flex items-center gap-3 sm:gap-4 min-w-0 flex-1'>
                     <div className='w-10 h-10 sm:w-12 sm:h-12 bg-[#ffffff11] rounded-lg flex items-center justify-center flex-shrink-0'>
-                        <Box
-                            width={22}
-                            height={22}
-                            fill='currentColor'
-                            className='w-5 h-5 sm:w-6 sm:h-6 text-neutral-300'
-                        />
+                        <HugeIconsEggs fill='currentColor' className='w-5 h-5 sm:w-6 sm:h-6 text-neutral-300' />
                     </div>
                     <div className='min-w-0 flex-1'>
                         {currentEggName ? (
                             currentEggName.includes(blank_egg_prefix) ? (
-                                <p className='text-amber-400 font-medium text-sm sm:text-base'>No software selected</p>
+                                <p className='text-amber-400 font-medium text-sm sm:text-base'>未选择软件</p>
                             ) : (
                                 <p className='text-neutral-200 font-medium text-sm sm:text-base truncate'>
                                     {currentEggName}
@@ -650,11 +631,11 @@ const SoftwareContainer = () => {
                         ) : (
                             <div className='flex items-center gap-2'>
                                 <Spinner size='small' />
-                                <span className='text-neutral-400 text-sm'>Loading...</span>
+                                <span className='text-neutral-400 text-sm'>加载中...</span>
                             </div>
                         )}
                         <p className='text-xs sm:text-sm text-neutral-400 leading-relaxed'>
-                            Manage your server&apos;s game or software configuration
+管理您的服务器游戏或软件配置
                         </p>
                     </div>
                 </div>
@@ -674,7 +655,7 @@ const SoftwareContainer = () => {
                         disabled={isLoading}
                     >
                         {isLoading && <Spinner size='small' />}
-                        Change Software
+                        更改软件
                     </ActionButton>
                 </div>
             </div>
@@ -682,9 +663,9 @@ const SoftwareContainer = () => {
     );
 
     const renderGameSelection = () => (
-        <TitledGreyBox title='Select Category'>
+        <TitledGreyBox title='选择类别'>
             <div className='space-y-4'>
-                <p className='text-sm text-neutral-400'>Choose the type of game or software you want to run</p>
+                <p className='text-sm text-neutral-400'>选择您想要运行的游戏或软件类型</p>
 
                 <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4'>
                     {nests?.map((nest) =>
@@ -712,7 +693,7 @@ const SoftwareContainer = () => {
                         onClick={() => setCurrentStep('overview')}
                         className='w-full sm:w-auto'
                     >
-                        Back to Overview
+                        返回概览
                     </ActionButton>
                 </div>
             </div>
@@ -720,15 +701,15 @@ const SoftwareContainer = () => {
     );
 
     const renderSoftwareSelection = () => (
-        <TitledGreyBox title={`Select Software - ${selectedNest?.attributes.name}`}>
+        <TitledGreyBox title={`选择软件 - ${selectedNest?.attributes.name}`}>
             <div className='space-y-4'>
-                <p className='text-sm text-neutral-400'>Choose the specific software version for your server</p>
+                <p className='text-sm text-neutral-400'>为您的服务器选择特定的软件版本</p>
 
                 {isLoading ? (
                     <div className='flex items-center justify-center py-16'>
                         <div className='flex flex-col items-center text-center'>
                             <Spinner size='large' />
-                            <p className='text-neutral-400 mt-4'>Loading software options...</p>
+                            <p className='text-neutral-400 mt-4'>加载软件选项中...</p>
                         </div>
                     </div>
                 ) : (
@@ -760,14 +741,14 @@ const SoftwareContainer = () => {
                         onClick={() => setCurrentStep('select-game')}
                         className='w-full sm:w-auto'
                     >
-                        Back to Games
+                        返回游戏
                     </ActionButton>
                     <ActionButton
                         variant='secondary'
                         onClick={() => setCurrentStep('overview')}
                         className='w-full sm:w-auto'
                     >
-                        Cancel
+                        取消
                     </ActionButton>
                 </div>
             </div>
@@ -776,26 +757,26 @@ const SoftwareContainer = () => {
 
     const renderConfiguration = () => (
         <div className='space-y-6'>
-            <TitledGreyBox title={`Configure ${selectedEgg?.attributes.name}`}>
+            <TitledGreyBox title={`配置 ${selectedEgg?.attributes.name}`}>
                 {eggPreview && (
                     <div className='space-y-6'>
-                        {/* Software Configuration */}
+                        {/* 软件配置 */}
                         <div className='space-y-4'>
-                            <h3 className='text-lg font-semibold text-neutral-200'>Software Configuration</h3>
+                            <h3 className='text-lg font-semibold text-neutral-200'>软件配置</h3>
                             <div className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
                                 <div>
                                     <label className='text-sm font-medium text-neutral-300 block mb-2'>
-                                        Startup Command
+                                        启动命令
                                     </label>
                                     <textarea
                                         value={customStartup}
                                         onChange={(e) => setCustomStartup(e.target.value)}
-                                        placeholder='Enter custom startup command...'
+                                        placeholder='输入自定义启动命令...'
                                         rows={3}
                                         className='w-full px-3 py-2 bg-[#ffffff08] border border-[#ffffff12] rounded-lg text-sm text-neutral-200 placeholder:text-neutral-500 focus:outline-none focus:border-brand transition-colors font-mono resize-none'
                                     />
                                     <p className='text-xs text-neutral-400 mt-1'>
-                                        Use variables like{' '}
+                                        使用变量如{' '}
                                         {eggPreview.variables
                                             .map((v) => `{{${v.env_variable}}}`)
                                             .slice(0, 3)
@@ -805,14 +786,14 @@ const SoftwareContainer = () => {
                                 </div>
                                 <div>
                                     <label className='text-sm font-medium text-neutral-300 block mb-2'>
-                                        Docker Image
+                                        Docker 镜像
                                     </label>
                                     {eggPreview.docker_images && Object.keys(eggPreview.docker_images).length > 1 ? (
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <button className='w-full px-3 py-2 bg-[#ffffff08] border border-[#ffffff12] rounded-lg text-sm text-neutral-200 focus:outline-none focus:border-brand transition-colors text-left flex items-center justify-between hover:border-[#ffffff20]'>
                                                     <span className='truncate'>
-                                                        {selectedDockerImage || 'Select image...'}
+                                                        {selectedDockerImage || '选择镜像...'}
                                                     </span>
                                                     <svg
                                                         className='w-4 h-4 text-neutral-400 flex-shrink-0'
@@ -851,20 +832,20 @@ const SoftwareContainer = () => {
                                     ) : (
                                         <div className='w-full px-3 py-2 bg-[#ffffff08] border border-[#ffffff12] rounded-lg text-sm text-neutral-200'>
                                             {(eggPreview.docker_images && Object.keys(eggPreview.docker_images)[0]) ||
-                                                'Default Image'}
+                                                '默认镜像'}
                                         </div>
                                     )}
                                     <p className='text-xs text-neutral-400 mt-1'>
-                                        Container runtime environment for your server
+                                        服务器的容器运行环境
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Environment Variables */}
+                        {/* 环境变量 */}
                         {eggPreview.variables.length > 0 && (
                             <div className='space-y-4'>
-                                <h3 className='text-lg font-semibold text-neutral-200'>Environment Variables</h3>
+                                <h3 className='text-lg font-semibold text-neutral-200'>环境变量</h3>
                                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                                     {eggPreview.variables.map((variable) => (
                                         <div key={variable.env_variable} className='space-y-3'>
@@ -873,17 +854,17 @@ const SoftwareContainer = () => {
                                                     {variable.name}
                                                     {!variable.user_editable && (
                                                         <span className='ml-2 px-2 py-0.5 text-xs bg-amber-500/20 text-amber-400 rounded'>
-                                                            Read-only
+                                                            只读
                                                         </span>
                                                     )}
                                                     {variable.user_editable && variable.rules.includes('required') && (
                                                         <span className='ml-2 px-2 py-0.5 text-xs bg-red-500/20 text-red-400 rounded'>
-                                                            Required
+                                                            必填
                                                         </span>
                                                     )}
                                                     {variable.user_editable && !variable.rules.includes('required') && (
                                                         <span className='ml-2 px-2 py-0.5 text-xs bg-neutral-500/20 text-neutral-400 rounded'>
-                                                            Optional
+                                                            可选
                                                         </span>
                                                     )}
                                                 </label>
@@ -902,11 +883,12 @@ const SoftwareContainer = () => {
                                                         onChange={(e) =>
                                                             handleVariableChange(variable.env_variable, e.target.value)
                                                         }
-                                                        placeholder={variable.default_value || 'Enter value...'}
-                                                        className={`w-full px-3 py-2 bg-[#ffffff08] border rounded-lg text-sm text-neutral-200 placeholder:text-neutral-500 focus:outline-none transition-colors ${variableErrors[variable.env_variable]
-                                                            ? 'border-red-500 focus:border-red-500'
-                                                            : 'border-[#ffffff12] focus:border-brand'
-                                                            }`}
+                                                        placeholder={variable.default_value || '输入值...'}
+                                                        className={`w-full px-3 py-2 bg-[#ffffff08] border rounded-lg text-sm text-neutral-200 placeholder:text-neutral-500 focus:outline-none transition-colors ${
+                                                            variableErrors[variable.env_variable]
+                                                                ? 'border-red-500 focus:border-red-500'
+                                                                : 'border-[#ffffff12] focus:border-brand'
+                                                        }`}
                                                     />
                                                     {variableErrors[variable.env_variable] && (
                                                         <p className='text-xs text-red-400 mt-1'>
@@ -918,7 +900,7 @@ const SoftwareContainer = () => {
                                                 <div className='w-full px-3 py-2 bg-[#ffffff04] border border-[#ffffff08] rounded-lg text-sm text-neutral-300 font-mono'>
                                                     {pendingVariables[variable.env_variable] ||
                                                         variable.default_value ||
-                                                        'Not set'}
+                                                        '未设置'}
                                                 </div>
                                             )}
 
@@ -927,7 +909,7 @@ const SoftwareContainer = () => {
                                                     {variable.env_variable}
                                                 </span>
                                                 {variable.rules && (
-                                                    <span className='text-neutral-500'>Rules: {variable.rules}</span>
+                                                    <span className='text-neutral-500'>规则: {variable.rules}</span>
                                                 )}
                                             </div>
                                         </div>
@@ -938,30 +920,26 @@ const SoftwareContainer = () => {
 
                         {/* Safety Options */}
                         <div className='space-y-4'>
-                            <h3 className='text-lg font-semibold text-neutral-200'>Safety Options</h3>
+                            <h3 className='text-lg font-semibold text-neutral-200'>安全选项</h3>
                             <div className='space-y-3'>
                                 <div className='flex items-center justify-between p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg hover:border-[#ffffff20] transition-colors'>
                                     <div className='flex-1 min-w-0 pr-4'>
                                         <label className='text-sm font-medium text-neutral-200 block mb-1'>
-                                            Create Backup
+                                            创建备份
                                         </label>
                                         <p className='text-xs text-neutral-400 leading-relaxed'>
-                                            {backupLimit !== 0 &&
-                                                (backupLimit === null || (backups?.backupCount || 0) < backupLimit)
-                                                ? 'Automatically create a backup before applying changes'
+                                            {backupLimit !== 0 && (backupLimit === null || (backups?.backupCount || 0) < backupLimit)
+                                                ? '在应用更改前自动创建备份'
                                                 : backupLimit === 0
-                                                    ? 'Backups are disabled for this server'
-                                                    : 'Backup limit reached'}
+                                                    ? '此服务器已禁用备份'
+                                                    : '已达到备份限制'}
                                         </p>
                                     </div>
                                     <div className='flex-shrink-0'>
                                         <Switch
                                             checked={shouldBackup}
                                             onCheckedChange={setShouldBackup}
-                                            disabled={
-                                                backupLimit === 0 ||
-                                                (backupLimit !== null && (backups?.backupCount || 0) >= backupLimit)
-                                            }
+                                            disabled={backupLimit === 0 || (backupLimit !== null && (backups?.backupCount || 0) >= backupLimit)}
                                         />
                                     </div>
                                 </div>
@@ -969,10 +947,10 @@ const SoftwareContainer = () => {
                                 <div className='flex items-center justify-between p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg hover:border-[#ffffff20] transition-colors'>
                                     <div className='flex-1 min-w-0 pr-4'>
                                         <label className='text-sm font-medium text-neutral-200 block mb-1'>
-                                            Wipe Files
+                                            清除文件
                                         </label>
                                         <p className='text-xs text-neutral-400 leading-relaxed'>
-                                            Delete all files before installing new software
+                                            在安装新软件前删除所有文件
                                         </p>
                                     </div>
                                     <div className='flex-shrink-0'>
@@ -990,7 +968,7 @@ const SoftwareContainer = () => {
                         onClick={() => setCurrentStep('select-software')}
                         className='w-full sm:w-auto'
                     >
-                        Back to Software
+                        返回软件
                     </ActionButton>
                     <ActionButton
                         variant='primary'
@@ -999,7 +977,7 @@ const SoftwareContainer = () => {
                         className='w-full sm:w-auto'
                     >
                         {isLoading && <Spinner size='small' />}
-                        Review Changes
+                        审查更改
                     </ActionButton>
                 </div>
             </TitledGreyBox>
@@ -1008,59 +986,59 @@ const SoftwareContainer = () => {
 
     const renderReview = () => (
         <div className='space-y-6'>
-            <TitledGreyBox title='Review Changes'>
+            <TitledGreyBox title='审查更改'>
                 {selectedEgg && eggPreview && (
                     <div className='space-y-6'>
                         {/* Summary */}
                         <div className='p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg'>
-                            <h3 className='text-lg font-semibold text-neutral-200 mb-4'>Change Summary</h3>
+                            <h3 className='text-lg font-semibold text-neutral-200 mb-4'>更改摘要</h3>
                             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm'>
                                 <div>
-                                    <span className='text-neutral-400'>From:</span>
+                                    <span className='text-neutral-400'>从:</span>
                                     <div className='text-neutral-200 font-medium'>
-                                        {currentEggName || 'No software'}
+                                        {currentEggName || '无软件'}
                                     </div>
                                 </div>
                                 <div>
-                                    <span className='text-neutral-400'>To:</span>
+                                    <span className='text-neutral-400'>到:</span>
                                     <div className='text-brand font-medium'>{selectedEgg.attributes.name}</div>
                                 </div>
                                 <div>
-                                    <span className='text-neutral-400'>Category:</span>
+                                    <span className='text-neutral-400'>类别:</span>
                                     <div className='text-neutral-200 font-medium'>{selectedNest?.attributes.name}</div>
                                 </div>
                                 <div>
-                                    <span className='text-neutral-400'>Docker Image:</span>
+                                    <span className='text-neutral-400'>Docker 镜像:</span>
                                     <div className='text-neutral-200 font-medium'>
-                                        {selectedDockerImage || 'Default'}
+                                        {selectedDockerImage || '默认'}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Startup Command Review */}
+                        {/* 启动命令审查 */}
                         <div className='p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg'>
-                            <h3 className='text-lg font-semibold text-neutral-200 mb-4'>Startup Configuration</h3>
+                            <h3 className='text-lg font-semibold text-neutral-200 mb-4'>启动配置</h3>
                             <div className='space-y-3'>
                                 <div>
-                                    <span className='text-neutral-400 text-sm'>Startup Command:</span>
+                                    <span className='text-neutral-400 text-sm'>启动命令:</span>
                                     <div className='mt-1 p-3 bg-[#ffffff08] border border-[#ffffff12] rounded-lg font-mono text-sm text-neutral-200 whitespace-pre-wrap'>
                                         {customStartup || eggPreview.egg.startup}
                                     </div>
                                 </div>
                                 <div>
-                                    <span className='text-neutral-400 text-sm'>Docker Image:</span>
+                                    <span className='text-neutral-400 text-sm'>Docker 镜像:</span>
                                     <div className='mt-1 p-3 bg-[#ffffff08] border border-[#ffffff12] rounded-lg text-sm text-neutral-200'>
-                                        {selectedDockerImage || 'Default Image'}
+                                        {selectedDockerImage || '默认镜像'}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Configuration Review */}
+                        {/* 配置审查 */}
                         {eggPreview.variables.length > 0 && (
                             <div className='p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg'>
-                                <h3 className='text-lg font-semibold text-neutral-200 mb-4'>Variable Configuration</h3>
+                                <h3 className='text-lg font-semibold text-neutral-200 mb-4'>变量配置</h3>
                                 <div className='space-y-2'>
                                     {eggPreview.variables.map((variable) => (
                                         <div
@@ -1076,7 +1054,7 @@ const SoftwareContainer = () => {
                                             <div className='text-brand font-mono text-sm'>
                                                 {pendingVariables[variable.env_variable] ||
                                                     variable.default_value ||
-                                                    'Not set'}
+                                                    '未设置'}
                                             </div>
                                         </div>
                                     ))}
@@ -1084,20 +1062,20 @@ const SoftwareContainer = () => {
                             </div>
                         )}
 
-                        {/* Safety Options Review */}
+                        {/* 安全选项审查 */}
                         <div className='p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg'>
-                            <h3 className='text-lg font-semibold text-neutral-200 mb-4'>Safety Options</h3>
+                            <h3 className='text-lg font-semibold text-neutral-200 mb-4'>安全选项审查</h3>
                             <div className='space-y-2'>
                                 <div className='flex justify-between items-center py-2 px-3 bg-[#ffffff08] rounded-lg'>
-                                    <span className='text-neutral-200'>Create Backup</span>
+                                    <span className='text-neutral-200'>创建备份</span>
                                     <span className={shouldBackup ? 'text-green-400' : 'text-neutral-400'}>
-                                        {shouldBackup ? 'Yes' : 'No'}
+                                        {shouldBackup ? '是' : '否'}
                                     </span>
                                 </div>
                                 <div className='flex justify-between items-center py-2 px-3 bg-[#ffffff08] rounded-lg'>
-                                    <span className='text-neutral-200'>Wipe Files</span>
+                                    <span className='text-neutral-200'>清除文件</span>
                                     <span className={shouldWipe ? 'text-amber-400' : 'text-neutral-400'}>
-                                        {shouldWipe ? 'Yes' : 'No'}
+                                        {shouldWipe ? '是' : '否'}
                                     </span>
                                 </div>
                             </div>
@@ -1109,27 +1087,28 @@ const SoftwareContainer = () => {
                                 {eggPreview.warnings.map((warning, index) => (
                                     <div
                                         key={index}
-                                        className={`p-4 border rounded-lg ${warning.severity === 'error'
-                                            ? 'bg-red-500/10 border-red-500/20'
-                                            : 'bg-amber-500/10 border-amber-500/20'
-                                            }`}
+                                        className={`p-4 border rounded-lg ${
+                                            warning.severity === 'error'
+                                                ? 'bg-red-500/10 border-red-500/20'
+                                                : 'bg-amber-500/10 border-amber-500/20'
+                                        }`}
                                     >
                                         <div className='flex items-start gap-3'>
-                                            <TriangleExclamation
-                                                width={22}
-                                                height={22}
+                                            <HugeIconsAlert
                                                 fill='currentColor'
-                                                className={`w-5 h-5 flex-shrink-0 mt-0.5 ${warning.severity === 'error' ? 'text-red-400' : 'text-amber-400'
-                                                    }`}
+                                                className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
+                                                    warning.severity === 'error' ? 'text-red-400' : 'text-amber-400'
+                                                }`}
                                             />
                                             <div>
                                                 <h4
-                                                    className={`font-semibold mb-2 ${warning.severity === 'error' ? 'text-red-400' : 'text-amber-400'
-                                                        }`}
+                                                    className={`font-semibold mb-2 ${
+                                                        warning.severity === 'error' ? 'text-red-400' : 'text-amber-400'
+                                                    }`}
                                                 >
                                                     {warning.type === 'subdomain_incompatible'
-                                                        ? 'Subdomain Will Be Deleted'
-                                                        : 'Warning'}
+                                                        ? '子域名将被删除'
+                                                        : '警告'}
                                                 </h4>
                                                 <p className='text-sm text-neutral-300'>{warning.message}</p>
                                             </div>
@@ -1142,21 +1121,19 @@ const SoftwareContainer = () => {
                         {/* General Warning */}
                         <div className='p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg'>
                             <div className='flex items-start gap-3'>
-                                <TriangleExclamation
-                                    width={22}
-                                    height={22}
+                                <HugeIconsAlert
                                     fill='currentColor'
                                     className='w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5'
                                 />
                                 <div>
-                                    <h4 className='text-amber-400 font-semibold mb-2'>This will:</h4>
+                                    <h4 className='text-amber-400 font-semibold mb-2'>这将:</h4>
                                     <ul className='text-sm text-neutral-300'>
-                                        <li>• Stop and reinstall your server</li>
-                                        <li>• Take several minutes to complete</li>
-                                        <li>• Modify and remove some files</li>
+                                        <li>• 停止并重新安装您的服务器</li>
+                                        <li>• 需要几分钟完成</li>
+                                        <li>• 修改和删除一些文件</li>
                                     </ul>
                                     <span className='text-sm font-bold mt-4'>
-                                        Please ensure you have backups of important data before proceeding.
+                                        请确保在继续之前备份重要数据。
                                     </span>
                                 </div>
                             </div>
@@ -1170,7 +1147,7 @@ const SoftwareContainer = () => {
                         onClick={() => setCurrentStep('configure')}
                         className='w-full sm:w-auto'
                     >
-                        Back to Configure
+                        返回配置
                     </ActionButton>
                     <ActionButton
                         variant='primary'
@@ -1179,7 +1156,7 @@ const SoftwareContainer = () => {
                         className='w-full sm:w-auto'
                     >
                         {isLoading && <Spinner size='small' />}
-                        Apply Changes
+                        应用更改
                     </ActionButton>
                 </div>
             </TitledGreyBox>
@@ -1189,53 +1166,27 @@ const SoftwareContainer = () => {
     // Show loading state if server data is not available
     if (!serverData) {
         return (
-            <ServerContentBlock title='Software Management'>
+            <ServerContentBlock title='软件管理'>
                 <div className='flex items-center justify-center h-64'>
                     <div className='flex flex-col items-center text-center'>
                         <Spinner size='large' />
-                        <p className='text-neutral-400 mt-4'>Loading server information...</p>
+                        <p className='text-neutral-400 mt-4'>加载服务器信息中...</p>
                     </div>
                 </div>
             </ServerContentBlock>
         );
     }
-    function RenderOperationModal() {
-        if (daemonType == 'elytra') {
-            return (
-                <OperationProgressModal
-                    visible={showOperationModal}
-                    operationId={currentOperationId}
-                    operationType='Software Change'
-                    onClose={closeOperationModal}
-                    onComplete={handleOperationComplete}
-                    onError={handleOperationError}
-                />
-            );
-        }
-        if (daemonType == 'wings') {
-            return (
-                <WingsOperationProgressModal
-                    visible={showOperationModal}
-                    operationId={currentOperationId}
-                    operationType='Software Change'
-                    onClose={closeOperationModal}
-                    onComplete={handleOperationComplete}
-                    onError={handleOperationError}
-                />
-            );
-        }
-        return <div>Could not find Operation Modal for this daemon: Using ${daemonType}</div>;
-    }
+
     return (
-        <ServerContentBlock title='Software Management'>
+        <ServerContentBlock title='软件管理'>
             <div className='space-y-6'>
-                <MainPageHeader direction='column' title='Software Management'>
+                <MainPageHeader direction='column' title='软件管理'>
                     <p className='text-neutral-400 leading-relaxed'>
-                        Change your server&apos;s game or software with our guided configuration wizard
+使用我们的引导式配置向导更改您的服务器游戏或软件
                     </p>
                 </MainPageHeader>
 
-                {/* Progress indicator */}
+                {/* 进度指示器 */}
                 {currentStep !== 'overview' && (
                     <div className='p-4 bg-[#ffffff08] border border-[#ffffff12] rounded-lg'>
                         <div className='flex items-center justify-between mb-2'>
@@ -1243,11 +1194,11 @@ const SoftwareContainer = () => {
                                 {currentStep.replace('-', ' ')}
                             </span>
                             <span className='text-sm text-neutral-400'>
-                                Step{' '}
+                                第{' '}
                                 {['overview', 'select-game', 'select-software', 'configure', 'review'].indexOf(
                                     currentStep,
-                                )}{' '}
-                                of 4
+                                ) + 1}{' '}
+                                步，共 5 步
                             </span>
                         </div>
                         <div className='w-full bg-[#ffffff12] rounded-full h-2'>
@@ -1261,7 +1212,7 @@ const SoftwareContainer = () => {
                     </div>
                 )}
 
-                {/* Step Content */}
+                {/* 步骤内容 */}
                 {currentStep === 'overview' && renderOverview()}
                 {currentStep === 'select-game' && renderGameSelection()}
                 {currentStep === 'select-software' && renderSoftwareSelection()}
@@ -1269,10 +1220,10 @@ const SoftwareContainer = () => {
                 {currentStep === 'review' && renderReview()}
             </div>
 
-            {/* Wipe Files Confirmation Modal */}
+            {/* 清除文件 Confirmation Modal */}
             <ConfirmationModal
-                title='Wipe All Files Without Backup?'
-                buttonText={wipeCountdown > 0 ? `Yes, Wipe Files (${wipeCountdown}s)` : 'Yes, Wipe Files'}
+                title='不备份就清除所有文件？'
+                buttonText={wipeCountdown > 0 ? `是的，清除文件 (${wipeCountdown}s)` : '是的，清除文件'}
                 visible={showWipeConfirmation}
                 onConfirmed={handleWipeConfirm}
                 onModalDismissed={() => setShowWipeConfirmation(false)}
@@ -1281,40 +1232,40 @@ const SoftwareContainer = () => {
             >
                 <div className='space-y-4'>
                     <div className='flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-lg'>
-                        <TriangleExclamation
-                            width={22}
-                            height={22}
-                            fill='currentColor'
-                            className='w-5 h-5 text-red-400 flex-shrink-0 mt-0.5'
-                        />
+                        <HugeIconsAlert fill='currentColor' className='w-5 h-5 text-red-400 flex-shrink-0 mt-0.5' />
                         <div>
-                            <h4 className='text-red-400 font-semibold mb-2'>DANGER: No Backup Selected</h4>
+                            <h4 className='text-red-400 font-semibold mb-2'>危险：未选择备份</h4>
                             <p className='text-sm text-neutral-300'>
-                                You have chosen to wipe all files <strong>without creating a backup</strong>. This
-                                action will <strong>permanently delete ALL files</strong> on your server and cannot be
-                                undone.
+                                您已选择清除所有文件 <strong>而不创建备份</strong>。此操作将 <strong>永久删除所有文件</strong> 在您的服务器上且无法撤销。
                             </p>
                         </div>
                     </div>
                     <div className='text-sm text-neutral-300 space-y-2'>
                         <p>
-                            <strong>What will happen:</strong>
+                            <strong>将发生的情况：</strong>
                         </p>
                         <ul className='list-disc list-inside space-y-1 ml-4'>
-                            <li>All server files will be permanently deleted</li>
-                            <li>Your server will be stopped and reinstalled</li>
-                            <li>Any custom configurations or data will be lost</li>
-                            <li>This action cannot be reversed</li>
+                            <li>所有服务器文件将被永久删除</li>
+                            <li>您的服务器将停止并重新安装</li>
+                            <li>任何自定义配置或数据都将丢失</li>
+                            <li>此操作无法逆转</li>
                         </ul>
                     </div>
                     <p className='text-sm text-neutral-300'>
-                        Are you absolutely sure you want to proceed without a backup?
+                        您确定要在没有备份的情况下继续吗？
                     </p>
                 </div>
             </ConfirmationModal>
 
             {/* Operation Progress Modal */}
-            {RenderOperationModal()}
+            <OperationProgressModal
+                visible={showOperationModal}
+                operationId={currentOperationId}
+                operationType='软件更改'
+                onClose={closeOperationModal}
+                onComplete={handleOperationComplete}
+                onError={handleOperationError}
+            />
         </ServerContentBlock>
     );
 };

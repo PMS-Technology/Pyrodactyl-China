@@ -1,4 +1,3 @@
-import { ArrowDownToLine, ClockArrowRotateLeft, Funnel, Magnifier, Xmark } from '@gravity-ui/icons';
 import { useEffect, useMemo, useState } from 'react';
 
 import FlashMessageRender from '@/components/FlashMessageRender';
@@ -8,6 +7,11 @@ import Select from '@/components/elements/Select';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import Spinner from '@/components/elements/Spinner';
 import ActivityLogEntry from '@/components/elements/activity/ActivityLogEntry';
+import HugeIconsDownload from '@/components/elements/hugeicons/Download';
+import HugeIconsFilter from '@/components/elements/hugeicons/Filter';
+import HugeIconsHistory from '@/components/elements/hugeicons/History';
+import HugeIconsSearch from '@/components/elements/hugeicons/Search';
+import HugeIconsX from '@/components/elements/hugeicons/X';
 import { Input } from '@/components/elements/inputs';
 import PaginationFooter from '@/components/elements/table/PaginationFooter';
 
@@ -151,7 +155,7 @@ const ServerActivityLogContainer = () => {
     }, [error]);
 
     return (
-        <ServerContentBlock title={'Activity Log'}>
+        <ServerContentBlock title={'活动日志'}>
             <div className='w-full h-full min-h-full flex-1 flex flex-col px-2 sm:px-0'>
                 <FlashMessageRender byKey={'server:activity'} />
 
@@ -165,7 +169,7 @@ const ServerActivityLogContainer = () => {
                 >
                     <MainPageHeader
                         direction='column'
-                        title={'Activity Log'}
+                        title={'活动日志'}
                         titleChildren={
                             <div className='flex gap-2 items-center flex-wrap'>
                                 <ActionButton
@@ -174,8 +178,8 @@ const ServerActivityLogContainer = () => {
                                     className='flex items-center gap-2'
                                     title='Toggle Filters (Ctrl+F)'
                                 >
-                                    <Funnel width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                                    Filters
+                                    <HugeIconsFilter className='w-4 h-4' fill='currentColor' />
+                                    筛选器
                                     {hasActiveFilters && <span className='w-2 h-2 bg-brand rounded-full'></span>}
                                 </ActionButton>
                                 <ActionButton
@@ -185,15 +189,14 @@ const ServerActivityLogContainer = () => {
                                     className='flex items-center gap-2'
                                     title='Export CSV (Ctrl+E)'
                                 >
-                                    <ArrowDownToLine width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                                    Export
+                                    <HugeIconsDownload className='w-4 h-4' fill='currentColor' />
+                                    导出
                                 </ActionButton>
                             </div>
                         }
                     >
                         <p className='text-sm text-neutral-400 leading-relaxed'>
-                            Monitor all server activity and track user actions. Filter events, search for specific
-                            activities, and export logs for audit purposes.
+                            监控所有服务器活动并跟踪用户操作。筛选事件，搜索特定活动，并导出日志以供审计。
                         </p>
                     </MainPageHeader>
                 </div>
@@ -210,29 +213,22 @@ const ServerActivityLogContainer = () => {
                         <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-4 hover:border-[#ffffff20] transition-all duration-150 shadow-sm'>
                             <div className='flex items-center gap-2 mb-4'>
                                 <div className='w-5 h-5 rounded-lg bg-[#ffffff11] flex items-center justify-center'>
-                                    <Funnel
-                                        width={22}
-                                        height={22}
-                                        className='w-2.5 h-2.5 text-zinc-400'
-                                        fill='currentColor'
-                                    />
+                                    <HugeIconsFilter className='w-2.5 h-2.5 text-zinc-400' fill='currentColor' />
                                 </div>
-                                <h3 className='text-base font-semibold text-zinc-100'>Filters</h3>
+                                <h3 className='text-base font-semibold text-zinc-100'>筛选器</h3>
                             </div>
 
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>Search</label>
+                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>搜索</label>
                                     <div className='relative'>
-                                        <Magnifier
-                                            width={22}
-                                            height={22}
+                                        <HugeIconsSearch
                                             className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10'
                                             fill='currentColor'
                                         />
                                         <Input.Text
                                             type='text'
-                                            placeholder='Search events, IPs, users...'
+                                            placeholder='搜索事件、IP、用户...'
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                             style={{ paddingLeft: '2.5rem' }}
@@ -241,14 +237,14 @@ const ServerActivityLogContainer = () => {
                                 </div>
 
                                 <div>
-                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>Event Type</label>
+                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>事件类型</label>
                                     <Select
                                         value={selectedEventType}
                                         onChange={(e) => setSelectedEventType(e.target.value)}
                                         className='w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-zinc-100 focus:border-brand focus:ring-1 focus:ring-brand hover:border-zinc-500 transition-colors duration-150'
                                     >
                                         <option value='' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            All Events
+                                            所有事件
                                         </option>
                                         {eventTypes.map((type) => (
                                             <option
@@ -263,26 +259,26 @@ const ServerActivityLogContainer = () => {
                                 </div>
 
                                 <div>
-                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>Time Range</label>
+                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>时间范围</label>
                                     <Select
                                         value={dateRange}
                                         onChange={(e) => setDateRange(e.target.value)}
                                         className='w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-zinc-100 focus:border-brand focus:ring-1 focus:ring-brand hover:border-zinc-500 transition-colors duration-150'
                                     >
                                         <option value='all' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            All Time
+                                            全部时间
                                         </option>
                                         <option value='1h' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last Hour
+                                            最近一小时
                                         </option>
                                         <option value='24h' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last 24 Hours
+                                            最近24小时
                                         </option>
                                         <option value='7d' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last 7 Days
+                                            最近7天
                                         </option>
                                         <option value='30d' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last 30 Days
+                                            最近30天
                                         </option>
                                     </Select>
                                 </div>
@@ -294,8 +290,8 @@ const ServerActivityLogContainer = () => {
                                             onClick={clearAllFilters}
                                             className='flex items-center gap-2 w-full'
                                         >
-                                            <Xmark width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                                            Clear All Filters
+                                            <HugeIconsX className='w-4 h-4' fill='currentColor' />
+                                            清除所有筛选器
                                         </ActionButton>
                                     )}
                                 </div>
@@ -315,17 +311,12 @@ const ServerActivityLogContainer = () => {
                     <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-4 hover:border-[#ffffff20] transition-all duration-150 shadow-sm'>
                         <div className='flex items-center gap-2 mb-4'>
                             <div className='w-5 h-5 rounded-lg bg-[#ffffff11] flex items-center justify-center'>
-                                <ClockArrowRotateLeft
-                                    width={22}
-                                    height={22}
-                                    className=' text-zinc-400'
-                                    fill='currentColor'
-                                />
+                                <HugeIconsHistory className='w-2.5 h-2.5 text-zinc-400' fill='currentColor' />
                             </div>
-                            <h3 className='text-base font-semibold text-zinc-100'>Events</h3>
+                            <h3 className='text-base font-semibold text-zinc-100'>事件</h3>
                             {filteredData?.items && (
                                 <span className='text-sm text-zinc-400'>
-                                    ({filteredData.items.length} {filteredData.items.length === 1 ? 'event' : 'events'})
+                                    ({filteredData.items.length} {filteredData.items.length === 1 ? '个事件' : '个事件'})
                                 </span>
                             )}
                         </div>
@@ -334,27 +325,22 @@ const ServerActivityLogContainer = () => {
                             <Spinner centered />
                         ) : !filteredData?.items?.length ? (
                             <div className='text-center py-12'>
-                                <ClockArrowRotateLeft
-                                    width={22}
-                                    height={22}
-                                    className=' text-zinc-600 mb-4'
-                                    fill='currentColor'
-                                />
+                                <HugeIconsHistory className='w-16 h-16 text-zinc-600 mb-4' fill='currentColor' />
                                 <h3 className='text-lg font-semibold text-zinc-300 mb-2'>
-                                    {hasActiveFilters ? 'No Matching Activity' : 'No Server Activity Yet'}
+                                    {hasActiveFilters ? '无匹配活动' : '暂无服务器活动'}
                                 </h3>
                                 <p className='text-sm text-zinc-400 mb-4 max-w-lg mx-auto leading-relaxed'>
                                     {hasActiveFilters
-                                        ? "Try adjusting your filters or search terms to find the activity you're looking for."
-                                        : 'Server activity logs will appear here as you manage your server. Start your server or perform actions to see them here.'}
+                                        ? "请尝试调整筛选器或搜索词来找到您要查找的活动。"
+                                        : '当您管理服务器时，服务器活动日志将显示在此处。启动服务器或执行操作即可在此处查看。'}
                                 </p>
                                 {hasActiveFilters && (
                                     <div className='flex gap-2 justify-center'>
                                         <ActionButton variant='secondary' onClick={clearAllFilters}>
-                                            Clear All Filters
+                                            清除所有筛选器
                                         </ActionButton>
                                         <ActionButton variant='secondary' onClick={() => setShowFilters(true)}>
-                                            Adjust Filters
+                                            调整筛选器
                                         </ActionButton>
                                     </div>
                                 )}

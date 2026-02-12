@@ -1,4 +1,3 @@
-import { ChevronDown, ChevronUp } from '@gravity-ui/icons';
 import { useEffect, useState } from 'react';
 
 import ActionButton from '@/components/elements/ActionButton';
@@ -13,6 +12,8 @@ import {
 } from '@/components/elements/DropdownMenu';
 import Modal from '@/components/elements/Modal';
 import Spinner from '@/components/elements/Spinner';
+import HugeIconsArrowDown from '@/components/elements/hugeicons/ArrowDown';
+import HugeIconsArrowUp from '@/components/elements/hugeicons/ArrowUp';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
 
 import setSelectedDockerImage from '@/api/server/setSelectedDockerImage';
@@ -87,13 +88,12 @@ const JavaVersionModalFeature = () => {
             onDismissed={() => setVisible(false)}
             closeOnBackground={false}
             showSpinnerOverlay={loading}
-            title='Unsupported Java Version'
+            title='不支持的 Java 版本'
         >
             <div className='flex flex-col gap-4 w-full h-full'>
                 {/*<FlashMessageRender key={'feature:javaVersion'} />*/}
                 <p>
-                    This server is currently running an unsupported version of Java and cannot be started. Please select
-                    a supported version from the list below to continue starting the server.
+                    此服务器当前运行的 Java 版本不受支持，无法启动。请从以下列表中选择一个受支持的版本以继续启动服务器。
                 </p>
                 <div className={`mt-6 flex flex-row justify-end items-center gap-3 my-4`}>
                     <Can action={'startup.docker-image'}>
@@ -109,11 +109,14 @@ const JavaVersionModalFeature = () => {
                                         .pop()
                                         ?.split('_')
                                         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                                        .join(' ') || 'Select a version'}
+                                        .join(' ') || '选择版本'}
                                     {dropDownOpen ? (
-                                        <ChevronUp fill={'currentColor'} className={`ml-2 w-[16px] h-[16px]`} />
+                                        <HugeIconsArrowUp fill={'currentColor'} className={`ml-2 w-[16px] h-[16px]`} />
                                     ) : (
-                                        <ChevronDown fill={'currentColor'} className={`ml-2 w-[16px] h-[16px]`} />
+                                        <HugeIconsArrowDown
+                                            fill={'currentColor'}
+                                            className={`ml-2 w-[16px] h-[16px]`}
+                                        />
                                     )}
                                 </button>
                             </DropdownMenuTrigger>
@@ -134,7 +137,7 @@ const JavaVersionModalFeature = () => {
                     </Button> */}
                     <Can action={'startup.docker-image'}>
                         <ActionButton variant='primary' onClick={updateJava} className={`w-full sm:w-auto`}>
-                            Update
+                            更新
                         </ActionButton>
                     </Can>
                 </div>

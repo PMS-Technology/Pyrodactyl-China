@@ -1,6 +1,6 @@
-import { Calendar } from '@gravity-ui/icons';
 import { format } from 'date-fns';
 
+import HugeIconsCalendar from '@/components/elements/hugeicons/Calendar';
 import ScheduleCronRow from '@/components/server/schedules/ScheduleCronRow';
 
 import { Schedule } from '@/api/server/schedules/getServerSchedules';
@@ -9,13 +9,13 @@ const ScheduleRow = ({ schedule }: { schedule: Schedule }) => (
     <>
         <div className={`flex-auto`}>
             <div className='flex flex-row flex-none align-middle items-center gap-6'>
-                <Calendar width={25} height={25} className='flex-none' fill='currentColor' />
+                <HugeIconsCalendar className='flex-none' fill='currentColor' />
                 <div>
                     <div className='flex flex-row items-center gap-2 text-lg'>
                         <p>{schedule.name}</p>
                     </div>
                     <p className={`text-xs text-zinc-400`}>
-                        Last run at: {schedule.lastRunAt ? format(schedule.lastRunAt, "MMM do 'at' h:mma") : 'N/A'}
+                        上次运行时间: {schedule.lastRunAt ? format(schedule.lastRunAt, "MMM do 'at' h:mma") : 'N/A'}
                     </p>
                 </div>
             </div>
@@ -23,7 +23,7 @@ const ScheduleRow = ({ schedule }: { schedule: Schedule }) => (
         <ScheduleCronRow cron={schedule.cron} />
         <div className='flex-none w-20 sm:ml-2 flex items-center align-middle justify-center'>
             <p className='rounded-full px-2 py-px text-xs uppercase bg-neutral-600 text-white'>
-                {schedule.isProcessing ? 'Processing' : schedule.isActive ? 'Active' : 'Inactive'}
+                {schedule.isProcessing ? '处理中' : schedule.isActive ? '活跃' : '非活跃'}
             </p>
         </div>
     </>

@@ -1,6 +1,9 @@
-import { Check, ChevronsRight, CircleFill } from '@gravity-ui/icons';
 import * as ContextMenuPrimitive from '@radix-ui/react-context-menu';
 import * as React from 'react';
+
+import HugeIconsCheck from '@/components/elements/hugeicons/Check';
+import HugeIconsChevronRight from '@/components/elements/hugeicons/ChevronRight';
+import HugeIconsDotFilled from '@/components/elements/hugeicons/DotFilled';
 
 import { cn } from '@/lib/utils';
 
@@ -32,7 +35,7 @@ const ContextMenuSubTrigger = React.forwardRef<
         {...props}
     >
         {children}
-        <ChevronsRight width={22} height={22} className='ml-auto' />
+        <HugeIconsChevronRight className='ml-auto h-4 w-4' />
     </ContextMenuPrimitive.SubTrigger>
 ));
 ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName;
@@ -102,7 +105,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
     >
         <span className='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
             <ContextMenuPrimitive.ItemIndicator>
-                <Check width={22} height={22} />
+                <HugeIconsCheck className='h-4 w-4' />
             </ContextMenuPrimitive.ItemIndicator>
         </span>
         {children}
@@ -124,7 +127,7 @@ const ContextMenuRadioItem = React.forwardRef<
     >
         <span className='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
             <ContextMenuPrimitive.ItemIndicator>
-                <CircleFill width={22} height={22} className='fill-current' />
+                <HugeIconsDotFilled className='h-4 w-4 fill-current' />
             </ContextMenuPrimitive.ItemIndicator>
         </span>
         {children}

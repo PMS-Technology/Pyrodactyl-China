@@ -1,4 +1,3 @@
-import { Eye, EyeSlash, Key, Plus, TrashBin } from '@gravity-ui/icons';
 import { format } from 'date-fns';
 import { Actions, useStoreActions } from 'easy-peasy';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
@@ -15,6 +14,11 @@ import { MainPageHeader } from '@/components/elements/MainPageHeader';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { Dialog } from '@/components/elements/dialog';
+import HugeIconsEye from '@/components/elements/hugeicons/Eye';
+import HugeIconsEyeSlash from '@/components/elements/hugeicons/EyeSlash';
+import HugeIconsKey from '@/components/elements/hugeicons/Key';
+import HugeIconsPlus from '@/components/elements/hugeicons/Plus';
+import HugeIconsTrash from '@/components/elements/hugeicons/Trash';
 
 import createApiKey from '@/api/account/createApiKey';
 import deleteApiKey from '@/api/account/deleteApiKey';
@@ -85,7 +89,7 @@ const AccountApiContainer = () => {
     };
 
     return (
-        <PageContentBlock title={'API Keys'}>
+        <PageContentBlock title={'API密钥'}>
             <FlashMessageRender byKey='account:api-keys' />
             <ApiKeyModal visible={apiKey.length > 0} onModalDismissed={() => setApiKey('')} apiKey={apiKey} />
 
@@ -94,8 +98,8 @@ const AccountApiContainer = () => {
                 <Dialog.Confirm
                     open={showCreateModal}
                     onClose={() => setShowCreateModal(false)}
-                    title='Create API Key'
-                    confirm='Create Key'
+                    title='创建API密钥'
+                    confirm='创建密钥'
                     onConfirmed={() => {
                         const form = document.getElementById('create-api-form') as HTMLFormElement;
                         if (form) {
@@ -117,17 +121,17 @@ const AccountApiContainer = () => {
                                 <SpinnerOverlay visible={isSubmitting} />
 
                                 <FormikFieldWrapper
-                                    label='Description'
+                                    label='描述'
                                     name='description'
-                                    description='A description of this API key.'
+                                    description='此API密钥的描述。'
                                 >
                                     <Field name='description' as={Input} className='w-full' />
                                 </FormikFieldWrapper>
 
                                 <FormikFieldWrapper
-                                    label='Allowed IPs'
+                                    label='允许的IP'
                                     name='allowedIps'
-                                    description='Leave blank to allow any IP address to use this API key, otherwise provide each IP address on a new line. Note: You can also use CIDR ranges here.'
+                                    description='留空以允许任何IP地址使用此API密钥，否则请在新行上提供每个IP地址。注意：您也可以在此处使用CIDR范围。'
                                 >
                                     <Field name='allowedIps' as={Input} className='w-full' />
                                 </FormikFieldWrapper>
@@ -149,15 +153,15 @@ const AccountApiContainer = () => {
                     }}
                 >
                     <MainPageHeader
-                        title='API Keys'
+                        title='API密钥'
                         titleChildren={
                             <ActionButton
                                 variant='primary'
                                 onClick={() => setShowCreateModal(true)}
                                 className='flex items-center gap-2'
                             >
-                                <Plus width={22} height={22} fill='currentColor' />
-                                Create API Key
+                                <HugeIconsPlus className='w-4 h-4' fill='currentColor' />
+                                创建API密钥
                             </ActionButton>
                         }
                     />
@@ -174,25 +178,25 @@ const AccountApiContainer = () => {
                     <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-4 sm:p-6 shadow-sm'>
                         <SpinnerOverlay visible={loading} />
                         <Dialog.Confirm
-                            title={'Delete API Key'}
-                            confirm={'Delete Key'}
+                            title={'删除API密钥'}
+                            confirm={'删除密钥'}
                             open={!!deleteIdentifier}
                             onClose={() => setDeleteIdentifier('')}
                             onConfirmed={() => doDeletion(deleteIdentifier)}
                         >
-                            All requests using the <Code>{deleteIdentifier}</Code> key will be invalidated.
+                            使用 <Code>{deleteIdentifier}</Code> 密钥的所有请求都将失效。
                         </Dialog.Confirm>
 
                         {keys.length === 0 ? (
                             <div className='text-center py-12'>
                                 <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-[#ffffff11] flex items-center justify-center'>
-                                    <Key width={22} height={22} className='text-zinc-400' fill='currentColor' />
+                                    <HugeIconsKey className='w-8 h-8 text-zinc-400' fill='currentColor' />
                                 </div>
-                                <h3 className='text-lg font-medium text-zinc-200 mb-2'>No API Keys</h3>
+                                <h3 className='text-lg font-medium text-zinc-200 mb-2'>无API密钥</h3>
                                 <p className='text-sm text-zinc-400 max-w-sm mx-auto'>
                                     {loading
-                                        ? 'Loading your API keys...'
-                                        : "You haven't created any API keys yet. Create one to get started with the API."}
+                                        ? '正在加载您的API密钥...'
+                                        : "您尚未创建任何API密钥。创建一个以开始使用API。"}
                                 </p>
                             </div>
                         ) : (
@@ -217,13 +221,13 @@ const AccountApiContainer = () => {
                                                     </div>
                                                     <div className='flex items-center gap-4 text-xs text-zinc-400'>
                                                         <span>
-                                                            Last used:{' '}
+                                                            最后使用:{' '}
                                                             {key.lastUsedAt
-                                                                ? format(key.lastUsedAt, 'MMM d, yyyy HH:mm')
-                                                                : 'Never'}
+                                                                ? format(key.lastUsedAt, 'yyyy年M月d日 HH:mm')
+                                                                : '从未'}
                                                         </span>
                                                         <div className='flex items-center gap-2'>
-                                                            <span>Key:</span>
+                                                            <span>密钥:</span>
                                                             <code className='font-mono px-2 py-1 bg-[#ffffff08] border border-[#ffffff08] rounded text-zinc-300'>
                                                                 {showKeys[key.identifier]
                                                                     ? key.identifier
@@ -236,13 +240,15 @@ const AccountApiContainer = () => {
                                                                 className='p-1 text-zinc-400 hover:text-zinc-300'
                                                             >
                                                                 {showKeys[key.identifier] ? (
-                                                                    <EyeSlash
-                                                                        width={18}
-                                                                        height={18}
+                                                                    <HugeIconsEyeSlash
+                                                                        className='w-3 h-3'
                                                                         fill='currentColor'
                                                                     />
                                                                 ) : (
-                                                                    <Eye width={18} height={18} fill='currentColor' />
+                                                                    <HugeIconsEye
+                                                                        className='w-3 h-3'
+                                                                        fill='currentColor'
+                                                                    />
                                                                 )}
                                                             </ActionButton>
                                                         </div>
@@ -254,7 +260,7 @@ const AccountApiContainer = () => {
                                                     className='ml-4'
                                                     onClick={() => setDeleteIdentifier(key.identifier)}
                                                 >
-                                                    <TrashBin width={20} height={20} fill='currentColor' />
+                                                    <HugeIconsTrash className='w-4 h-4' fill='currentColor' />
                                                 </ActionButton>
                                             </div>
                                         </div>

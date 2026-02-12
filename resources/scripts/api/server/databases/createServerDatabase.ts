@@ -1,11 +1,10 @@
 import http from '@/api/http';
 import { ServerDatabase, rawDataToServerDatabase } from '@/api/server/databases/getServerDatabases';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 
 export default (uuid: string, data: { connectionsFrom: string; databaseName: string }): Promise<ServerDatabase> => {
     return new Promise((resolve, reject) => {
         http.post(
-            `/api/client/servers/${getGlobalDaemonType()}/${uuid}/databases`,
+            `/api/client/servers/${uuid}/databases`,
             {
                 database: data.databaseName,
                 remote: data.connectionsFrom,

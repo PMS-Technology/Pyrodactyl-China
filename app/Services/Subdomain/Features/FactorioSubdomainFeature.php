@@ -17,13 +17,12 @@ class FactorioSubdomainFeature implements SubdomainFeatureInterface
 
     /**
      * Get the DNS records that need to be created for Factorio.
-     */
+    */
     public function getDnsRecords(Server $server, string $subdomain, string $domain): array
     {
         $ip = $server->allocation->ip;
         $port = $server->allocation->port;
-        $subdomain_split = explode(".", $subdomain);
-        $fullDomain = $subdomain_split[0] . '.' . $domain;
+        $fullDomain = $subdomain . '.' . $domain;
 
         $records = [];
 
@@ -54,5 +53,5 @@ class FactorioSubdomainFeature implements SubdomainFeatureInterface
 
         return $records;
     }
-}
 
+}

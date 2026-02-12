@@ -44,15 +44,15 @@ const DeleteScheduleButton = ({ scheduleId, onDeleted }: Props) => {
             <Dialog.Confirm
                 open={visible}
                 onClose={() => setVisible(false)}
-                title={'Delete Schedule'}
-                confirm={'Delete'}
+                title={'删除计划'}
+                confirm={'删除'}
                 onConfirmed={onDelete}
                 loading={isLoading}
             >
-                All tasks will be removed and any running processes will be terminated.
+                所有任务将被移除，任何正在运行的进程将被终止。
             </Dialog.Confirm>
             <ActionButton variant='danger' className={'flex-1 sm:flex-none'} onClick={() => setVisible(true)}>
-                Delete
+                删除
             </ActionButton>
         </>
     );

@@ -133,7 +133,7 @@ export default createGlobalStyle`
         border-bottom: 1px solid #3a3a3a44;
         color: #eee;
         border-radius: 0;
-        caret-color: var(--color-brand);
+        caret-color: #fa4e49;
         margin: 0;
 
         &::placeholder {
@@ -175,7 +175,7 @@ export default createGlobalStyle`
                 z-index: 123;
                 width: 3px;
                 height: 100%;
-                background: var(--color-brand);
+                background: #fa4e49;
             } */
         }
 

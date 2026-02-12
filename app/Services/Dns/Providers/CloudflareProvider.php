@@ -6,10 +6,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Pterodactyl\Contracts\Dns\DnsProviderInterface;
 use Pterodactyl\Exceptions\Dns\DnsProviderException;
-use Illuminate\Support\Facades\Log;
-
-use Pterodactyl\Services\Dns;
-
 
 class CloudflareProvider implements DnsProviderInterface
 {
@@ -41,15 +37,15 @@ class CloudflareProvider implements DnsProviderInterface
         if (!isset($this->client)) {
             throw DnsProviderException::invalidConfiguration('cloudflare', 'api_token');
         }
-
+        
         try {
             $response = $this->client->get('user/tokens/verify');
             $data = json_decode($response->getBody()->getContents(), true);
-
+            
             if (!$data['success']) {
                 throw DnsProviderException::authenticationFailed('cloudflare');
             }
-
+            
             return true;
         } catch (GuzzleException $e) {
             throw DnsProviderException::connectionFailed('cloudflare', $e->getMessage());
@@ -62,7 +58,6 @@ class CloudflareProvider implements DnsProviderInterface
     public function createRecord(string $domain, string $name, string $type, $content, int $ttl = 300): string
     {
         $zoneId = $this->getZoneId($domain);
-
 
         try {
             $payload = [
@@ -88,18 +83,10 @@ class CloudflareProvider implements DnsProviderInterface
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
-
+            
             if (!$data['success']) {
                 throw new \Exception('DNS provider rejected the record creation request.');
             }
-
-            /* Log::debug("Create Record", [ */
-            /*     "Domain" => $domain, */
-            /*     "Name" => $name, */
-            /*     "Payload" => $payload, */
-            /*     "Response" => $response, */
-            /*     "Data" => $data */
-            /* ]); */
 
             return $data['result']['id'];
         } catch (GuzzleException $e) {
@@ -138,7 +125,7 @@ class CloudflareProvider implements DnsProviderInterface
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
-
+            
             if (!$data['success']) {
                 throw new \Exception('DNS provider rejected the record update request.');
             }
@@ -159,7 +146,7 @@ class CloudflareProvider implements DnsProviderInterface
         try {
             $response = $this->client->delete("zones/{$zoneId}/dns_records/{$recordId}");
             $data = json_decode($response->getBody()->getContents(), true);
-
+            
             if (!$data['success']) {
                 throw new \Exception('DNS provider rejected the record deletion request.');
             }
@@ -178,7 +165,7 @@ class CloudflareProvider implements DnsProviderInterface
         try {
             $response = $this->client->get("zones/{$zoneId}/dns_records/{$recordId}");
             $data = json_decode($response->getBody()->getContents(), true);
-
+            
             if (!$data['success']) {
                 throw new \Exception("DNS record not found or inaccessible.");
             }
@@ -208,9 +195,9 @@ class CloudflareProvider implements DnsProviderInterface
             $response = $this->client->get("zones/{$zoneId}/dns_records", [
                 'query' => $params
             ]);
-
+            
             $data = json_decode($response->getBody()->getContents(), true);
-
+            
             if (!$data['success']) {
                 throw new \Exception('Failed to retrieve DNS records.');
             }

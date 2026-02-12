@@ -26,14 +26,14 @@ export const StatusPill = () => {
             ></div>
             <div className='text-sm font-bold'>
                 {status === 'offline'
-                    ? 'Offline'
+                    ? '离线'
                     : status === 'running'
-                      ? 'Online'
+                      ? '在线'
                       : status === 'stopping'
-                        ? 'Stopping'
+                        ? '停止中'
                         : status === 'starting'
-                          ? 'Starting'
-                          : 'Fetching'}
+                          ? '启动中'
+                          : '获取中'}
             </div>
         </div>
     );

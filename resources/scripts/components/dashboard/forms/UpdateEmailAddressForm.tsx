@@ -18,7 +18,7 @@ interface Values {
 
 const schema = Yup.object().shape({
     email: Yup.string().email().required(),
-    password: Yup.string().required('You must provide your current account password.'),
+    password: Yup.string().required('您必须提供当前账户密码。'),
 });
 
 const UpdateEmailAddressForm = () => {
@@ -35,14 +35,14 @@ const UpdateEmailAddressForm = () => {
                 addFlash({
                     type: 'success',
                     key: 'account:email',
-                    message: 'Your primary email has been updated.',
+                    message: '您的主要邮箱已更新。',
                 }),
             )
             .catch((error) =>
                 addFlash({
                     type: 'error',
                     key: 'account:email',
-                    title: 'Error',
+                    title: '错误',
                     message: httpErrorToHuman(error),
                 }),
             )
@@ -58,13 +58,13 @@ const UpdateEmailAddressForm = () => {
                 <Fragment>
                     <SpinnerOverlay size={'large'} visible={isSubmitting} />
                     <Form className={`m-0`}>
-                        <Field id={'current_email'} type={'email'} name={'email'} label={'Email'} />
+                        <Field id={'current_email'} type={'email'} name={'email'} label={'邮箱'} />
                         <div className={`mt-6`}>
-                            <Field id={'confirm_password'} type={'password'} name={'password'} label={'Password'} />
+                            <Field id={'confirm_password'} type={'password'} name={'password'} label={'密码'} />
                         </div>
                         <div className={`mt-6`}>
                             <ActionButton variant='primary' disabled={isSubmitting || !isValid}>
-                                Update Email
+                                更新邮箱
                             </ActionButton>
                         </div>
                     </Form>

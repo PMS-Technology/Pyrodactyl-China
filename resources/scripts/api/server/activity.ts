@@ -7,7 +7,6 @@ import useSWR from 'swr';
 
 import type { PaginatedResult, QueryBuilderParams } from '@/api/http';
 import http, { withQueryBuilderParams } from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 
 import { ServerContext } from '@/state/server';
 
@@ -21,13 +20,12 @@ const useActivityLogs = (
     config?: SWRConfiguration<PaginatedResult<ActivityLog>, AxiosError>,
 ) => {
     const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
-    const daemonType = getGlobalDaemonType();
     const key = useServerSWRKey(['activity', useFilteredObject(filters || {})]);
 
     return useSWR<PaginatedResult<ActivityLog>>(
         key,
         async () => {
-            const { data } = await http.get(`/api/client/servers/${daemonType}/${uuid}/activity`, {
+            const { data } = await http.get(`/api/client/servers/${uuid}/activity`, {
                 params: {
                     ...withQueryBuilderParams(filters),
                     include: ['actor'],

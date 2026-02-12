@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
 @section('title')
-  Administration
+  管理
 @endsection
 
 @section('content-header')
-  <h1>Administrative Overview<small>A quick glance at your system.</small></h1>
+  <h1>管理概览<small>快速查看您的系统。</small></h1>
   <ol class="breadcrumb">
-    <li><a href="{{ route('admin.index') }}">Admin</a></li>
-    <li class="active">Index</li>
+    <li><a href="{{ route('admin.index') }}">管理</a></li>
+    <li class="active">首页</li>
   </ol>
 @endsection
 
@@ -18,12 +18,11 @@
     <div class="box
       ">
       <div class="box-header with-border">
-      <h3 class="box-title">System Information</h3>
+      <h3 class="box-title">系统信息</h3>
       </div>
       <div class="box-body">
-      You are running Pyrodactyl panel version <code>{{ config('app.version') }}</code>.
+      您正在运行 Pyrodactyl 面板版本 <code>{{ config('app.version') }}</code>。
       </div>
-
       <!-- <div aria-hidden="true"
       style="background-color: #ffffff33; position: absolute; height: 1px; width: 100%; margin-top: 20px;"></div>
       <div class="row" style="margin-top: 20px;">
@@ -31,7 +30,7 @@
       <div class="small-box bg-[#000000]">
       <div class="inner">
       <h3 id="cpu-load">--</h3>
-      <p>CPU Usage</p>
+      <p>CPU 使用率</p>
       </div>
       </div>
       </div>
@@ -39,7 +38,7 @@
       <div class="small-box bg-[#000000]">
       <div class="inner">
       <h3 id="ram-usage">--</h3>
-      <p>Memory Usage</p>
+      <p>内存使用</p>
       </div>
       </div>
       </div>
@@ -49,7 +48,7 @@
       <div class="small-box bg-[#000000]">
       <div class="inner items-center">
       <h3 id="disk-usage">--</h3>
-      <p>Storage</p>
+      <p>存储</p>
       </div>
       </div>
       </div>
@@ -58,7 +57,7 @@
       <div class="small-box bg-[#000000]">
       <div class="inner">
       <h3 id="uptime">--</h3>
-      <p>System Uptime</p>
+      <p>系统运行时间</p>
       </div>
       </div>
       </div> -->
@@ -70,11 +69,11 @@
   <div class="row">
     <div class="col-xs-6 col-sm-3 text-center">
     <a href="https://discord.gg/UhuYKKK2uM"><button class="btn btn-warning" style="width:100%;"><i
-        class="fa fa-fw fa-support"></i> Get Help <small>(via Discord)</small></button></a>
+        class="fa fa-fw fa-support"></i> 获取帮助 <small>(通过 Discord)</small></button></a>
     </div>
     <div class="col-xs-6 col-sm-3 text-center">
-    <a href="https://pyrodactyl.dev"><button class="btn btn-primary" style="width:100%;"><i
-        class="fa fa-fw fa-link"></i> Documentation</button></a>
+    <a href="https://github.com/pyrohost/pyrodactyl/wiki"><button class="btn btn-primary" style="width:100%;"><i
+        class="fa fa-fw fa-link"></i> 文档</button></a>
     </div>
     <div class="clearfix visible-xs-block">&nbsp;</div>
     <div class="col-xs-6 col-sm-3 text-center">
@@ -83,7 +82,7 @@
     </div>
     <div class="col-xs-6 col-sm-3 text-center">
     <a href="{{ $version->getDonations() }}"><button class="btn btn-success" style="width:100%;"><i
-        class="fa fa-fw fa-money"></i> Support the Project</button></a>
+        class="fa fa-fw fa-money"></i> 支持项目</button></a>
     </div>
   </div>
 @endsection
@@ -122,16 +121,16 @@
         $('#uptime').text(formatUptime(data.metrics.uptime));
       },
       error: function (xhr) {
-        console.error('Failed to fetch system metrics:', xhr.responseText);
+        console.error('获取系统指标失败:', xhr.responseText);
       }
       });
     }
 
     // Initial update
-    // updateSystemMetrics();
+    updateSystemMetrics();
 
     // Update every 60 seconds
-    // setInterval(updateSystemMetrics, 60000);
+    setInterval(updateSystemMetrics, 60000);
     });
   </script>
 

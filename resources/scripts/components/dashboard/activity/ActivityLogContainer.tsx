@@ -1,4 +1,3 @@
-import { ArrowDownToLine, ArrowRotateLeft, Funnel, Magnifier, Xmark } from '@gravity-ui/icons';
 import { useEffect, useMemo, useState } from 'react';
 
 import FlashMessageRender from '@/components/FlashMessageRender';
@@ -8,6 +7,11 @@ import PageContentBlock from '@/components/elements/PageContentBlock';
 import Select from '@/components/elements/Select';
 import Spinner from '@/components/elements/Spinner';
 import ActivityLogEntry from '@/components/elements/activity/ActivityLogEntry';
+import HugeIconsDownload from '@/components/elements/hugeicons/Download';
+import HugeIconsFilter from '@/components/elements/hugeicons/Filter';
+import HugeIconsHistory from '@/components/elements/hugeicons/History';
+import HugeIconsSearch from '@/components/elements/hugeicons/Search';
+import HugeIconsX from '@/components/elements/hugeicons/X';
 import { Input } from '@/components/elements/inputs';
 import PaginationFooter from '@/components/elements/table/PaginationFooter';
 
@@ -156,7 +160,7 @@ const ActivityLogContainer = () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Account Activity Log'}>
+        <PageContentBlock title={'账户活动日志'}>
             <div className='w-full h-full min-h-full flex-1 flex flex-col px-2 sm:px-0'>
                 <FlashMessageRender byKey={'account'} />
 
@@ -168,40 +172,40 @@ const ActivityLogContainer = () => {
                             'linear(0,0.01,0.04 1.6%,0.161 3.3%,0.816 9.4%,1.046,1.189 14.4%,1.231,1.254 17%,1.259,1.257 18.6%,1.236,1.194 22.3%,1.057 27%,0.999 29.4%,0.955 32.1%,0.942,0.935 34.9%,0.933,0.939 38.4%,1 47.3%,1.011,1.017 52.6%,1.016 56.4%,1 65.2%,0.996 70.2%,1.001 87.2%,1)',
                     }}
                 >
-                    <MainPageHeader title={'Activity Log'}>
+                    <MainPageHeader title={'活动日志'}>
                         <div className='flex gap-2 items-center flex-wrap'>
                             <ActionButton
                                 variant='secondary'
                                 onClick={() => setShowFilters(!showFilters)}
                                 className='flex items-center gap-2'
-                                title='Toggle Filters (Ctrl+F)'
+                                title='切换筛选器 (Ctrl+F)'
                             >
-                                <Funnel width={22} height={22} fill='currentColor' />
-                                Filters
+                                <HugeIconsFilter className='w-4 h-4' fill='currentColor' />
+                                筛选器
                                 {hasActiveFilters && <span className='w-2 h-2 bg-blue-500 rounded-full'></span>}
                             </ActionButton>
                             <ActionButton
                                 variant={autoRefresh ? 'primary' : 'secondary'}
                                 onClick={() => setAutoRefresh(!autoRefresh)}
                                 className='flex items-center gap-2'
-                                title='Auto Refresh (Ctrl+R)'
+                                title='自动刷新 (Ctrl+R)'
                             >
                                 {autoRefresh ? (
-                                    <Xmark width={22} height={22} fill='currentColor' />
+                                    <HugeIconsX className='w-4 h-4' fill='currentColor' />
                                 ) : (
-                                    <Magnifier width={22} height={22} fill='currentColor' />
+                                    <HugeIconsSearch className='w-4 h-4' fill='currentColor' />
                                 )}
-                                {autoRefresh ? 'Live' : 'Refresh'}
+                                {autoRefresh ? '实时' : '刷新'}
                             </ActionButton>
                             <ActionButton
                                 variant='secondary'
                                 onClick={exportLogs}
                                 disabled={!filteredData?.items?.length}
                                 className='flex items-center gap-2'
-                                title='Export CSV (Ctrl+E)'
+                                title='导出CSV (Ctrl+E)'
                             >
-                                <ArrowDownToLine width={22} height={22} fill='currentColor' />
-                                Export
+                                <HugeIconsDownload className='w-4 h-4' fill='currentColor' />
+                                导出
                             </ActionButton>
                         </div>
                     </MainPageHeader>
@@ -219,24 +223,22 @@ const ActivityLogContainer = () => {
                         <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-4 hover:border-[#ffffff20] transition-all duration-150 shadow-sm'>
                             <div className='flex items-center gap-2 mb-4'>
                                 <div className='w-5 h-5 rounded-lg bg-[#ffffff11] flex items-center justify-center'>
-                                    <Funnel width={22} height={22} className='text-zinc-400' fill='currentColor' />
+                                    <HugeIconsFilter className='w-2.5 h-2.5 text-zinc-400' fill='currentColor' />
                                 </div>
-                                <h3 className='text-base font-semibold text-zinc-100'>Filters</h3>
+                                <h3 className='text-base font-semibold text-zinc-100'>筛选器</h3>
                             </div>
 
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>Search</label>
+                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>搜索</label>
                                     <div className='relative'>
-                                        <Magnifier
-                                            width={22}
-                                            height={22}
+                                        <HugeIconsSearch
                                             className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10'
                                             fill='currentColor'
                                         />
                                         <Input.Text
                                             type='text'
-                                            placeholder='Search events, IPs, users...'
+                                            placeholder='搜索事件、IP地址、用户...'
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                             style={{ paddingLeft: '2.5rem' }}
@@ -245,14 +247,14 @@ const ActivityLogContainer = () => {
                                 </div>
 
                                 <div>
-                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>Event Type</label>
+                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>事件类型</label>
                                     <Select
                                         value={selectedEventType}
                                         onChange={(e) => setSelectedEventType(e.target.value)}
                                         className='w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-zinc-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 hover:border-zinc-500 transition-colors duration-150'
                                     >
                                         <option value='' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            All Events
+                                            所有事件
                                         </option>
                                         {eventTypes.map((type) => (
                                             <option
@@ -267,26 +269,26 @@ const ActivityLogContainer = () => {
                                 </div>
 
                                 <div>
-                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>Time Range</label>
+                                    <label className='block text-sm font-medium text-zinc-300 mb-2'>时间范围</label>
                                     <Select
                                         value={dateRange}
                                         onChange={(e) => setDateRange(e.target.value)}
                                         className='w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-zinc-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 hover:border-zinc-500 transition-colors duration-150'
                                     >
                                         <option value='all' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            All Time
+                                            全部时间
                                         </option>
                                         <option value='1h' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last Hour
+                                            最近一小时
                                         </option>
                                         <option value='24h' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last 24 Hours
+                                            最近24小时
                                         </option>
                                         <option value='7d' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last 7 Days
+                                            最近7天
                                         </option>
                                         <option value='30d' style={{ backgroundColor: '#27272a', color: '#f4f4f5' }}>
-                                            Last 30 Days
+                                            最近30天
                                         </option>
                                     </Select>
                                 </div>
@@ -298,8 +300,8 @@ const ActivityLogContainer = () => {
                                             onClick={clearAllFilters}
                                             className='flex items-center gap-2 w-full'
                                         >
-                                            <Xmark width={22} height={22} fill='currentColor' />
-                                            Clear All Filters
+                                            <HugeIconsX className='w-4 h-4' fill='currentColor' />
+                                            清除所有筛选
                                         </ActionButton>
                                     )}
                                 </div>
@@ -319,12 +321,12 @@ const ActivityLogContainer = () => {
                     <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-4 hover:border-[#ffffff20] transition-all duration-150 shadow-sm'>
                         <div className='flex items-center gap-2 mb-4'>
                             <div className='w-5 h-5 rounded-lg bg-[#ffffff11] flex items-center justify-center'>
-                                <Magnifier width={22} height={22} className=' text-zinc-400' fill='currentColor' />
+                                <HugeIconsHistory className='w-2.5 h-2.5 text-zinc-400' fill='currentColor' />
                             </div>
-                            <h3 className='text-base font-semibold text-zinc-100'>Activity Events</h3>
+                            <h3 className='text-base font-semibold text-zinc-100'>活动事件</h3>
                             {filteredData?.items && (
                                 <span className='text-sm text-zinc-400'>
-                                    ({filteredData.items.length} {filteredData.items.length === 1 ? 'event' : 'events'})
+                                    ({filteredData.items.length} {filteredData.items.length === 1 ? '个事件' : '个事件'})
                                 </span>
                             )}
                         </div>
@@ -333,27 +335,22 @@ const ActivityLogContainer = () => {
                             <Spinner centered />
                         ) : !filteredData?.items?.length ? (
                             <div className='text-center py-12'>
-                                <ArrowRotateLeft
-                                    width={22}
-                                    height={22}
-                                    className=' text-zinc-600 mb-4'
-                                    fill='currentColor'
-                                />
+                                <HugeIconsHistory className='w-16 h-16 text-zinc-600 mb-4' fill='currentColor' />
                                 <h3 className='text-lg font-semibold text-zinc-300 mb-2'>
-                                    {hasActiveFilters ? 'No Matching Activity' : 'No Activity Yet'}
+                                    {hasActiveFilters ? '无匹配活动' : '暂无活动'}
                                 </h3>
                                 <p className='text-sm text-zinc-400 mb-4 max-w-lg mx-auto leading-relaxed'>
                                     {hasActiveFilters
-                                        ? "Try adjusting your filters or search terms to find the activity you're looking for."
-                                        : 'Activity logs will appear here as you use your account. Check back later or perform some actions to see them here.'}
+                                        ? "请尝试调整筛选条件或搜索词来查找您要找的活动。"
+                                        : '当您使用账户时，活动日志将显示在此处。请稍后回来查看或执行一些操作以在此处查看它们。'}
                                 </p>
                                 {hasActiveFilters && (
                                     <div className='flex gap-2 justify-center'>
                                         <ActionButton variant='secondary' onClick={clearAllFilters}>
-                                            Clear All Filters
+                                            清除所有筛选
                                         </ActionButton>
                                         <ActionButton variant='secondary' onClick={() => setShowFilters(true)}>
-                                            Adjust Filters
+                                            调整筛选器
                                         </ActionButton>
                                     </div>
                                 )}

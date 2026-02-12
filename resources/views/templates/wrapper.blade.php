@@ -2,7 +2,7 @@
 <!-- Copyright (c) 2023-2025 Pyro Inc., parent collaborators, and contributors -->
 <html data-pyro-html lang="en" style="background-color: #000000; height: 100%; width: 100%; margin: 0; padding: 0;">
     <head>
-        <title>{{ config('app.name', 'Panel') }}</title>
+        <title>{{ config('app.name', '面板') }}</title>
 
         @section('meta')
             <meta charset="utf-8">

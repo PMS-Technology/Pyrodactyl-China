@@ -1,29 +1,29 @@
 @extends('layouts.admin')
 
 @section('title')
-    {{ $node->name }}: Configuration
+    {{ $node->name }}: 配置
 @endsection
 
 @section('content-header')
-    <h1>{{ $node->name }}<small>Your daemon configuration file.</small></h1>
+    <h1>{{ $node->name }}<small>您的守护进程配置文件。</small></h1>
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li><a href="{{ route('admin.nodes') }}">Nodes</a></li>
+        <li><a href="{{ route('admin.index') }}">管理员</a></li>
+        <li><a href="{{ route('admin.nodes') }}">节点</a></li>
         <li><a href="{{ route('admin.nodes.view', $node->id) }}">{{ $node->name }}</a></li>
-        <li class="active">Configuration</li>
+        <li class="active">配置</li>
     </ol>
 @endsection
 
 @section('content')
 <div class="row">
     <div class="col-xs-12">
-       <div class="nav-tabs-custom nav-tabs-floating">
+        <div class="nav-tabs-custom nav-tabs-floating">
             <ul class="nav nav-tabs">
-                <li><a href="{{ route('admin.nodes.view', $node->id) }}">About</a></li>
-                <li><a href="{{ route('admin.nodes.view.settings', $node->id) }}">Settings</a></li>
-                <li class="active"><a href="{{ route('admin.nodes.view.configuration', $node->id) }}">Configuration</a></li>
-                <li><a href="{{ route('admin.nodes.view.allocation', $node->id) }}">Allocation</a></li>
-                <li><a href="{{ route('admin.nodes.view.servers', $node->id) }}">Servers</a></li>
+                <li><a href="{{ route('admin.nodes.view', $node->id) }}">关于</a></li>
+                <li><a href="{{ route('admin.nodes.view.settings', $node->id) }}">设置</a></li>
+                <li class="active"><a href="{{ route('admin.nodes.view.configuration', $node->id) }}">配置</a></li>
+                <li><a href="{{ route('admin.nodes.view.allocation', $node->id) }}">分配</a></li>
+                <li><a href="{{ route('admin.nodes.view.servers', $node->id) }}">服务器</a></li>
             </ul>
         </div>
     </div>
@@ -32,29 +32,28 @@
     <div class="col-sm-8">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Configuration File</h3>
+                <h3 class="box-title">配置文件</h3>
             </div>
             <div class="box-body">
                 <pre class="no-margin">{{ $node->getYamlConfiguration() }}</pre>
             </div>
             <div class="box-footer">
-                <p class="no-margin">This file should be placed in your daemon's root directory (usually <code>/etc/elytra</code>) in a file called <code>config.yml</code>.</p>
+                <p class="no-margin">此文件应放置在您的守护进程根目录中（通常为 <code>/etc/pterodactyl</code>），文件名为 <code>config.yml</code>。</p>
             </div>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3 class="box-title">Auto-Deploy</h3>
+                <h3 class="box-title">自动部署</h3>
             </div>
             <div class="box-body">
                 <p class="text-muted small">
-                    Use the button below to generate a custom deployment command that can be used to configure
-                    elytra on the target server with a single command.
+                    使用下面的按钮生成一个自定义部署命令，可用于通过单个命令在目标服务器上配置 wings。
                 </p>
             </div>
             <div class="box-footer">
-                <button type="button" id="configTokenBtn" class="btn btn-sm btn-default" style="width:100%;">Generate Token</button>
+                <button type="button" id="configTokenBtn" class="btn btn-sm btn-default" style="width:100%;">生成令牌</button>
             </div>
         </div>
     </div>
@@ -64,25 +63,25 @@
 @section('footer-scripts')
     @parent
     <script>
+    var panelUrl = "{{ config('app.url') }}";
+    var debugMode = "{{ config('app.debug') ? 'true' : 'false' }}";
     $('#configTokenBtn').on('click', function (event) {
         $.ajax({
             method: 'POST',
-            url: '{{ route('admin.nodes.view.configuration.token', $node->id) }}',
-            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            url: "{{ route('admin.nodes.view.configuration.token', $node->id) }}",
+            headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
         }).done(function (data) {
-
-            var commandTemplate = "{!! addslashes($node->getAutoDeploy("PLACEHOLDER_TOKEN")) !!}";
-            var command = commandTemplate.replace('PLACEHOLDER_TOKEN', data.token);
+            var command = 'cd /etc/pterodactyl && sudo wings configure --panel-url ' + panelUrl + ' --token ' + data.token + ' --node ' + data.node + (debugMode === 'true' ? ' --allow-insecure' : '');
             swal({
                 type: 'success',
-                title: 'Token created.',
-                text: "<p>To auto-configure your node run the following command:<br /><small><pre>" + command + "</pre></small></p>",
-                html: true,
+                title: '令牌已创建。',
+                text: '<p>要自动配置您的节点，请运行以下命令：<br /><small><pre>' + command + '</pre></small></p>',
+                html: true
             })
         }).fail(function () {
             swal({
-                title: 'Error',
-                text: 'Something went wrong creating your token.',
+                title: '错误',
+                text: '创建令牌时出现问题。',
                 type: 'error'
             });
         });

@@ -8,7 +8,7 @@ interface CaptchaProps {
     onExpired?: () => void;
     className?: string;
     theme?: 'light' | 'dark' | 'auto';
-    size?: 'normal' | 'compact' | 'invisible' | 'flexible';
+    size?: 'normal' | 'compact' | 'invisible';
 }
 
 export default function Captcha({
@@ -16,8 +16,8 @@ export default function Captcha({
     onError,
     onExpired,
     className,
-    theme = 'dark',
-    size = 'flexible',
+    theme = 'auto',
+    size = 'normal',
 }: CaptchaProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [widgetId, setWidgetId] = useState<string | null>(null);
@@ -42,12 +42,12 @@ export default function Captcha({
     };
 
     const handleError = (err: any) => {
-        setError('Captcha verification failed');
+        setError('验证码验证失败');
         onErrorRef.current?.(err);
     };
 
     const handleExpired = () => {
-        setError('Captcha expired');
+        setError('验证码已过期');
         onExpiredRef.current?.();
     };
 
@@ -95,7 +95,7 @@ export default function Captcha({
                 }
             } catch (err) {
                 if (mounted) {
-                    setError('Failed to load captcha');
+                    setError('验证码加载失败');
                 }
             } finally {
                 if (mounted) {
@@ -147,7 +147,7 @@ export default function Captcha({
     return (
         <div className={className}>
             <div ref={containerRef} />
-            {isLoading && <div className='text-sm text-gray-500 mt-2'>Loading captcha...</div>}
+            {isLoading && <div className='text-sm text-gray-500 mt-2'>正在加载验证码...</div>}
             {error && <div className='text-sm text-red-500 mt-2'>{error}</div>}
         </div>
     );

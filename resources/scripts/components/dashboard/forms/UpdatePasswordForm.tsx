@@ -20,11 +20,11 @@ interface Values {
 }
 
 const schema = Yup.object().shape({
-    current: Yup.string().min(1).required('You must provide your current account password.'),
+    current: Yup.string().min(1).required('您必须提供当前账户密码。'),
     password: Yup.string().min(8).required(),
     confirmPassword: Yup.string().test(
         'password',
-        'Password confirmation does not match the password you entered.',
+        '密码确认与您输入的密码不匹配。',
         function (value) {
             return value === this.parent.password;
         },
@@ -72,16 +72,16 @@ const UpdatePasswordForm = () => {
                                 id={'current_password'}
                                 type={'password'}
                                 name={'current'}
-                                label={'Current Password'}
+                                label={'当前密码'}
                             />
                             <div className={`mt-6`}>
                                 <Field
                                     id={'new_password'}
                                     type={'password'}
                                     name={'password'}
-                                    label={'New Password'}
+                                    label={'新密码'}
                                     description={
-                                        'Your new password should be at least 8 characters in length and unique to this website.'
+                                        '您的新密码长度应至少为8个字符，并且对此网站来说是唯一的。'
                                     }
                                 />
                             </div>
@@ -90,13 +90,13 @@ const UpdatePasswordForm = () => {
                                     id={'confirm_new_password'}
                                     type={'password'}
                                     name={'confirmPassword'}
-                                    label={'Confirm New Password'}
+                                    label={'确认新密码'}
                                 />
                             </div>
                             <div className={`mt-6`}>
                                 <ActionButton variant='primary' disabled={isSubmitting || !isValid}>
                                     {isSubmitting && <Spinner size='small' />}
-                                    {isSubmitting ? 'Updating...' : 'Update Password'}
+                                    {isSubmitting ? '更新中...' : '更新密码'}
                                 </ActionButton>
                             </div>
                         </Form>

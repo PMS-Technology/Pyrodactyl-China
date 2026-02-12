@@ -1,4 +1,3 @@
-import { BarsPlay } from '@gravity-ui/icons';
 import { NavLink } from 'react-router-dom';
 
 import {
@@ -9,6 +8,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/elements/DropdownMenu';
 import Logo from '@/components/elements/PyroLogo';
+import HugeIconsMenu from '@/components/elements/hugeicons/Menu';
 
 interface MobileTopBarProps {
     onMenuToggle: () => void;
@@ -24,7 +24,7 @@ const MobileTopBar = ({ onMenuToggle, onTriggerLogout, onSelectAdminPanel, rootA
                 onMenuToggle();
             }
         } catch (error) {
-            console.error('Error in mobile menu toggle:', error);
+            console.error('移动端菜单切换错误:', error);
         }
     };
 
@@ -34,7 +34,7 @@ const MobileTopBar = ({ onMenuToggle, onTriggerLogout, onSelectAdminPanel, rootA
                 onTriggerLogout();
             }
         } catch (error) {
-            console.error('Error in logout trigger:', error);
+            console.error('登出触发错误:', error);
         }
     };
 
@@ -44,19 +44,19 @@ const MobileTopBar = ({ onMenuToggle, onTriggerLogout, onSelectAdminPanel, rootA
                 onSelectAdminPanel();
             }
         } catch (error) {
-            console.error('Error in admin panel select:', error);
+            console.error('管理面板选择错误:', error);
         }
     };
 
     return (
         <div className='lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#1a1a1a] border-b border-[#ffffff08] h-16 flex items-center justify-between px-4'>
-            {/* Logo */}
+            {/* 标志 */}
             <NavLink to={'/'} className='flex shrink-0 h-8 w-fit'>
                 <Logo uniqueId='mobile-topbar' />
             </NavLink>
 
             <div className='flex items-center gap-2'>
-                {/* User Menu */}
+                {/* 用户菜单 */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <button className='w-10 h-10 flex items-center justify-center rounded-md text-white hover:bg-[#ffffff11] p-2 cursor-pointer'>
@@ -75,24 +75,24 @@ const MobileTopBar = ({ onMenuToggle, onTriggerLogout, onSelectAdminPanel, rootA
                     <DropdownMenuContent className='z-99999' sideOffset={8}>
                         {rootAdmin && onSelectAdminPanel && (
                             <DropdownMenuItem onSelect={handleAdminPanel}>
-                                Admin Panel
+                                管理面板
                                 <span className='ml-2 z-10 rounded-full bg-brand px-2 py-1 text-xs text-white'>
-                                    Staff
+                                    管理员
                                 </span>
                             </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onSelect={handleLogout}>Log Out</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={handleLogout}>退出登录</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Menu Toggle Button */}
+                {/* 菜单切换按钮 */}
                 <button
                     onClick={handleMenuToggle}
                     className='w-10 h-10 flex items-center justify-center rounded-md text-white hover:bg-[#ffffff11] p-2 cursor-pointer'
-                    aria-label='Toggle navigation menu'
+                    aria-label='切换导航菜单'
                 >
-                    <BarsPlay width={22} height={22} fill='currentColor' />
+                    <HugeIconsMenu fill='currentColor' />
                 </button>
             </div>
         </div>

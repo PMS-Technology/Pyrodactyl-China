@@ -66,12 +66,12 @@ const EulaModalFeature = () => {
             onDismissed={() => setVisible(false)}
             closeOnBackground={false}
             showSpinnerOverlay={loading}
-            title='Accept Minecraft EULA'
+            title='接受 Minecraft EULA'
         >
             <div className='flex flex-col'>
                 <FlashMessageRender key={'feature:eula'} />
                 <p className={`text-zinc-200`}>
-                    Before starting your Minecraft server, you need to accept the{' '}
+                    在启动您的 Minecraft 服务器之前，您需要接受{' '}
                     <a
                         target={'_blank'}
                         className={`text-zinc-300 underline transition-colors duration-150 hover:text-zinc-400`}
@@ -80,14 +80,14 @@ const EulaModalFeature = () => {
                     >
                         Minecraft EULA
                     </a>
-                    .
+                    。
                 </p>
                 <div className={`my-6 gap-3 flex items-center justify-end`}>
                     <ActionButton variant='secondary' onClick={() => setVisible(false)}>
-                        I don&apos;t accept
+                        我不接受
                     </ActionButton>
                     <ActionButton variant='primary' onClick={onAcceptEULA}>
-                        I accept
+                        我接受
                     </ActionButton>
                 </div>
             </div>

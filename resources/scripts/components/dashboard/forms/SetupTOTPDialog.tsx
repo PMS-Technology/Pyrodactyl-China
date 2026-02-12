@@ -79,8 +79,8 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
                 </p>
             </CopyOnClick>
             <p id={'totp-code-description'} className={'mt-6'}>
-                Scan the QR code above using an authenticator app, or enter the secret code above. Then, enter the
-                6-digit code it generates below.
+                使用身份验证器应用扫描上方的二维码，或输入上方的密钥代码。然后，在下方输入
+                它生成的6位数字代码。
             </p>
             <Input.Text
                 aria-labelledby={'totp-code-description'}
@@ -95,7 +95,7 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
                 pattern={'\\d{6}'}
             />
             <label htmlFor={'totp-password'} className={'block mt-3'}>
-                Account Password
+                账户密码
             </label>
             <Input.Text
                 variant={Input.Text.Variants.Loose}
@@ -106,7 +106,7 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
             />
             <Dialog.Footer>
                 <ActionButton variant='secondary' onClick={close}>
-                    Cancel
+                    取消
                 </ActionButton>
                 {/* <Tooltip
                     disabled={password.length > 0 && value.length === 6}
@@ -123,7 +123,7 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
                     type={'submit'}
                     form={'enable-totp-form'}
                 >
-                    Enable
+                    启用
                 </ActionButton>
                 {/* </Tooltip> */}
             </Dialog.Footer>
@@ -132,6 +132,6 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
 };
 
 export default asDialog({
-    title: 'Enable Authenticator App',
-    description: "You'll be required to enter a verification code each time you sign in.",
+    title: '启用身份验证器应用',
+    description: "您将在每次登录时需要输入验证码。",
 })(ConfigureTwoFactorForm);

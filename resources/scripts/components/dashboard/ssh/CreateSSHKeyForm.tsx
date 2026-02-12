@@ -33,7 +33,7 @@ const CreateSSHKeyForm = () => {
                 resetForm();
                 setSubmitting(false);
                 setSshKey(`${key.name}`);
-                mutate((data) => (data || []).concat(key)); // Update the list of SSH keys after creation
+                mutate((data) => (data || []).concat(key)); // 创建后更新SSH密钥列表
             })
             .catch((error) => {
                 console.error(error);
@@ -44,49 +44,49 @@ const CreateSSHKeyForm = () => {
 
     return (
         <>
-            {/* Flash Messages */}
+            {/* 消息提示 */}
             <FlashMessageRender byKey='account' />
 
-            {/* Modal for SSH Key */}
+            {/* SSH密钥模态框 */}
             {/* Add your modal logic here to display the SSH key details after creation */}
 
-            {/* Form for creating SSH key */}
+            {/* 创建SSH密钥表单 */}
             <ContentBox>
                 <Formik
                     onSubmit={submit}
                     initialValues={{ name: '', publicKey: '' }}
                     validationSchema={object().shape({
-                        name: string().required('SSH Key Name is required'),
-                        publicKey: string().required('Public Key is required'),
+                        name: string().required('SSH密钥名称是必需的'),
+                        publicKey: string().required('公钥是必需的'),
                     })}
                 >
                     {({ isSubmitting }) => (
                         <Form className='space-y-6'>
-                            {/* Show spinner overlay when submitting */}
+                            {/* 提交时显示加载覆盖 */}
                             <SpinnerOverlay visible={isSubmitting} />
 
-                            {/* SSH Key Name Field */}
+                            {/* SSH密钥名称字段 */}
                             <FormikFieldWrapper
-                                label='SSH Key Name'
+                                label='SSH密钥名称'
                                 name='name'
-                                description='A name to identify this SSH key.'
+                                description='用于标识此SSH密钥的名称。'
                             >
                                 <Field name='name' as={Input} className='w-full' />
                             </FormikFieldWrapper>
 
-                            {/* Public Key Field */}
+                            {/* 公钥字段 */}
                             <FormikFieldWrapper
-                                label='Public Key'
+                                label='公钥'
                                 name='publicKey'
-                                description='Enter your public SSH key.'
+                                description='输入您的公钥SSH密钥。'
                             >
                                 <Field name='publicKey' as={Input} className='w-full' />
                             </FormikFieldWrapper>
 
-                            {/* Submit Button below form fields */}
+                            {/* 表单字段下方的提交按钮 */}
                             <div className='flex justify-end mt-6'>
                                 <ActionButton type='submit' disabled={isSubmitting}>
-                                    {isSubmitting ? 'Creating...' : 'Create SSH Key'}
+                                    {isSubmitting ? '创建中...' : '创建SSH密钥'}
                                 </ActionButton>
                             </div>
                         </Form>

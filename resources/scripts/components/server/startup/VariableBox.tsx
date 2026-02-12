@@ -1,4 +1,3 @@
-import { ChevronDown, ChevronUp, Lock } from '@gravity-ui/icons';
 import debounce from 'debounce';
 import { memo, useState } from 'react';
 import isEqual from 'react-fast-compare';
@@ -14,6 +13,9 @@ import {
 import InputSpinner from '@/components/elements/InputSpinner';
 import { Switch } from '@/components/elements/SwitchV2';
 import { Input } from '@/components/elements/TextInput';
+import HugeIconsArrowDown from '@/components/elements/hugeicons/ArrowDown';
+import HugeIconsArrowUp from '@/components/elements/hugeicons/ArrowUp';
+import HugeIconsSquareLock from '@/components/elements/hugeicons/SquareLock';
 
 import { ServerEggVariable } from '@/api/server/types';
 import updateStartupVariable from '@/api/server/updateStartupVariable';
@@ -75,9 +77,7 @@ const VariableBox = ({ variable }: Props) => {
                 <div className='flex flex-col items-baseline sm:flex-row sm:justify-between gap-2 sm:gap-3'>
                     <div className='flex items-center gap-2 min-w-0'>
                         {!variable.isEditable && (
-                            <Lock
-                                width={22}
-                                height={22}
+                            <HugeIconsSquareLock
                                 fill={'currentColor'}
                                 className='text-neutral-500 w-4 h-4 flex-shrink-0'
                             />
@@ -98,11 +98,11 @@ const VariableBox = ({ variable }: Props) => {
                         <span className='text-sm font-medium text-neutral-300'>
                             {isStringSwitch
                                 ? variable.serverValue === 'true'
-                                    ? 'Enabled'
-                                    : 'Disabled'
+                                    ? '已启用'
+                                    : '已禁用'
                                 : variable.serverValue === '1'
-                                  ? 'On'
-                                  : 'Off'}
+                                  ? '开启'
+                                  : '关闭'}
                         </span>
                         <Switch
                             disabled={!canEdit || !variable.isEditable}
@@ -134,16 +134,12 @@ const VariableBox = ({ variable }: Props) => {
                                             {variable.serverValue}
                                         </span>
                                         {dropDownOpen ? (
-                                            <ChevronUp
-                                                width={22}
-                                                height={22}
+                                            <HugeIconsArrowUp
                                                 fill={'currentColor'}
                                                 className='w-[14px] h-[14px] opacity-60 flex-shrink-0'
                                             />
                                         ) : (
-                                            <ChevronDown
-                                                width={22}
-                                                height={22}
+                                            <HugeIconsArrowDown
                                                 fill={'currentColor'}
                                                 className='w-[14px] h-[14px] opacity-60 flex-shrink-0'
                                             />
@@ -177,7 +173,7 @@ const VariableBox = ({ variable }: Props) => {
                                 readOnly={!canEdit || !variable.isEditable}
                                 name={variable.envVariable}
                                 defaultValue={variable.serverValue ?? ''}
-                                placeholder={variable.defaultValue || 'Enter value...'}
+                                placeholder={variable.defaultValue || '输入值...'}
                                 disabled={!canEdit || !variable.isEditable}
                             />
                         )}

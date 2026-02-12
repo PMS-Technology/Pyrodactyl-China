@@ -63,7 +63,7 @@ function ResetPasswordContainer() {
                 } else {
                     console.error('Captcha enabled but no response available');
                     console.log(captchaResponse);
-                    clearAndAddHttpError({ error: new Error('Please complete the captcha verification.') });
+                    clearAndAddHttpError({ error: new Error('请完成验证码验证。') });
                     setSubmitting(false);
                     return;
                 }
@@ -97,11 +97,11 @@ function ResetPasswordContainer() {
                 }}
                 validationSchema={object().shape({
                     password: string()
-                        .required('A new password is required.')
-                        .min(8, 'Your new password should be at least 8 characters in length.'),
+                        .required('新密码是必填项。')
+                        .min(8, '您的新密码长度至少为8个字符。'),
                     password_confirmation: string()
-                        .required('Your new password does not match.')
-                        .oneOf([ref('password')], 'Your new password does not match.'),
+                        .required('您的新密码不匹配。')
+                        .oneOf([ref('password')], '您的新密码不匹配。'),
                 })}
             >
                 {({ isSubmitting }) => (
@@ -118,21 +118,21 @@ function ResetPasswordContainer() {
                         </div>
                         <div className={`mt-6`}>
                             <Field
-                                label={'New Password'}
+                                label={'新密码'}
                                 name={'password'}
                                 type={'password'}
-                                description={'Passwords must be at least 8 characters in length.'}
+                                description={'密码长度至少为8个字符。'}
                             />
                         </div>
                         <div className={`mt-6`}>
-                            <Field label={'Confirm New Password'} name={'password_confirmation'} type={'password'} />
+                            <Field label={'确认新密码'} name={'password_confirmation'} type={'password'} />
                         </div>
                         <Captcha
                             className='mt-6'
                             onError={(error) => {
                                 console.error('Captcha error:', error);
                                 clearAndAddHttpError({
-                                    error: new Error('Captcha verification failed. Please try again.'),
+                                    error: new Error('验证码验证失败。请重试。'),
                                 });
                             }}
                         />
@@ -145,7 +145,7 @@ function ResetPasswordContainer() {
                                 disabled={isSubmitting}
                                 isLoading={isSubmitting}
                             >
-                                Reset Password
+                                重置密码
                             </Button>
                         </div>
                         <div aria-hidden className='my-8 bg-[#ffffff33] min-h-[1px]'></div>
@@ -157,7 +157,7 @@ function ResetPasswordContainer() {
                                 to={'/auth/login'}
                                 className={`text-xs text-white tracking-wide uppercase no-underline hover:text-neutral-700 border-color-[#ffffff33] pt-4`}
                             >
-                                Return to Login
+                                返回登录
                             </Link>
                         </div>
                     </LoginFormContainer>

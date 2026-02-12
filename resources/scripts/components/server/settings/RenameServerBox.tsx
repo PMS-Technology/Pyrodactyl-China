@@ -20,13 +20,13 @@ interface Values {
 
 const RenameServerForm = () => {
     return (
-        <TitledGreyBox title={'Server Details'}>
+        <TitledGreyBox title={'服务器详情'}>
             <Form className='flex flex-col gap-4'>
-                <Field id={'name'} name={'name'} label={'Server Name'} type={'text'} />
-                <Field id={'description'} name={'description'} label={'Server Description'} type={'text'} />
+                <Field id={'name'} name={'name'} label={'服务器名称'} type={'text'} />
+                <Field id={'description'} name={'description'} label={'服务器描述'} type={'text'} />
                 <div className={`mt-6 text-right`}>
                     <ActionButton variant='primary' type={'submit'}>
-                        Save
+                        保存
                     </ActionButton>
                 </div>
             </Form>
@@ -41,14 +41,14 @@ const RenameServerBox = () => {
 
     const submit = ({ name, description }: Values) => {
         clearFlashes('settings');
-        toast('Updating server details...');
+        toast('正在更新服务器详情...');
         renameServer(server.uuid, name, description)
             .then(() => setServer({ ...server, name, description }))
             .catch((error) => {
                 console.error(error);
                 addError({ key: 'settings', message: httpErrorToHuman(error) });
             })
-            .then(() => toast.success('Server details updated!'));
+            .then(() => toast.success('服务器详情已更新！'));
     };
 
     return (

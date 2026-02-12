@@ -34,26 +34,14 @@ class ProcessScheduleService
       throw new DisplayException('Cannot process schedule for task execution: no tasks are registered.');
     }
 
-    $claimed = false;
-    $this->connection->transaction(function () use ($schedule, $task, &$claimed) {
-      $affectedRows = Schedule::where('id', $schedule->id)
-        ->where('is_processing', false)
-        ->update([
-          'is_processing' => true,
-          'next_run_at' => $schedule->getNextRunDate(),
-        ]);
+    $this->connection->transaction(function () use ($schedule, $task) {
+      $schedule->forceFill([
+        'is_processing' => true,
+        'next_run_at' => $schedule->getNextRunDate(),
+      ])->saveOrFail();
 
-      if ($affectedRows === 0) {
-        return;
-      }
-
-      $claimed = true;
       $task->update(['is_queued' => true]);
     });
-
-    if (!$claimed) {
-      return;
-    }
 
     $job = new RunTaskJob($task, $now);
     if ($schedule->only_when_online) {
@@ -74,9 +62,8 @@ class ProcessScheduleService
           // issue connecting to Wings run the failed sequence for a job. Otherwise we
           // can just quietly mark the task as completed without actually running anything.
           $job->failed($exception);
-        } else {
-          $job->failed();
         }
+        $job->failed();
 
         return;
       }

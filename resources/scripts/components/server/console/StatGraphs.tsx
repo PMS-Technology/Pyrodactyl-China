@@ -1,8 +1,9 @@
-import { ArrowDownToLine, ArrowUpToLine } from '@gravity-ui/icons';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useEffect, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 
+import HugeIconsCloudUp from '@/components/elements/hugeicons/CloudUp';
+import HugeIconsDownload from '@/components/elements/hugeicons/Download';
 import ChartBlock from '@/components/server/console/ChartBlock';
 import { useChart, useChartTickLabel } from '@/components/server/console/chart';
 import { SocketEvent } from '@/components/server/events';
@@ -80,7 +81,7 @@ const StatGraphs = () => {
                 }}
             >
                 <ChartBlock title={'CPU'}>
-                    <Line aria-label='CPU Usage' role='img' {...cpu.props} />
+                    <Line aria-label='CPU 使用率' role='img' {...cpu.props} />
                 </ChartBlock>
             </div>
             <div
@@ -91,8 +92,8 @@ const StatGraphs = () => {
                         'linear(0,0.01,0.04 1.6%,0.161 3.3%,0.816 9.4%,1.046,1.189 14.4%,1.231,1.254 17%,1.259,1.257 18.6%,1.236,1.194 22.3%,1.057 27%,0.999 29.4%,0.955 32.1%,0.942,0.935 34.9%,0.933,0.939 38.4%,1 47.3%,1.011,1.017 52.6%,1.016 56.4%,1 65.2%,0.996 70.2%,1.001 87.2%,1)',
                 }}
             >
-                <ChartBlock title={'RAM'}>
-                    <Line aria-label='Memory Usage' role='img' {...memory.props} />
+                <ChartBlock title={'内存'}>
+                    <Line aria-label='内存使用率' role='img' {...memory.props} />
                 </ChartBlock>
             </div>
             <div
@@ -104,17 +105,15 @@ const StatGraphs = () => {
                 }}
             >
                 <ChartBlock
-                    title={'Network Activity'}
+                    title={'网络活动'}
                     legend={
                         <div className='flex gap-2'>
                             <Tooltip.Root delayDuration={200}>
                                 <Tooltip.Trigger asChild>
                                     <div className='flex items-center cursor-default'>
-                                        <ArrowDownToLine
-                                            width={22}
-                                            height={22}
+                                        <HugeIconsDownload
                                             fill='currentColor'
-                                            className='mr-2 text-yellow-400'
+                                            className='mr-2 w-4 h-4 text-yellow-400'
                                         />
                                     </div>
                                 </Tooltip.Trigger>
@@ -124,7 +123,7 @@ const StatGraphs = () => {
                                         className='px-2 py-1 text-sm bg-gray-800 text-gray-100 rounded shadow-lg'
                                         sideOffset={5}
                                     >
-                                        Inbound
+                                        入站
                                         <Tooltip.Arrow className='fill-gray-800' />
                                     </Tooltip.Content>
                                 </Tooltip.Portal>
@@ -133,12 +132,7 @@ const StatGraphs = () => {
                             <Tooltip.Root delayDuration={200}>
                                 <Tooltip.Trigger asChild>
                                     <div className='flex items-center cursor-default'>
-                                        <ArrowUpToLine
-                                            width={22}
-                                            height={22}
-                                            fill='currentColor'
-                                            className='text-blue-400'
-                                        />
+                                        <HugeIconsCloudUp fill='currentColor' className='w-4 h-4 text-blue-400' />
                                     </div>
                                 </Tooltip.Trigger>
                                 <Tooltip.Portal>
@@ -147,7 +141,7 @@ const StatGraphs = () => {
                                         className='px-2 py-1 text-sm bg-gray-800 text-gray-100 rounded shadow-lg'
                                         sideOffset={5}
                                     >
-                                        Outbound
+                                        出站
                                         <Tooltip.Arrow className='fill-gray-800' />
                                     </Tooltip.Content>
                                 </Tooltip.Portal>
@@ -155,7 +149,7 @@ const StatGraphs = () => {
                         </div>
                     }
                 >
-                    <Line aria-label='Network Activity. Download and upload activity' role='img' {...network.props} />
+                    <Line aria-label='网络活动。下载和上传活动' role='img' {...network.props} />
                 </ChartBlock>
             </div>
         </Tooltip.Provider>

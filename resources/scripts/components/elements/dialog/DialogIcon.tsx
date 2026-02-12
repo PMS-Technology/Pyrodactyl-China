@@ -1,7 +1,7 @@
-import { Shield } from '@gravity-ui/icons';
 import clsx from 'clsx';
 import { useContext, useEffect } from 'react';
 
+import HugeIconsUserShield from '../hugeicons/UserShield';
 import { DialogContext, DialogIconProps, styles } from './';
 
 // const icons = {
@@ -19,7 +19,8 @@ export default ({ type, position, className }: DialogIconProps) => {
 
         setIcon(
             <div className={clsx(styles.dialog_icon, styles[type], className)}>
-                <Shield width={22} height={22} fill='currentColor' />
+                {/* <Icon className={'w-6 h-6'} /> */}
+                <HugeIconsUserShield fill='currentColor'></HugeIconsUserShield>
             </div>,
         );
     }, [type, className]);

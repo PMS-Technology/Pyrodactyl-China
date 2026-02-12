@@ -1,9 +1,9 @@
-import { TriangleExclamation } from '@gravity-ui/icons';
 import React, { useEffect, useState } from 'react';
 
 import ActionButton from '@/components/elements/ActionButton';
 import Spinner from '@/components/elements/Spinner';
 import { Dialog } from '@/components/elements/dialog';
+import HugeIconsAlert from '@/components/elements/hugeicons/Alert';
 
 import {
     UI_CONFIG,
@@ -111,9 +111,7 @@ const OperationProgressModal: React.FC<Props> = ({
                     </div>
                 );
             case 'error':
-                return (
-                    <TriangleExclamation width={22} height={22} fill='currentColor' className='w-5 h-5 text-red-400' />
-                );
+                return <HugeIconsAlert fill='currentColor' className='w-5 h-5 text-red-400' />;
             default:
                 return <Spinner size={'small'} />;
         }
@@ -152,13 +150,8 @@ const OperationProgressModal: React.FC<Props> = ({
                 {error ? (
                     <div className='space-y-4'>
                         <div className='flex items-center justify-center space-x-3'>
-                            <TriangleExclamation
-                                width={22}
-                                height={22}
-                                fill='currentColor'
-                                className='w-6 h-6 text-red-400'
-                            />
-                            <span className='text-red-400 font-semibold text-lg'>Error</span>
+                            <HugeIconsAlert fill='currentColor' className='w-6 h-6 text-red-400' />
+                            <span className='text-red-400 font-semibold text-lg'>错误</span>
                         </div>
                         <div className='p-4 bg-red-500/10 border border-red-500/20 rounded-lg'>
                             <p className='text-sm text-red-300'>{error}</p>
@@ -179,7 +172,7 @@ const OperationProgressModal: React.FC<Props> = ({
 
                         {/* Message Box */}
                         <div className='p-4 bg-[#ffffff11] border border-[#ffffff12] rounded-lg'>
-                            <p className='text-sm text-zinc-300 text-center'>{operation.message || 'Processing...'}</p>
+                            <p className='text-sm text-zinc-300 text-center'>{operation.message || '处理中...'}</p>
                         </div>
 
                         {/* Progress Bar for Active Operations */}
@@ -192,7 +185,7 @@ const OperationProgressModal: React.FC<Props> = ({
                                     />
                                 </div>
                                 <p className='text-xs text-zinc-500 text-center'>
-                                    This window will close automatically when complete
+                                    完成后此窗口将自动关闭
                                 </p>
                             </div>
                         )}
@@ -205,12 +198,12 @@ const OperationProgressModal: React.FC<Props> = ({
                                         <div className='w-2 h-2 rounded-full bg-white' />
                                     </div>
                                     <p className='text-sm text-green-300 font-medium'>
-                                        Operation completed successfully
+                                        操作成功完成
                                     </p>
                                 </div>
                                 {autoCloseTimer && (
                                     <p className='text-xs text-green-200 text-center'>
-                                        Closing automatically in 3 seconds
+                                        3秒后自动关闭
                                     </p>
                                 )}
                             </div>
@@ -220,13 +213,8 @@ const OperationProgressModal: React.FC<Props> = ({
                         {isFailedStatus(operation.status) && (
                             <div className='p-4 bg-red-500/10 border border-red-500/20 rounded-lg'>
                                 <div className='flex items-center justify-center space-x-2 mb-2'>
-                                    <TriangleExclamation
-                                        width={22}
-                                        height={22}
-                                        fill='currentColor'
-                                        className='w-5 h-5 text-red-400'
-                                    />
-                                    <p className='text-sm text-red-300 font-medium'>Operation failed</p>
+                                    <HugeIconsAlert fill='currentColor' className='w-5 h-5 text-red-400' />
+                                    <p className='text-sm text-red-300 font-medium'>操作失败</p>
                                 </div>
                                 {operation.message && (
                                     <p className='text-xs text-red-200 text-center'>{operation.message}</p>
@@ -238,7 +226,7 @@ const OperationProgressModal: React.FC<Props> = ({
                     /* Loading State */
                     <div className='flex items-center justify-center space-x-3 py-4'>
                         <Spinner size={'small'} />
-                        <span className='text-zinc-400 font-medium'>Initializing...</span>
+                        <span className='text-zinc-400 font-medium'>初始化中...</span>
                     </div>
                 )}
             </div>
@@ -246,10 +234,10 @@ const OperationProgressModal: React.FC<Props> = ({
             {canClose && (
                 <Dialog.Footer>
                     <ActionButton onClick={handleClose} variant='secondary' className='mr-3'>
-                        Cancel
+                        取消
                     </ActionButton>
                     <ActionButton onClick={handleClose} variant='primary'>
-                        {operation?.is_completed ? 'Done' : 'Close'}
+                        {operation?.is_completed ? '完成' : '关闭'}
                     </ActionButton>
                 </Dialog.Footer>
             )}

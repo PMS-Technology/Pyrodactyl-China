@@ -83,18 +83,18 @@ export interface EditorProps {
     className?: string;
     style?: CSSProperties;
 
-    // CodeMirror Config
+    // CodeMirror配置
     extensions?: Extension[];
     language?: LanguageDescription;
 
-    // Options
+    // 选项
     filename?: string;
     initialContent?: string;
 
     // ?
     fetchContent?: (callback: () => Promise<string>) => void;
 
-    // Events
+    // 事件
     onContentSaved?: () => void;
     onLanguageChanged?: (language: LanguageDescription | undefined) => void;
 }

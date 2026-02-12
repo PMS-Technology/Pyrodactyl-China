@@ -55,27 +55,23 @@ const PIDLimitModalFeature = () => {
             dismissable={false}
             closeOnBackground={false}
             closeButton={true}
-            title={isAdmin ? 'Memory or process limit reached' : 'Possible resource limit reached'}
+            title={isAdmin ? '达到内存或进程限制' : '可能达到资源限制'}
         >
             <FlashMessageRender key={'feature:pidLimit'} />
             <div className={`flex-col`}>
                 {isAdmin ? (
                     <>
                         <p>
-                            This server has reached the maximum process, thread, or memory limit. Increasing{' '}
-                            <code className={`font-mono bg-zinc-900`}>container_pid_limit</code> in the Wings
-                            configuration, <code className={`font-mono bg-zinc-900`}>config.yml</code>, might help
-                            resolve this issue.
+                            此服务器已达到最大进程、线程或内存限制。增加 Wings 配置文件 <code className={`font-mono bg-zinc-900`}>config.yml</code> 中的 <code className={`font-mono bg-zinc-900`}>container_pid_limit</code> 可能有助于解决此问题。
                         </p>
                         <p className='mt-3'>
-                            <b>Note: Wings must be restarted for the configuration file changes to take effect</b>
+                            <b>注意：必须重启 Wings 才能使配置文件更改生效</b>
                         </p>
                     </>
                 ) : (
                     <>
                         <p>
-                            This server is attempting to use more resources than allocated. Please contact the
-                            administrator and give them the error below.
+                            此服务器正在尝试使用超出分配的资源。请联系管理员并向他们提供以下错误信息。
                         </p>
                         <p className='mt-3'>
                             <code className={`font-mono bg-zinc-900`}>

@@ -30,12 +30,12 @@ const DeleteSSHKeyButton = ({ name, fingerprint }: { name: string; fingerprint: 
         <>
             <Dialog.Confirm
                 open={visible}
-                title={'Delete SSH Key'}
-                confirm={'Delete Key'}
+                title={'删除SSH密钥'}
+                confirm={'删除密钥'}
                 onConfirmed={onClick}
                 onClose={() => setVisible(false)}
             >
-                Removing the <Code>{name}</Code> SSH key will invalidate its usage across the Panel.
+                删除 <Code>{name}</Code> SSH密钥将使其在整个面板中的使用无效。
             </Dialog.Confirm>
             <button
                 className='p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-150'

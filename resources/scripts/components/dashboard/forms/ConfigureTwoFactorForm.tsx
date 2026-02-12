@@ -8,17 +8,17 @@ import ActionButton from '@/components/elements/ActionButton';
 
 import { ApplicationStore } from '@/state';
 
-import useFlash from '@/plugins/useFlash';
+import { useFlashKey } from '@/plugins/useFlash';
 
 const ConfigureTwoFactorForm = () => {
     const [tokens, setTokens] = useState<string[]>([]);
     const [visible, setVisible] = useState<'enable' | 'disable' | null>(null);
     const isEnabled = useStoreState((state: ApplicationStore) => state.user.data!.useTotp);
-    const { clearFlashes } = useFlash();
+    const { clearAndAddHttpError } = useFlashKey('account:two-step');
 
     useEffect(() => {
         return () => {
-            clearFlashes('account:two-step');
+            clearAndAddHttpError();
         };
     }, [visible]);
 
@@ -34,17 +34,17 @@ const ConfigureTwoFactorForm = () => {
             <DisableTOTPDialog open={visible === 'disable'} onClose={() => setVisible(null)} />
             <p className={`text-sm`}>
                 {isEnabled
-                    ? 'Your account is protected by an authenticator app.'
-                    : 'You have not configured an authenticator app.'}
+                    ? '您的账户受身份验证器应用保护。'
+                    : '您尚未配置身份验证器应用。'}
             </p>
             <div className={`mt-6`}>
                 {isEnabled ? (
                     <ActionButton variant='danger' onClick={() => setVisible('disable')}>
-                        Remove Authenticator App
+                        移除身份验证器应用
                     </ActionButton>
                 ) : (
                     <ActionButton variant='primary' onClick={() => setVisible('enable')}>
-                        Enable Authenticator App
+                        启用身份验证器应用
                     </ActionButton>
                 )}
             </div>

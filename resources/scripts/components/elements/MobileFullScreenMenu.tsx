@@ -1,15 +1,21 @@
-import { AbbrApi, Gear, House, Key, Xmark } from '@gravity-ui/icons';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import type { FeatureLimitKey, ServerRouteDefinition } from '@/routers/routes';
-import { getServerNavRoutes } from '@/routers/routes';
-
 import Can from '@/components/elements/Can';
-
-import { getSubdomainInfo } from '@/api/server/network/subdomain';
-
-import { ServerContext } from '@/state/server';
+import HugeIconsApi from '@/components/elements/hugeicons/Api';
+import HugeIconsClock from '@/components/elements/hugeicons/Clock';
+import HugeIconsCloudUp from '@/components/elements/hugeicons/CloudUp';
+import HugeIconsConnections from '@/components/elements/hugeicons/Connections';
+import HugeIconsConsole from '@/components/elements/hugeicons/Console';
+import HugeIconsController from '@/components/elements/hugeicons/Controller';
+import HugeIconsDashboardSettings from '@/components/elements/hugeicons/DashboardSettings';
+import HugeIconsDatabase from '@/components/elements/hugeicons/Database';
+import HugeIconsFolder from '@/components/elements/hugeicons/Folder';
+import HugeIconsHome from '@/components/elements/hugeicons/Home';
+import HugeIconsPencil from '@/components/elements/hugeicons/Pencil';
+import HugeIconsPeople from '@/components/elements/hugeicons/People';
+import HugeIconsSsh from '@/components/elements/hugeicons/Ssh';
+import HugeIconsX from '@/components/elements/hugeicons/X';
 
 interface MobileFullScreenMenuProps {
     isVisible: boolean;
@@ -26,9 +32,9 @@ const MobileFullScreenMenu = ({ isVisible, onClose, children }: MobileFullScreen
             <button
                 onClick={onClose}
                 className='absolute top-4 right-4 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200'
-                aria-label='Close menu'
+                aria-label='关闭菜单'
             >
-                <Xmark width={22} height={22} fill='currentColor' />
+                <HugeIconsX fill='currentColor' />
             </button>
 
             {/* Full screen navigation menu */}
@@ -42,124 +48,55 @@ const MobileFullScreenMenu = ({ isVisible, onClose, children }: MobileFullScreen
     );
 };
 
-interface NavigationItemProps {
-    to: string;
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-    children: React.ReactNode;
-    end?: boolean;
-    onClick: () => void;
-}
-
-const NavigationItem = ({ to, icon: Icon, children, end = false, onClick }: NavigationItemProps) => (
-    <NavLink
-        to={to}
-        end={end}
-        className={({ isActive }) =>
-            `flex items-center gap-4 p-4 rounded-md transition-all duration-200 ${
-                isActive
-                    ? 'bg-gradient-to-r from-brand/20 to-brand/10 border-l-4 border-brand text-white'
-                    : 'text-white/80 hover:text-white hover:bg-[#ffffff11] border-l-4 border-transparent'
-            }`
-        }
-        onClick={onClick}
-    >
-        <div>
-            <Icon width={22} height={22} fill='currentColor' />
-        </div>
-        <span className='text-lg font-medium'>{children}</span>
-    </NavLink>
-);
-
 interface DashboardMobileMenuProps {
     isVisible: boolean;
     onClose: () => void;
 }
 
 export const DashboardMobileMenu = ({ isVisible, onClose }: DashboardMobileMenuProps) => {
+    const NavigationItem = ({
+        to,
+        icon: Icon,
+        children,
+        end = false,
+    }: {
+        to: string;
+        icon: React.ComponentType<{ fill: string }>;
+        children: React.ReactNode;
+        end?: boolean;
+    }) => (
+        <NavLink
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+                `flex items-center gap-4 p-4 rounded-md transition-all duration-200 ${
+                    isActive
+                        ? 'bg-gradient-to-r from-brand/20 to-brand/10 border-l-4 border-brand text-white'
+                        : 'text-white/80 hover:text-white hover:bg-[#ffffff11] border-l-4 border-transparent'
+                }`
+            }
+            onClick={onClose}
+        >
+            <Icon fill='currentColor' />
+            <span className='text-lg font-medium'>{children}</span>
+        </NavLink>
+    );
+
     return (
         <MobileFullScreenMenu isVisible={isVisible} onClose={onClose}>
-            <NavigationItem to='/' icon={House} end onClick={onClose}>
-                Servers
+            <NavigationItem to='/' icon={HugeIconsHome} end>
+                服务器
             </NavigationItem>
-            <NavigationItem to='/account/api' icon={AbbrApi} end onClick={onClose}>
-                API Keys
+            <NavigationItem to='/account/api' icon={HugeIconsApi} end>
+                API密钥
             </NavigationItem>
-            <NavigationItem to='/account/ssh' icon={Key} end onClick={onClose}>
-                SSH Keys
+            <NavigationItem to='/account/ssh' icon={HugeIconsSsh} end>
+                SSH密钥
             </NavigationItem>
-            <NavigationItem to='/account' icon={Gear} end onClick={onClose}>
-                Settings
+            <NavigationItem to='/account' icon={HugeIconsDashboardSettings} end>
+                设置
             </NavigationItem>
         </MobileFullScreenMenu>
-    );
-};
-
-interface ServerMobileNavItemProps {
-    route: ServerRouteDefinition;
-    serverId: string;
-    onClose: () => void;
-}
-
-/**
- * Mobile navigation item that handles permission and feature limit checks.
- */
-const ServerMobileNavItem = ({ route, serverId, onClose }: ServerMobileNavItemProps) => {
-    const { icon: Icon, name, path, permission, featureLimit, end } = route;
-
-    // Feature limits from server state
-    const featureLimits = ServerContext.useStoreState((state) => state.server.data?.featureLimits);
-    const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
-
-    // State for subdomain support check (only for network route)
-    const [subdomainSupported, setSubdomainSupported] = useState(false);
-
-    // Check subdomain support for network feature
-    useEffect(() => {
-        if (featureLimit !== 'network' || !uuid) return;
-
-        const checkSubdomainSupport = async () => {
-            try {
-                const data = await getSubdomainInfo(uuid);
-                setSubdomainSupported(data.supported);
-            } catch {
-                setSubdomainSupported(false);
-            }
-        };
-
-        checkSubdomainSupport();
-    }, [featureLimit, uuid]);
-
-    // Check if the item should be visible based on feature limits
-    const isVisible = (): boolean => {
-        if (!featureLimit) return true;
-
-        if (featureLimit === 'network') {
-            const allocationLimit = featureLimits?.allocations ?? 0;
-            return allocationLimit > 0 || subdomainSupported;
-        }
-
-        const limitValue = featureLimits?.[featureLimit as FeatureLimitKey] ?? 0;
-        return limitValue !== 0;
-    };
-
-    if (!isVisible() || !Icon || !name) return null;
-
-    const to = path ? `/server/${serverId}/${path}` : `/server/${serverId}`;
-
-    const NavContent = (
-        <NavigationItem to={to} icon={Icon} end={end} onClick={onClose}>
-            {name}
-        </NavigationItem>
-    );
-
-    if (permission === null || permission === undefined) {
-        return NavContent;
-    }
-
-    return (
-        <Can action={permission} matchAny>
-            {NavContent}
-        </Can>
     );
 };
 
@@ -167,25 +104,124 @@ interface ServerMobileMenuProps {
     isVisible: boolean;
     onClose: () => void;
     serverId?: string;
-    // These props are kept for backwards compatibility but are no longer used
-    // The component now reads feature limits directly from ServerContext
     databaseLimit?: number | null;
     backupLimit?: number | null;
     allocationLimit?: number | null;
     subdomainSupported?: boolean;
 }
 
-export const ServerMobileMenu = ({ isVisible, onClose, serverId }: ServerMobileMenuProps) => {
-    if (!serverId) return null;
+export const ServerMobileMenu = ({
+    isVisible,
+    onClose,
+    serverId,
+    databaseLimit,
+    backupLimit,
+    allocationLimit,
+    subdomainSupported = false,
+}: ServerMobileMenuProps) => {
+    const NavigationItem = ({
+        to,
+        icon: Icon,
+        children,
+        end = false,
+    }: {
+        to: string;
+        icon: React.ComponentType<{ fill: string }>;
+        children: React.ReactNode;
+        end?: boolean;
+    }) => (
+        <NavLink
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+                `flex items-center gap-4 p-4 rounded-md transition-all duration-200 ${
+                    isActive
+                        ? 'bg-gradient-to-r from-brand/20 to-brand/10 border-l-4 border-brand text-white'
+                        : 'text-white/80 hover:text-white hover:bg-[#ffffff11] border-l-4 border-transparent'
+                }`
+            }
+            onClick={onClose}
+        >
+            <Icon fill='currentColor' />
+            <span className='text-lg font-medium'>{children}</span>
+        </NavLink>
+    );
 
-    // Get navigation routes from centralized config
-    const navRoutes = getServerNavRoutes();
+    if (!serverId) return null;
 
     return (
         <MobileFullScreenMenu isVisible={isVisible} onClose={onClose}>
-            {navRoutes.map((route) => (
-                <ServerMobileNavItem key={route.path || 'home'} route={route} serverId={serverId} onClose={onClose} />
-            ))}
+            <NavigationItem to={`/server/${serverId}`} icon={HugeIconsHome} end>
+                首页
+            </NavigationItem>
+
+            <>
+                <Can action={'file.*'} matchAny>
+                    <NavigationItem to={`/server/${serverId}/files`} icon={HugeIconsFolder}>
+                        文件
+                    </NavigationItem>
+                </Can>
+
+                {databaseLimit !== 0 && (
+                    <Can action={'database.*'} matchAny>
+                        <NavigationItem to={`/server/${serverId}/databases`} icon={HugeIconsDatabase} end>
+                            数据库
+                        </NavigationItem>
+                    </Can>
+                )}
+
+                {backupLimit !== 0 && (
+                    <Can action={'backup.*'} matchAny>
+                        <NavigationItem to={`/server/${serverId}/backups`} icon={HugeIconsCloudUp} end>
+                            备份
+                        </NavigationItem>
+                    </Can>
+                )}
+
+                {(allocationLimit > 0 || subdomainSupported) && (
+                    <Can action={'allocation.*'} matchAny>
+                        <NavigationItem to={`/server/${serverId}/network`} icon={HugeIconsConnections} end>
+                            网络
+                        </NavigationItem>
+                    </Can>
+                )}
+
+                <Can action={'user.*'} matchAny>
+                    <NavigationItem to={`/server/${serverId}/users`} icon={HugeIconsPeople} end>
+                        用户
+                    </NavigationItem>
+                </Can>
+
+                <Can action={['startup.read', 'startup.update', 'startup.command', 'startup.docker-image']} matchAny>
+                    <NavigationItem to={`/server/${serverId}/startup`} icon={HugeIconsConsole} end>
+                        启动项
+                    </NavigationItem>
+                </Can>
+
+                <Can action={'schedule.*'} matchAny>
+                    <NavigationItem to={`/server/${serverId}/schedules`} icon={HugeIconsClock}>
+                        计划任务
+                    </NavigationItem>
+                </Can>
+
+                <Can action={['settings.*', 'file.sftp']} matchAny>
+                    <NavigationItem to={`/server/${serverId}/settings`} icon={HugeIconsDashboardSettings} end>
+                        设置
+                    </NavigationItem>
+                </Can>
+
+                <Can action={['activity.*', 'activity.read']} matchAny>
+                    <NavigationItem to={`/server/${serverId}/activity`} icon={HugeIconsPencil} end>
+                        活动
+                    </NavigationItem>
+                </Can>
+            </>
+
+            <Can action={'startup.software'}>
+                <NavigationItem to={`/server/${serverId}/shell`} icon={HugeIconsController} end>
+                    软件
+                </NavigationItem>
+            </Can>
         </MobileFullScreenMenu>
     );
 };

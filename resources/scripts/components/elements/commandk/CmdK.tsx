@@ -1,17 +1,3 @@
-import {
-    Box,
-    BranchesDown,
-    ClockArrowRotateLeft,
-    CloudArrowUpIn,
-    Database,
-    FolderOpen,
-    Gear,
-    House,
-    PencilToLine,
-    Persons,
-    Power,
-    Terminal,
-} from '@gravity-ui/icons';
 import { Command } from 'cmdk';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +8,18 @@ import Can from '@/components/elements/Can';
 import { ServerContext } from '@/state/server';
 
 import ModrinthLogo from '../ModrinthLogo';
+import HugeIconsClock from '../hugeicons/Clock';
+import HugeIconsCloudUp from '../hugeicons/CloudUp';
+import HugeIconsConnections from '../hugeicons/Connections';
+import HugeIconsConsole from '../hugeicons/Console';
+import HugeIconsController from '../hugeicons/Controller';
+import HugeIconsDashboardSettings from '../hugeicons/DashboardSettings';
+import HugeIconsDatabase from '../hugeicons/Database';
+import HugeIconsFolder from '../hugeicons/Folder';
+import HugeIconsHome from '../hugeicons/Home';
+import HugeIconsPencil from '../hugeicons/Pencil';
+import HugeIconsPeople from '../hugeicons/People';
+import HugeIconsZap from '../hugeicons/Zap';
 
 const CommandMenu = () => {
     const [open, setOpen] = useState(false);
@@ -63,100 +61,100 @@ const CommandMenu = () => {
     }, []);
 
     return (
-        <Command.Dialog open={open} onOpenChange={setOpen} label='Global Command Menu'>
+        <Command.Dialog open={open} onOpenChange={setOpen} label='全局命令菜单'>
             <Command.Input />
             <Command.List>
-                <Command.Empty>No results found.</Command.Empty>
+                <Command.Empty>未找到结果。</Command.Empty>
 
-                <Command.Group heading='Pages'>
+                <Command.Group heading='页面'>
                     <Command.Item onSelect={() => cmdkNavigate('')}>
-                        <House fill='currentColor' />
-                        Home
+                        <HugeIconsHome fill='currentColor' />
+                        首页
                     </Command.Item>
                     <Can action={'file.*'} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/files')}>
-                            <FolderOpen fill='currentColor' />
-                            Files
+                            <HugeIconsFolder fill='currentColor' />
+                            文件
                         </Command.Item>
                     </Can>
                     <Can action={'database.*'} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/databases')}>
-                            <Database fill='currentColor' />
-                            Databases
+                            <HugeIconsDatabase fill='currentColor' />
+                            数据库
                         </Command.Item>
                     </Can>
                     <Can action={'backup.*'} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/backups')}>
-                            <CloudArrowUpIn fill='currentColor' />
-                            Backups
+                            <HugeIconsCloudUp fill='currentColor' />
+                            备份
                         </Command.Item>
                     </Can>
                     <Can action={'allocation.*'} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/network')}>
-                            <BranchesDown fill='currentColor' />
-                            Networking
+                            <HugeIconsConnections fill='currentColor' />
+                            网络
                         </Command.Item>
                     </Can>
                     <Can action={'user.*'} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/users')}>
-                            <Persons fill='currentColor' />
-                            Users
+                            <HugeIconsPeople fill='currentColor' />
+                            用户
                         </Command.Item>
                     </Can>
                     <Can action={['startup.*']} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/startup')}>
-                            <Terminal fill='currentColor' />
-                            Startup
+                            <HugeIconsConsole fill='currentColor' />
+                            启动项
                         </Command.Item>
                     </Can>
                     <Can action={['schedule.*']} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/schedules')}>
-                            <ClockArrowRotateLeft fill='currentColor' />
-                            Schedules
+                            <HugeIconsClock fill='currentColor' />
+                            计划任务
                         </Command.Item>
                     </Can>
                     <Can action={['settings.*', 'file.sftp']} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/settings')}>
-                            <Gear fill='currentColor' />
-                            Settings
+                            <HugeIconsDashboardSettings fill='currentColor' />
+                            设置
                         </Command.Item>
                     </Can>
                     <Can action={['activity.*']} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/activity')}>
-                            <PencilToLine fill='currentColor' />
-                            Activity
+                            <HugeIconsPencil fill='currentColor' />
+                            活动
                         </Command.Item>
                     </Can>
                     <Can action={['modrinth.*']} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/mods')}>
                             <ModrinthLogo />
-                            Mods/Plugins
+                            模组/插件
                         </Command.Item>
                     </Can>
                     <Can action={['software.*']} matchAny>
                         <Command.Item onSelect={() => cmdkNavigate('/shell')}>
-                            <Box fill='currentColor' />
-                            Software
+                            <HugeIconsController fill='currentColor' />
+                            软件
                         </Command.Item>
                     </Can>
                 </Command.Group>
-                <Command.Group heading='Server'>
+                <Command.Group heading='服务器'>
                     <Can action={'control.start'}>
                         <Command.Item disabled={status !== 'offline'} onSelect={() => cmdkPowerAction('start')}>
-                            <Power fill='currentColor' />
-                            Start Server
+                            <HugeIconsZap fill='currentColor' />
+                            启动服务器
                         </Command.Item>
                     </Can>
                     <Can action={'control.restart'}>
                         <Command.Item disabled={!status} onSelect={() => cmdkPowerAction('restart')}>
-                            <Power fill='currentColor' />
-                            Restart Server
+                            <HugeIconsZap fill='currentColor' />
+                            重启服务器
                         </Command.Item>
                     </Can>
                     <Can action={'control.restart'}>
                         <Command.Item disabled={status === 'offline'} onSelect={() => cmdkPowerAction('stop')}>
-                            <Power fill='currentColor' />
-                            Stop Server
+                            <HugeIconsZap fill='currentColor' />
+                            停止服务器
                         </Command.Item>
                     </Can>
                 </Command.Group>

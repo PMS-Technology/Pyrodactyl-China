@@ -1,10 +1,11 @@
-import { ChevronLeft, Person } from '@gravity-ui/icons';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ActionButton from '@/components/elements/ActionButton';
 import { MainPageHeader } from '@/components/elements/MainPageHeader';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import HugeIconsArrowLeft from '@/components/elements/hugeicons/ArrowLeft';
+import HugeIconsUser from '@/components/elements/hugeicons/User';
 import UserFormComponent from '@/components/server/users/UserFormComponent';
 
 import { ServerContext } from '@/state/server';
@@ -39,15 +40,15 @@ const EditUserContainer = () => {
     // Show loading state while we're waiting for subusers to load
     if (!subuser && subusers.length === 0) {
         return (
-            <ServerContentBlock title={'Edit User'}>
-                <MainPageHeader title={'Edit User'}>
+            <ServerContentBlock title={'编辑用户'}>
+                <MainPageHeader title={'编辑用户'}>
                     <ActionButton
                         variant='secondary'
                         onClick={() => navigate(`/server/${serverId}/users`)}
                         className='flex items-center gap-2'
                     >
-                        <ChevronLeft width={22} height={22} fill='currentColor' />
-                        Back to Users
+                        <HugeIconsArrowLeft className='w-4 h-4' fill='currentColor' />
+                        返回用户列表
                     </ActionButton>
                 </MainPageHeader>
                 <div className='flex items-center justify-center py-12'>
@@ -60,25 +61,25 @@ const EditUserContainer = () => {
     // If subuser not found after loading, show not found message
     if (!subuser) {
         return (
-            <ServerContentBlock title={'Edit User'}>
-                <MainPageHeader title={'Edit User'}>
+            <ServerContentBlock title={'编辑用户'}>
+                <MainPageHeader title={'编辑用户'}>
                     <ActionButton
                         variant='secondary'
                         onClick={() => navigate(`/server/${serverId}/users`)}
                         className='flex items-center gap-2'
                     >
-                        <ChevronLeft width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                        Back to Users
+                        <HugeIconsArrowLeft className='w-4 h-4' fill='currentColor' />
+                        返回用户列表
                     </ActionButton>
                 </MainPageHeader>
                 <div className='flex flex-col items-center justify-center py-12 px-4'>
                     <div className='text-center'>
                         <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-[#ffffff11] flex items-center justify-center'>
-                            <Person width={22} height={22} className='w-8 h-8 text-zinc-400' fill='currentColor' />
+                            <HugeIconsUser className='w-8 h-8 text-zinc-400' fill='currentColor' />
                         </div>
-                        <h3 className='text-lg font-medium text-zinc-200 mb-2'>User not found</h3>
+                        <h3 className='text-lg font-medium text-zinc-200 mb-2'>未找到用户</h3>
                         <p className='text-sm text-zinc-400 max-w-sm'>
-                            The user you&apos;re trying to edit could not be found.
+                            您尝试编辑的用户未找到。
                         </p>
                     </div>
                 </div>
@@ -87,16 +88,16 @@ const EditUserContainer = () => {
     }
 
     return (
-        <ServerContentBlock title={'Edit User'}>
-            <MainPageHeader title={`Edit User: ${subuser.email}`}>
+        <ServerContentBlock title={'编辑用户'}>
+            <MainPageHeader title={`编辑用户: ${subuser.email}`}>
                 <ActionButton
                     variant='secondary'
                     onClick={() => navigate(`/server/${serverId}/users`)}
                     className='flex items-center gap-2'
                     disabled={isSubmitting}
                 >
-                    <ChevronLeft width={22} height={22} className='w-4 h-4' fill='currentColor' />
-                    Back to Users
+                    <HugeIconsArrowLeft className='w-4 h-4' fill='currentColor' />
+                    返回用户列表
                 </ActionButton>
             </MainPageHeader>
 

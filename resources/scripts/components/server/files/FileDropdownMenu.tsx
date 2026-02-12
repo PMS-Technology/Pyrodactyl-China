@@ -1,4 +1,3 @@
-import { BarsPlay, Copy, FileArrowDown, FileZipper, PencilToLine, Shield, TrashBin } from '@gravity-ui/icons';
 import { join } from 'pathe';
 import { memo, useState } from 'react';
 import isEqual from 'react-fast-compare';
@@ -7,6 +6,13 @@ import { toast } from 'sonner';
 import Can from '@/components/elements/Can';
 import { ContextMenuContent, ContextMenuItem } from '@/components/elements/ContextMenu';
 import { Dialog } from '@/components/elements/dialog';
+import HugeIconsCopy from '@/components/elements/hugeicons/Copy';
+import HugeIconsDelete from '@/components/elements/hugeicons/Delete';
+import HugeIconsFileDownload from '@/components/elements/hugeicons/FileDownload';
+import HugeIconsFileSecurity from '@/components/elements/hugeicons/FileSecurity';
+import HugeIconsFileZip from '@/components/elements/hugeicons/FileZip';
+import HugeIconsMoveTo from '@/components/elements/hugeicons/MoveTo';
+import HugeIconsPencil from '@/components/elements/hugeicons/Pencil';
 import ChmodFileModal from '@/components/server/files/ChmodFileModal';
 import RenameFileModal from '@/components/server/files/RenameFileModal';
 
@@ -92,12 +98,12 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
             <Dialog.Confirm
                 open={showConfirmation}
                 onClose={() => setShowConfirmation(false)}
-                title={`Delete ${file.isFile ? 'File' : 'Directory'}`}
-                confirm={'Delete'}
+                title={`删除${file.isFile ? '文件' : '目录'}`}
+                confirm={'删除'}
                 onConfirmed={doDeletion}
             >
-                You will not be able to recover the contents of
-                <span className={'font-semibold text-zinc-50'}> {file.name}</span> once deleted.
+                一旦删除，您将无法恢复
+                <span className={'font-semibold text-zinc-50'}> {file.name}</span> 的内容。
             </Dialog.Confirm>
             {modal ? (
                 modal === 'chmod' ? (
@@ -120,51 +126,51 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
             <ContextMenuContent className='flex flex-col gap-1'>
                 <Can action={'file.update'}>
                     <ContextMenuItem className='flex gap-2' onSelect={() => setModal('rename')}>
-                        <PencilToLine className='h-4! w-4!' fill='currentColor' />
-                        <span>Rename</span>
+                        <HugeIconsPencil className='h-4! w-4!' fill='currentColor' />
+                        <span>重命名</span>
                     </ContextMenuItem>
                     <ContextMenuItem className='flex gap-2' onSelect={() => setModal('move')}>
-                        <BarsPlay className='h-4! w-4!' fill='currentColor' />
-                        <span>Move</span>
+                        <HugeIconsMoveTo className='h-4! w-4!' fill='currentColor' />
+                        <span>移动</span>
                     </ContextMenuItem>
                     <ContextMenuItem className='flex gap-2' onSelect={() => setModal('chmod')}>
-                        <Shield className='h-4! w-4!' fill='currentColor' />
-                        <span>Permissions</span>
+                        <HugeIconsFileSecurity className='h-4! w-4!' fill='currentColor' />
+                        <span>权限</span>
                     </ContextMenuItem>
                 </Can>
                 {file.isFile && (
                     <Can action={'file.create'}>
                         <ContextMenuItem className='flex gap-2' onClick={doCopy}>
-                            <Copy className='h-4! w-4!' fill='currentColor' />
-                            <span>Duplicate</span>
+                            <HugeIconsCopy className='h-4! w-4!' fill='currentColor' />
+                            <span>复制</span>
                         </ContextMenuItem>
                     </Can>
                 )}
                 {file.isArchiveType() ? (
                     <Can action={'file.create'}>
-                        <ContextMenuItem className='flex gap-2' onSelect={doUnarchive} title={'Unarchive'}>
-                            <FileZipper className='h-4! w-4!' fill='currentColor' />
-                            <span>Unarchive</span>
+                        <ContextMenuItem className='flex gap-2' onSelect={doUnarchive} title={'解压'}>
+                            <HugeIconsFileZip className='h-4! w-4!' fill='currentColor' />
+                            <span>解压</span>
                         </ContextMenuItem>
                     </Can>
                 ) : (
                     <Can action={'file.archive'}>
                         <ContextMenuItem className='flex gap-2' onSelect={doArchive}>
-                            <FileZipper className='h-4! w-4!' fill='currentColor' />
-                            <span>Archive</span>
+                            <HugeIconsFileZip className='h-4! w-4!' fill='currentColor' />
+                            <span>压缩</span>
                         </ContextMenuItem>
                     </Can>
                 )}
                 {file.isFile && (
                     <ContextMenuItem className='flex gap-2' onSelect={doDownload}>
-                        <FileArrowDown className='h-4! w-4!' fill='currentColor' />
-                        <span>Download</span>
+                        <HugeIconsFileDownload className='h-4! w-4!' fill='currentColor' />
+                        <span>下载</span>
                     </ContextMenuItem>
                 )}
                 <Can action={'file.delete'}>
                     <ContextMenuItem className='flex gap-2' onSelect={() => setShowConfirmation(true)}>
-                        <TrashBin className='h-4! w-4!' fill='currentColor' />
-                        <span>Delete</span>
+                        <HugeIconsDelete className='h-4! w-4!' fill='currentColor' />
+                        <span>删除</span>
                     </ContextMenuItem>
                 </Can>
             </ContextMenuContent>

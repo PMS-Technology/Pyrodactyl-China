@@ -1,5 +1,4 @@
 import http from '@/api/http';
-import { getGlobalDaemonType } from '@/api/server/getServer';
 
 export interface Schedule {
     id: number;
@@ -68,7 +67,7 @@ export const rawDataToServerSchedule = (data: any): Schedule => ({
 });
 
 export default async (uuid: string): Promise<Schedule[]> => {
-    const { data } = await http.get(`/api/client/servers/${getGlobalDaemonType()}/${uuid}/schedules`, {
+    const { data } = await http.get(`/api/client/servers/${uuid}/schedules`, {
         params: {
             include: ['tasks'],
         },

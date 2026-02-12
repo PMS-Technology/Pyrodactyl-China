@@ -15,7 +15,7 @@ const DownloadModrinth: React.FC<DownloadProps> = ({ url, serverUuid, directory 
     const downloadAndUploadFile = async () => {
         setLoading(true);
         try {
-            toast.info('Downloading file from Modrinth...');
+            toast.info('正在从 Modrinth 下载文件...');
 
             // 1️⃣ Download the file from Modrinth
             const downloadResponse = await axios.get(url, {
@@ -32,7 +32,7 @@ const DownloadModrinth: React.FC<DownloadProps> = ({ url, serverUuid, directory 
             formData.append('files', file, fileName);
 
             // 3️⃣ Upload to Pyrodactyl Server
-            toast.info(`Uploading ${fileName} to server...`);
+            toast.info(`正在上传 ${fileName} 到服务器...`);
             await axios.post(`/api/client/servers/${serverUuid}/files/upload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
                 params: { directory: `/container/${directory}` },
@@ -43,7 +43,7 @@ const DownloadModrinth: React.FC<DownloadProps> = ({ url, serverUuid, directory 
                 },
             });
 
-            toast.success(`${fileName} uploaded successfully!`);
+            toast.success(`${fileName} 上传成功！`);
         } catch (error) {
             handleError(error);
         } finally {
@@ -53,13 +53,13 @@ const DownloadModrinth: React.FC<DownloadProps> = ({ url, serverUuid, directory 
 
     const handleError = (error: any) => {
         if (axios.isCancel(error)) {
-            toast.warning('Request cancelled.');
+            toast.warning('请求已取消。');
         } else if (error.response) {
-            toast.error(`Server error! Status: ${error.response.status}`);
+            toast.error(`服务器错误！状态: ${error.response.status}`);
         } else if (error.request) {
-            toast.error('No response from server.');
+            toast.error('服务器无响应。');
         } else {
-            toast.error(`Error: ${error.message}`);
+            toast.error(`错误: ${error.message}`);
         }
     };
 
@@ -70,9 +70,9 @@ const DownloadModrinth: React.FC<DownloadProps> = ({ url, serverUuid, directory 
                 disabled={loading}
                 className='px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer'
             >
-                {loading ? 'Processing...' : 'Download & Upload'}
+                {loading ? '处理中...' : '下载并上传'}
             </button>
-            {progress > 0 && <p className='mt-2 text-sm'>Upload Progress: {progress}%</p>}
+            {progress > 0 && <p className='mt-2 text-sm'>上传进度: {progress}%</p>}
         </div>
     );
 };

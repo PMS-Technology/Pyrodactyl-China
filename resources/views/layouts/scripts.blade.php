@@ -1,1 +1,1 @@
-{{-- Just here as a binder for dynamically rendered content. --}}
+{{-- 只是一个用于动态渲染内容的绑定器。 --}}

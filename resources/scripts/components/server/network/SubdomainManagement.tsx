@@ -1,4 +1,3 @@
-import { Link } from '@gravity-ui/icons';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as yup from 'yup';
@@ -6,6 +5,9 @@ import * as yup from 'yup';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import ActionButton from '@/components/elements/ActionButton';
 import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
+import Input from '@/components/elements/Input';
+import Select from '@/components/elements/Select';
+import HugeIconsLink from '@/components/elements/hugeicons/Link';
 
 import {
     SubdomainInfo,
@@ -58,14 +60,14 @@ CleanSelect.displayName = 'CleanSelect';
 const validationSchema = yup.object().shape({
     subdomain: yup
         .string()
-        .required('A subdomain name is required.')
-        .min(1, 'Subdomain must be at least 1 character.')
-        .max(63, 'Subdomain cannot exceed 63 characters.')
+        .required('需要子域名名称。')
+        .min(1, '子域名至少需要 1 个字符。')
+        .max(63, '子域名不能超过 63 个字符。')
         .matches(
             /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i,
-            'Subdomain can only contain lowercase letters, numbers, and hyphens. It must start and end with a letter or number.',
+            '子域名只能包含小写字母、数字和连字符。必须以字母或数字开头和结尾。',
         ),
-    domain_id: yup.string().required('A domain must be selected.'),
+    domain_id: yup.string().required('必须选择一个域名。'),
 });
 
 const SubdomainManagement = () => {
@@ -127,7 +129,7 @@ const SubdomainManagement = () => {
                 setAvailabilityStatus({
                     checked: true,
                     available: false,
-                    message: 'Failed to check availability. Please try again.',
+                    message: '检查可用性失败。请重试。',
                 });
             } finally {
                 setCheckingAvailability(false);
@@ -183,7 +185,7 @@ const SubdomainManagement = () => {
     const handleDeleteSubdomain = async () => {
         if (
             !confirm(
-                'Are you sure you want to delete this subdomain? This will remove all associated DNS records and cannot be undone.',
+                '您确定要删除此子域名吗？这将删除所有关联的 DNS 记录且无法撤销。',
             )
         ) {
             return;
@@ -208,7 +210,7 @@ const SubdomainManagement = () => {
                 <div className='flex items-center justify-center py-12'>
                     <div className='flex flex-col items-center gap-3'>
                         <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-brand'></div>
-                        <p className='text-sm text-neutral-400'>Loading subdomain configuration...</p>
+                        <p className='text-sm text-neutral-400'>加载子域名配置中...</p>
                     </div>
                 </div>
             </div>
@@ -223,7 +225,7 @@ const SubdomainManagement = () => {
         return (
             <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-6 shadow-sm'>
                 <div className='flex items-center justify-between mb-6'>
-                    <h3 className='text-xl font-extrabold tracking-tight'>Subdomain Management</h3>
+                    <h3 className='text-xl font-extrabold tracking-tight'>子域名管理</h3>
                 </div>
                 <div className='flex flex-col items-center justify-center py-12'>
                     <div className='text-center'>
@@ -236,9 +238,9 @@ const SubdomainManagement = () => {
                                 />
                             </svg>
                         </div>
-                        <h4 className='text-md font-medium text-zinc-200 mb-1'>No domains configured</h4>
+                        <h4 className='text-md font-medium text-zinc-200 mb-1'>未配置域名</h4>
                         <p className='text-sm text-zinc-400 max-w-sm'>
-                            Contact your administrator to configure subdomain support for this server.
+                            联系您的管理员为此服务器配置子域名支持。
                         </p>
                     </div>
                 </div>
@@ -249,8 +251,8 @@ const SubdomainManagement = () => {
     return (
         <div className='bg-gradient-to-b from-[#ffffff08] to-[#ffffff05] border-[1px] border-[#ffffff12] rounded-xl p-6 shadow-sm'>
             <div className='flex items-center gap-3 mb-6'>
-                <Link className='w-6 h-6 text-zinc-400' fill='currentColor' />
-                <h3 className='text-xl font-extrabold tracking-tight'>Subdomain Management</h3>
+                <HugeIconsLink className='w-6 h-6 text-zinc-400' fill='currentColor' />
+                <h3 className='text-xl font-extrabold tracking-tight'>子域名管理</h3>
                 {subdomainInfo?.current_subdomain && (
                     <div className='flex items-center gap-2 text-sm ml-auto'>
                         <div
@@ -261,7 +263,7 @@ const SubdomainManagement = () => {
                                 subdomainInfo.current_subdomain.attributes.is_active ? 'text-green-400' : 'text-red-400'
                             }
                         >
-                            {subdomainInfo.current_subdomain.attributes.is_active ? 'Active' : 'Inactive'}
+                            {subdomainInfo.current_subdomain.attributes.is_active ? '活跃' : '非活跃'}
                         </span>
                     </div>
                 )}
@@ -275,7 +277,7 @@ const SubdomainManagement = () => {
                     <div className='bg-[#ffffff08] border border-[#ffffff15] rounded-lg p-4'>
                         <div className='flex items-center justify-between'>
                             <div>
-                                <p className='text-sm text-zinc-400 mb-2'>Current Subdomain</p>
+                                <p className='text-sm text-zinc-400 mb-2'>当前子域名</p>
                                 <p className='text-lg font-medium text-white font-mono'>
                                     {subdomainInfo?.current_subdomain?.attributes?.full_domain}
                                 </p>
@@ -290,7 +292,7 @@ const SubdomainManagement = () => {
                             disabled={loading}
                             size='sm'
                         >
-                            {loading ? 'Deleting...' : 'Delete Subdomain'}
+                            {loading ? '删除中...' : '删除子域名'}
                         </ActionButton>
                         <ActionButton
                             type='button'
@@ -299,7 +301,7 @@ const SubdomainManagement = () => {
                             disabled={loading}
                             size='sm'
                         >
-                            Edit Subdomain
+                            编辑子域名
                         </ActionButton>
                     </div>
                 </div>
@@ -325,8 +327,8 @@ const SubdomainManagement = () => {
                             <div className='space-y-4'>
                                 <FormikFieldWrapper
                                     name='subdomain'
-                                    label='Subdomain'
-                                    description='Choose a unique name for your subdomain. Only lowercase letters, numbers, and hyphens are allowed.'
+                                    label='子域名'
+                                    description='为您的子域名选择一个唯一的名称。只允许使用小写字母、数字和连字符。'
                                 >
                                     <div className='flex items-center border border-[#ffffff15] overflow-hidden hover:border-[#ffffff25] transition-colors'>
                                         <Field
@@ -380,7 +382,7 @@ const SubdomainManagement = () => {
                                         {checkingAvailability ? (
                                             <div className='flex items-center text-sm text-blue-300'>
                                                 <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400 mr-3'></div>
-                                                Checking availability...
+                                                检查可用性中...
                                             </div>
                                         ) : (
                                             availabilityStatus && (
@@ -413,7 +415,7 @@ const SubdomainManagement = () => {
                                             }}
                                             disabled={isSubmitting || loading}
                                         >
-                                            Cancel
+                                            取消
                                         </ActionButton>
                                         <ActionButton
                                             type='submit'
@@ -428,7 +430,7 @@ const SubdomainManagement = () => {
                                                 (availabilityStatus?.checked && !availabilityStatus?.available)
                                             }
                                         >
-                                            {isSubmitting ? 'Saving...' : 'Save Changes'}
+                                            {isSubmitting ? '保存中...' : '保存更改'}
                                         </ActionButton>
                                     </>
                                 ) : (
@@ -445,7 +447,7 @@ const SubdomainManagement = () => {
                                             (availabilityStatus?.checked && !availabilityStatus?.available)
                                         }
                                     >
-                                        {isSubmitting ? 'Creating...' : 'Create Subdomain'}
+                                        {isSubmitting ? '创建中...' : '创建子域名'}
                                     </ActionButton>
                                 )}
                             </div>

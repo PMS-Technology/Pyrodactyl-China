@@ -1,9 +1,9 @@
-import { Pencil } from '@gravity-ui/icons';
 import { useStoreState } from 'easy-peasy';
 import { useNavigate } from 'react-router-dom';
 
 import ActionButton from '@/components/elements/ActionButton';
 import Can from '@/components/elements/Can';
+import HugeIconsPencil from '@/components/elements/hugeicons/Pencil';
 import { PageListItem } from '@/components/elements/pages/PageList';
 import RemoveSubuserButton from '@/components/server/users/RemoveSubuserButton';
 
@@ -31,7 +31,7 @@ const UserRow = ({ subuser }: Props) => {
             <div className={`sm:ml-4 flex-1 overflow-hidden flex flex-col`}>
                 <p className={`truncate text-lg`}>{subuser.email}</p>
                 <p className={`mt-1 md:mt-0 text-xs text-zinc-400 truncate sm:text-left text-center`}>
-                    {subuser.twoFactorEnabled ? 'MFA Enabled' : 'MFA Disabled'}
+                    {subuser.twoFactorEnabled ? 'MFA 已启用' : 'MFA 已禁用'}
                 </p>
             </div>
 
@@ -40,7 +40,7 @@ const UserRow = ({ subuser }: Props) => {
                     <p className={`font-medium text-center`}>
                         {subuser.permissions.filter((permission) => permission !== 'websocket.connect').length}
                     </p>
-                    <p className={`text-xs text-zinc-500 uppercase`}>Permissions</p>
+                    <p className={`text-xs text-zinc-500 uppercase`}>权限</p>
                 </div>
                 {subuser.uuid !== uuid && (
                     <>
@@ -53,8 +53,8 @@ const UserRow = ({ subuser }: Props) => {
                                     onClick={handleEditClick}
                                     aria-label='Edit subuser'
                                 >
-                                    <Pencil width={22} height={22} fill='currentColor' />
-                                    Edit
+                                    <HugeIconsPencil className='w-4 h-4' fill='currentColor' />
+                                    编辑
                                 </ActionButton>
                             </Can>
                             <Can action={'user.delete'}>

@@ -39,22 +39,21 @@ function ScheduleContainer() {
     }, []);
 
     return (
-        <ServerContentBlock title={'Schedules'}>
+        <ServerContentBlock title={'计划'}>
             <FlashMessageRender byKey={'schedules'} />
             <MainPageHeader
                 direction='column'
-                title={'Schedules'}
+                title={'计划'}
                 titleChildren={
                     <Can action={'schedule.create'}>
                         <ActionButton variant='primary' onClick={() => setVisible(true)}>
-                            New Schedule
+                            新建计划
                         </ActionButton>
                     </Can>
                 }
             >
                 <p className='text-sm text-neutral-400 leading-relaxed'>
-                    Automate server tasks with scheduled commands. Create recurring tasks to manage your server, run
-                    backups, or execute custom commands.
+                    使用计划命令自动化服务器任务。创建重复任务来管理您的服务器、运行备份或执行自定义命令。
                 </p>
             </MainPageHeader>
             <Can action={'schedule.create'}>
@@ -74,10 +73,9 @@ function ScheduleContainer() {
                                         />
                                     </svg>
                                 </div>
-                                <h3 className='text-lg font-medium text-zinc-200 mb-2'>No schedules found</h3>
+                                <h3 className='text-lg font-medium text-zinc-200 mb-2'>未找到计划</h3>
                                 <p className='text-sm text-zinc-400 max-w-sm'>
-                                    Your server does not have any scheduled tasks. Create one to automate server
-                                    management.
+                                    您的服务器没有任何计划任务。创建一个来自动化服务器管理。
                                 </p>
                             </div>
                         </div>
