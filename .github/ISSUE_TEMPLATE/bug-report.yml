@@ -56,15 +56,24 @@ body:
 - type: input
   id: wings-version
   attributes:
+<<<<<<< HEAD
     label: Daemon Version
     description: Version number of your Elytra(Or Wings) (latest is not a version)
+=======
+    label: Wings Version
+    description: Version number of your Wings (latest is not a version)
+>>>>>>> 5582002da (Revert "Delete .github directory")
     placeholder: 1.4.2
   validations:
     required: true
 
 - type: checkboxes
   attributes:
+<<<<<<< HEAD
     label: Daemon Installation Type
+=======
+    label: Wings Installation Type
+>>>>>>> 5582002da (Revert "Delete .github directory")
     description: How did you install Wings?
     options:
     - label: Offical Docker image.
@@ -72,15 +81,24 @@ body:
     - label: Native install.
       required: false
     - label: Pyrodactyl Elytra
+<<<<<<< HEAD
       required: false
     - label: Pterodacty Wings
       required: false
+=======
+      required: true
+    - label: Pterodacty Wings
+      required: true
+>>>>>>> 5582002da (Revert "Delete .github directory")
     # - label: I used official installation script.
     #   required: false
     - label: I used a third party installation script or Docker image.
       required: false
+<<<<<<< HEAD
     - label: Daemon Version does not apply to this Bug
       required: false
+=======
+>>>>>>> 5582002da (Revert "Delete .github directory")
   validations:
     required: true
 

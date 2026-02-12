@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: Build & Push Version (reusable)
 
 on:
@@ -6,6 +7,22 @@ on:
 
 permissions:
   packages: write
+=======
+name: Build & Push Version
+on:
+  workflow_run:
+    workflows: ["Create release"]
+    types:
+      - completed
+  push:
+    tags:
+      - "v*"
+    branches:
+      - 'releases/*'
+
+permissions:
+    packages: write
+>>>>>>> 5582002da (Revert "Delete .github directory")
 
 jobs:
   build-release:
@@ -14,8 +31,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+<<<<<<< HEAD
           ref: ${{ github.ref }}
           fetch-depth: 0
+=======
+          fetch-depth: 1
+
+      - name: Extract version from branch name
+        id: extract_version
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          VERSION="${BRANCH_NAME#releases/v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+>>>>>>> 5582002da (Revert "Delete .github directory")
 
       - name: Login to GHCR
         uses: docker/login-action@v3
@@ -24,6 +53,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+<<<<<<< HEAD
       - name: Set up QEMU (for multi-arch)
         uses: docker/setup-qemu-action@v3
 
@@ -31,13 +61,26 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push
+=======
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push release image
+>>>>>>> 5582002da (Revert "Delete .github directory")
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+<<<<<<< HEAD
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.ref_name }}
             ghcr.io/${{ github.repository }}:latest
+=======
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.extract_version.outputs.version }}
+            ghcr.io/${{ github.repository }}:latest
+          platforms: linux/amd64,linux/arm64
+>>>>>>> 5582002da (Revert "Delete .github directory")
           cache-from: type=gha
           cache-to: type=gha,mode=max

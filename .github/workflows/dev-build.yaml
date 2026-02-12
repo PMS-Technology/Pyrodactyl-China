@@ -25,9 +25,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+<<<<<<< HEAD
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
+=======
+>>>>>>> 5582002da (Revert "Delete .github directory")
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -39,7 +42,11 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:canary
             ghcr.io/${{ github.repository }}:canary-${{ github.sha }}
+<<<<<<< HEAD
           platforms: linux/amd64,linux/arm64
+=======
+          platforms: linux/amd64
+>>>>>>> 5582002da (Revert "Delete .github directory")
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
